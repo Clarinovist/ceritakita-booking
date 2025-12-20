@@ -1,0 +1,83 @@
+import { z } from 'zod';
+
+// Customer validation schema
+export const customerSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
+  whatsapp: z.string()
+    .min(8, 'WhatsApp number too short')
+    .max(20, 'WhatsApp number too long')
+    .regex(/^[0-9+\-\s()]+$/, 'Invalid phone number format'),
+  category: z.enum([
+    'Indoor',
+    'Outdoor',
+    'Wedding',
+    'Prewedding Bronze',
+    'Prewedding Gold',
+    'Prewedding Silver',
+    'Wisuda',
+    'Family',
+    'Birthday',
+    'Pas Foto',
+    'Self Photo'
+  ]),
+  serviceId: z.string().optional(),
+});
+
+// Booking validation schema
+export const bookingSchema = z.object({
+  date: z.string().refine((val) => {
+    const date = new Date(val);
+    return !isNaN(date.getTime());
+  }, 'Invalid date format'),
+  notes: z.string().max(500, 'Notes too long').optional().default(''),
+  location_link: z.string().url('Invalid URL').optional().or(z.literal('')),
+});
+
+// Payment validation schema
+export const paymentSchema = z.object({
+  date: z.string().refine((val) => {
+    const date = new Date(val);
+    return !isNaN(date.getTime());
+  }, 'Invalid date format'),
+  amount: z.number().min(0, 'Amount must be positive'),
+  note: z.string().max(200, 'Note too long'),
+  proof_base64: z.string().optional().default(''),
+});
+
+// Finance validation schema
+export const financeSchema = z.object({
+  total_price: z.number().min(0, 'Total price must be positive'),
+  payments: z.array(paymentSchema).default([]),
+});
+
+// Full booking creation schema
+export const createBookingSchema = z.object({
+  customer: customerSchema,
+  booking: bookingSchema,
+  finance: financeSchema,
+});
+
+// Booking update schema (only allow specific fields to be updated)
+export const updateBookingSchema = z.object({
+  id: z.string().uuid('Invalid booking ID'),
+  status: z.enum(['Active', 'Canceled', 'Rescheduled']).optional(),
+  booking: bookingSchema.partial().optional(),
+  finance: financeSchema.optional(),
+  customer: customerSchema.partial().optional(),
+});
+
+// Service validation schema
+export const serviceSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Service name is required').max(100, 'Name too long'),
+  basePrice: z.number().min(0, 'Base price must be positive'),
+  discountValue: z.number().min(0, 'Discount must be positive'),
+  isActive: z.boolean(),
+  badgeText: z.string().max(50, 'Badge text too long').optional(),
+}).refine((data) => data.discountValue <= data.basePrice, {
+  message: 'Discount cannot exceed base price',
+  path: ['discountValue'],
+});
+
+// Array of services schema
+export const servicesArraySchema = z.array(serviceSchema);

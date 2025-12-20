@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import lockfile from 'proper-lockfile';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.txt');
 
@@ -46,9 +47,13 @@ function ensureDB() {
 
 export function readData(): Booking[] {
   ensureDB();
-  const fileContent = fs.readFileSync(DB_PATH, 'utf-8');
+
   try {
+    // Read data without locking for simplicity
+    // Locking is only applied on writes to prevent concurrent write issues
+    const fileContent = fs.readFileSync(DB_PATH, 'utf-8');
     const data = JSON.parse(fileContent);
+
     // Backward compatibility: Ensure status exists
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return data.map((b: any) => ({
@@ -101,10 +106,53 @@ export function readServices(): Service[] {
   }
 }
 
-export function writeServices(data: Service[]) {
-  fs.writeFileSync(SERVICES_PATH, JSON.stringify(data, null, 2), 'utf-8');
+export async function writeServices(data: Service[]): Promise<void> {
+  let release: (() => Promise<void>) | null = null;
+
+  try {
+    // Acquire exclusive lock
+    release = await lockfile.lock(SERVICES_PATH, {
+      retries: {
+        retries: 5,
+        minTimeout: 100,
+        maxTimeout: 1000,
+      }
+    });
+
+    // Write data
+    fs.writeFileSync(SERVICES_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error("Error writing services file:", error);
+    throw error;
+  } finally {
+    if (release) {
+      await release();
+    }
+  }
 }
 
-export function writeData(data: Booking[]) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+export async function writeData(data: Booking[]): Promise<void> {
+  ensureDB();
+  let release: (() => Promise<void>) | null = null;
+
+  try {
+    // Acquire exclusive lock
+    release = await lockfile.lock(DB_PATH, {
+      retries: {
+        retries: 5,
+        minTimeout: 100,
+        maxTimeout: 1000,
+      }
+    });
+
+    // Write data
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error("Error writing DB file:", error);
+    throw error;
+  } finally {
+    if (release) {
+      await release();
+    }
+  }
 }

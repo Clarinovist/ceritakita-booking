@@ -36,3 +36,7 @@ yarn-error.log*
 next-env.d.ts
 .env.local
 node_modules/
+
+# data files (local development)
+/data/db.txt
+/data/services.json

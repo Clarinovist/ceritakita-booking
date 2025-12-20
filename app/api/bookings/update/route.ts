@@ -1,14 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readData, writeData } from '@/lib/storage';
+import { requireAuth } from '@/lib/auth';
+import { updateBookingSchema } from '@/lib/validation';
 
 export async function PUT(req: NextRequest) {
+    // Require authentication for updating bookings
+    const authCheck = await requireAuth(req);
+    if (authCheck) return authCheck;
+
     try {
         const body = await req.json();
-        const { id, ...updates } = body;
 
-        if (!id) {
-            return NextResponse.json({ error: 'Missing Booking ID' }, { status: 400 });
+        // Validate input using Zod
+        const validationResult = updateBookingSchema.safeParse(body);
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: 'Validation failed', details: validationResult.error.issues },
+                { status: 400 }
+            );
         }
+
+        const { id, ...updates } = validationResult.data;
 
         const data = readData();
         const index = data.findIndex((b) => b.id === id);
@@ -17,14 +29,21 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
         }
 
-        // Merge updates
-        const updatedBooking = { ...data[index], ...updates };
-        data[index] = updatedBooking;
+        // Only update allowed fields (no arbitrary field injection)
+        const updatedBooking = {
+            ...data[index],
+            ...(updates.status && { status: updates.status }),
+            ...(updates.booking && { booking: { ...data[index].booking, ...updates.booking } }),
+            ...(updates.finance && { finance: updates.finance }),
+            ...(updates.customer && { customer: { ...data[index].customer, ...updates.customer } }),
+        };
 
-        writeData(data);
+        data[index] = updatedBooking;
+        await writeData(data);
 
         return NextResponse.json(updatedBooking);
-    } catch {
+    } catch (error) {
+        console.error('Error updating booking:', error);
         return NextResponse.json({ error: 'Failed to update booking' }, { status: 500 });
     }
 }
