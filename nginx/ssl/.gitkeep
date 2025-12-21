@@ -1,0 +1,2 @@
+# This directory is for SSL/TLS certificates
+# Place your certificate files here and update nginx/nginx.conf accordingly
