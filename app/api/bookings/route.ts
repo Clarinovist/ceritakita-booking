@@ -89,6 +89,14 @@ export async function POST(req: NextRequest) {
         let validatedTotalPrice = 0;
         if (service && service.isActive) {
             validatedTotalPrice = service.basePrice - service.discountValue;
+
+            // Add add-ons to total price
+            if (addons && addons.length > 0) {
+                const addonsTotal = addons.reduce((total, addon) => {
+                    return total + (addon.price_at_booking * addon.quantity);
+                }, 0);
+                validatedTotalPrice += addonsTotal;
+            }
         } else if (service && !service.isActive) {
             return NextResponse.json(
                 { error: 'Selected service is not available' },

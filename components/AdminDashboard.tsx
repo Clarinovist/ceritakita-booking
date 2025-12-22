@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     const [addons, setAddons] = useState<Addon[]>([]);
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
     const [viewMode, setViewMode] = useState<'dashboard' | 'calendar' | 'table' | 'services' | 'photographers' | 'addons'>('dashboard');
-    const [filterStatus, setFilterStatus] = useState<'All' | 'Active' | 'Canceled' | 'Rescheduled'>('All');
+    const [filterStatus, setFilterStatus] = useState<'All' | 'Active' | 'Canceled' | 'Rescheduled'>('Active');
 
     // Date Range State
     const [dateRange, setDateRange] = useState({
@@ -1606,24 +1606,14 @@ export default function AdminDashboard() {
                                     <Euro size={16} /> Financials
                                 </h3>
 
-                                {/* Total Price Editor */}
+                                {/* Total Price Display (Read-only) */}
                                 <div className="flex gap-4 items-end">
                                     <div className="flex-1">
-                                        <label className="text-sm">Total Package Price</label>
-                                        <input
-                                            type="number"
-                                            className="w-full border rounded p-2"
-                                            defaultValue={selectedBooking.finance.total_price}
-                                            onBlur={(e) => {
-                                                const val = Number(e.target.value);
-                                                if (val !== selectedBooking.finance.total_price) {
-                                                    handleUpdateFinance(selectedBooking.id, {
-                                                        ...selectedBooking.finance,
-                                                        total_price: val
-                                                    });
-                                                }
-                                            }}
-                                        />
+                                        <label className="text-sm text-gray-500">Total Package Price</label>
+                                        <div className="w-full border rounded p-2 bg-gray-50 font-bold text-lg">
+                                            Rp {selectedBooking.finance.total_price.toLocaleString('id-ID')}
+                                        </div>
+                                        <p className="text-xs text-gray-400 mt-1">Calculated from service + add-ons at booking time</p>
                                     </div>
                                     <div className="flex-1 text-right">
                                         <div className="text-sm text-gray-500">Status</div>
