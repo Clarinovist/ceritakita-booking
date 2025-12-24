@@ -479,8 +479,30 @@ export function StepPayment() {
 
       {/* Submit Info */}
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-xs text-purple-800">
-        <strong>Info:</strong> Setelah menekan tombol "Selesaikan", data akan terkirim ke admin. 
+        <strong>Info:</strong> Setelah menekan tombol "Selesaikan", data akan terkirim ke admin.
         Anda akan menerima konfirmasi via WhatsApp.
+      </div>
+
+      {/* Submit Button - Desktop */}
+      <div className="hidden md:block">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-primary-200 disabled:opacity-50 disabled:cursor-not-allowed touch-target"
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Memproses...
+            </span>
+          ) : (
+            'Selesaikan Booking'
+          )}
+        </button>
+        
+        <p className="text-center text-[10px] text-gray-400 mt-2">
+          Dengan menekan tombol di atas, Anda menyetujui semua data yang telah diisi
+        </p>
       </div>
     </div>
   );

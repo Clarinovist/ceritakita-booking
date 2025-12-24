@@ -64,6 +64,17 @@ function MultiStepBookingFormContent() {
     prevStep();
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentStep === totalSteps) {
+      submitForm();
+    } else {
+      if (validateCurrentStep()) {
+        nextStep();
+      }
+    }
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -112,7 +123,10 @@ function MultiStepBookingFormContent() {
       </div>
 
       {/* Form Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+      >
         {/* Main Content */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 animate-slide-up">
@@ -198,7 +212,7 @@ function MultiStepBookingFormContent() {
             </div>
           )}
         </div>
-      </div>
+      </form>
 
       {/* Navigation Buttons */}
       <MobileStepNavigation
