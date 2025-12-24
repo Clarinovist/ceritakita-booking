@@ -68,7 +68,7 @@ export const authOptions: AuthOptions = {
 // Wrap the handler with rate limiting
 const originalHandler = NextAuth(authOptions);
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, context: { params: { nextauth: string[] } }) {
     // Apply rate limiting to auth endpoints
     const rateLimitResult = rateLimiters.strict(req);
     if (rateLimitResult) {
@@ -77,11 +77,11 @@ export async function GET(req: NextRequest) {
         });
         return rateLimitResult;
     }
-    
-    return originalHandler(req);
+
+    return originalHandler(req, context);
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, context: { params: { nextauth: string[] } }) {
     // Apply rate limiting to auth endpoints
     const rateLimitResult = rateLimiters.strict(req);
     if (rateLimitResult) {
@@ -90,6 +90,6 @@ export async function POST(req: NextRequest) {
         });
         return rateLimitResult;
     }
-    
-    return originalHandler(req);
+
+    return originalHandler(req, context);
 }
