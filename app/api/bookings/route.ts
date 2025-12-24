@@ -279,3 +279,59 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(errorResponse, { status: statusCode });
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+        // Rate limiting
+        const rateLimitResult = rateLimiters.moderate(req);
+        if (rateLimitResult) {
+            logger.warn('Rate limit exceeded for DELETE bookings', {
+                ip: req.headers.get('x-forwarded-for')
+            });
+            return rateLimitResult;
+        }
+
+        // Require authentication
+        const authCheck = await requireAuth(req);
+        if (authCheck) return authCheck;
+
+        // Get booking ID from URL query parameter
+        const { searchParams } = new URL(req.url);
+        const bookingId = searchParams.get('id');
+
+        if (!bookingId) {
+            logger.warn('DELETE request missing booking ID');
+            return NextResponse.json(
+                { error: 'Booking ID is required', code: 'MISSING_ID' },
+                { status: 400 }
+            );
+        }
+
+        // Import deleteBooking function
+        const { deleteBooking, readBooking } = await import('@/lib/storage-sqlite');
+
+        // Check if booking exists
+        const existingBooking = readBooking(bookingId);
+
+        if (!existingBooking) {
+            logger.warn('Attempted to delete non-existent booking', { bookingId });
+            return NextResponse.json(
+                { error: 'Booking not found', code: 'NOT_FOUND' },
+                { status: 404 }
+            );
+        }
+
+        // Delete the booking
+        deleteBooking(bookingId);
+
+        logger.info('Booking deleted successfully', {
+            bookingId,
+            customer: existingBooking.customer.name
+        });
+
+        return NextResponse.json({ success: true, bookingId });
+    } catch (error) {
+        const { error: errorResponse, statusCode } = createErrorResponse(error as Error);
+        return NextResponse.json(errorResponse, { status: statusCode });
+    }
+}

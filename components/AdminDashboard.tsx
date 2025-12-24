@@ -203,6 +203,33 @@ export default function AdminDashboard() {
     const handleUpdateFinance = (bookingId: string, newFinance: FinanceData) => handleUpdate(bookingId, { finance: newFinance });
     const handleUpdateStatus = (bookingId: string, status: Booking['status']) => handleUpdate(bookingId, { status });
 
+    // Booking Deletion
+    const handleDeleteBooking = async (bookingId: string) => {
+        if (!confirm("Are you sure you want to delete this booking? This action cannot be undone.")) return;
+
+        try {
+            const res = await fetch(`/api/bookings?id=${bookingId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                // Remove from local state
+                setBookings(prev => prev.filter(b => b.id !== bookingId));
+                // Close detail modal if it's the deleted booking
+                if (selectedBooking?.id === bookingId) {
+                    setSelectedBooking(null);
+                }
+                alert("Booking deleted successfully");
+            } else {
+                const error = await res.json();
+                throw new Error(error.error || "Failed to delete");
+            }
+        } catch (error) {
+            console.error("Delete booking error:", error);
+            alert(`Failed to delete booking: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    };
+
     // Services Management
     const saveAllServices = async (updatedList: Service[]) => {
         try {
@@ -971,9 +998,14 @@ export default function AdminDashboard() {
                                                     )}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    <button onClick={() => setSelectedBooking(b)} className="text-blue-600 hover:text-blue-800 font-medium text-xs border border-blue-200 px-3 py-1 rounded hover:bg-blue-50">
-                                                        Details
-                                                    </button>
+                                                    <div className="flex gap-2">
+                                                        <button onClick={() => setSelectedBooking(b)} className="text-blue-600 hover:text-blue-800 font-medium text-xs border border-blue-200 px-3 py-1 rounded hover:bg-blue-50">
+                                                            Details
+                                                        </button>
+                                                        <button onClick={() => handleDeleteBooking(b.id)} className="text-red-600 hover:text-red-800 font-medium text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50">
+                                                            Delete
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
@@ -1661,9 +1693,14 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
                         <div className="p-6 border-b flex justify-between items-center bg-gray-50 sticky top-0">
                             <h2 className="text-2xl font-bold">Booking Details</h2>
-                            <button onClick={() => setSelectedBooking(null)} className="text-gray-500 hover:text-red-500">
-                                <XCircle size={24} />
-                            </button>
+                            <div className="flex gap-2">
+                                <button onClick={() => handleDeleteBooking(selectedBooking.id)} className="text-red-600 hover:text-red-800 font-medium text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50">
+                                    Delete Booking
+                                </button>
+                                <button onClick={() => setSelectedBooking(null)} className="text-gray-500 hover:text-red-500">
+                                    <XCircle size={24} />
+                                </button>
+                            </div>
                         </div>
 
                         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
