@@ -212,16 +212,18 @@ function MultiStepBookingFormContent() {
             </div>
           )}
         </div>
-      </form>
 
-      {/* Navigation Buttons */}
-      <MobileStepNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onBack={handleBack}
-        onNext={handleNext}
-        isNextDisabled={isSubmitting || currentErrors.length > 0}
-      />
+        {/* Navigation Buttons - Inside Form */}
+        <div className="lg:col-span-12">
+          <MobileStepNavigation
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            onBack={handleBack}
+            onNext={handleNext}
+            isNextDisabled={isSubmitting || currentErrors.length > 0}
+          />
+        </div>
+      </form>
 
       {/* Keyboard Shortcuts Info */}
       <div className="hidden md:block mt-8 text-center text-xs text-gray-500">

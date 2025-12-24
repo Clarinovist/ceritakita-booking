@@ -211,21 +211,42 @@ export function MobileStepNavigation({
           </button>
         )}
 
-        {/* Next Button */}
-        {showNext && (
+        {/* Next/Selesai Button */}
+        {showNext ? (
           <button
             type="button"
             onClick={onNext}
             disabled={isNextDisabled}
-            className={`flex-1 md:flex-none px-6 py-3 md:py-3 font-semibold rounded-xl transition-all active:scale-95 touch-target ${
+            className={`flex-1 md:flex-none px-6 py-4 md:py-3 font-bold rounded-xl transition-all active:scale-95 touch-target flex items-center justify-center gap-2 ${
               isNextDisabled
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-200'
             }`}
-            aria-label={currentStep === totalSteps ? 'Selesaikan Booking' : 'Lanjut ke Langkah Berikutnya'}
+            aria-label="Lanjut ke Langkah Berikutnya"
             aria-disabled={isNextDisabled}
           >
-            {currentStep === totalSteps ? 'Selesaikan' : 'Lanjut'}
+            <span>Lanjut</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        ) : (
+          // Last step - Selesai button
+          <button
+            type="submit"
+            disabled={isNextDisabled}
+            className={`flex-1 md:flex-none px-6 py-4 md:py-3 font-bold rounded-xl transition-all active:scale-95 touch-target flex items-center justify-center gap-2 ${
+              isNextDisabled
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-success-600 hover:bg-success-700 text-white shadow-lg shadow-success-200'
+            }`}
+            aria-label="Selesaikan Booking"
+            aria-disabled={isNextDisabled}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Selesaikan</span>
           </button>
         )}
       </div>
