@@ -31,6 +31,7 @@ export default function AdminSidebar({ viewMode, setViewMode }: AdminSidebarProp
     { id: 'portfolio', icon: ImageIcon, label: 'Portfolio' },
     { id: 'addons', icon: ShoppingBag, label: 'Add-ons' },
     { id: 'photographers', icon: Camera, label: 'Photographers' },
+    { id: 'coupons', icon: Tag, label: 'Kupon' },
     { id: 'users', icon: Users, label: 'Users' },
     { id: 'payment-settings', icon: CreditCard, label: 'Payment Settings' },
   ];

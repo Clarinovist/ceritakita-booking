@@ -359,6 +359,33 @@ export function getCouponById(id: string): Coupon | null {
 }
 
 /**
+ * Get a single coupon by code
+ */
+export function getCouponByCode(code: string): Coupon | null {
+  const db = getDb();
+  const stmt = db.prepare('SELECT * FROM coupons WHERE UPPER(code) = UPPER(?)');
+  const row = stmt.get(code) as any;
+
+  if (!row) return null;
+
+  return {
+    id: row.id,
+    code: row.code,
+    discount_type: row.discount_type,
+    discount_value: row.discount_value,
+    min_purchase: row.min_purchase,
+    max_discount: row.max_discount,
+    usage_limit: row.usage_limit,
+    usage_count: row.usage_count,
+    valid_from: row.valid_from,
+    valid_until: row.valid_until,
+    is_active: row.is_active === 1,
+    description: row.description,
+    created_at: row.created_at
+  };
+}
+
+/**
  * Get suggested coupons based on order total
  */
 export function getSuggestedCoupons(orderTotal: number): Coupon[] {

@@ -11,6 +11,7 @@ import { readFile } from 'fs/promises';
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
 import { safeNumber, safeProperty } from '@/lib/type-utils';
+import { recordCouponUsage, incrementCouponUsage, getCouponByCode } from '@/lib/coupons';
 
 /**
  * Helper: Parse multipart form data
@@ -270,6 +271,43 @@ export async function POST(req: NextRequest) {
 
         // Save to SQLite database with async/await
         await createBooking(newBooking);
+
+        // Record coupon usage if a coupon was applied
+        if (couponCode && couponDiscount > 0) {
+            try {
+                // Get coupon by code
+                const coupon = getCouponByCode(couponCode);
+                
+                if (coupon) {
+                    // Increment coupon usage count
+                    incrementCouponUsage(couponCode);
+                    
+                    // Record detailed usage
+                    recordCouponUsage(
+                        coupon.id,
+                        bookingId,
+                        customer.name,
+                        customer.whatsapp,
+                        couponDiscount,
+                        validatedTotalPrice + couponDiscount // Original total before discount
+                    );
+
+                    logger.info('Coupon usage recorded', {
+                        requestId,
+                        bookingId,
+                        couponCode,
+                        discountAmount: couponDiscount
+                    });
+                }
+            } catch (couponError) {
+                // Log but don't fail the booking if coupon recording fails
+                logger.error('Failed to record coupon usage', {
+                    requestId,
+                    bookingId,
+                    couponCode
+                }, couponError as Error);
+            }
+        }
 
         logger.info('Booking created successfully', {
             requestId,
