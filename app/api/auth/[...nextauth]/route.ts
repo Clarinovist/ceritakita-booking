@@ -3,6 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { NextRequest } from "next/server";
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger } from '@/lib/logger';
+import { verifyUserCredentials, seedDefaultAdmin } from '@/lib/user-management';
+
+// Initialize default admin on first load
+seedDefaultAdmin();
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -13,22 +17,36 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                const adminUser = process.env.ADMIN_USERNAME;
-                const adminPass = process.env.ADMIN_PASSWORD;
+                if (!credentials?.username || !credentials?.password) {
+                    return null;
+                }
 
-                if (
-                    credentials?.username === adminUser &&
-                    credentials?.password === adminPass
-                ) {
-                    logger.info('Successful admin login', {
-                        username: credentials?.username
+                const user = verifyUserCredentials(credentials.username, credentials.password);
+                
+                if (user) {
+                    if (user.is_active === 0) {
+                        logger.warn('Login attempt to inactive account', {
+                            username: credentials.username
+                        });
+                        return null;
+                    }
+
+                    logger.info('Successful login', {
+                        username: user.username,
+                        role: user.role
                     });
-                    return { id: "1", name: "Admin", email: "admin@ceritakita.com" };
+                    
+                    return {
+                        id: user.id,
+                        name: user.username,
+                        email: `${user.username}@ceritakita.local`,
+                        role: user.role
+                    };
                 }
                 
                 logger.warn('Failed login attempt', {
-                    username: credentials?.username,
-                    ip: 'unknown' // Would need to pass request context
+                    username: credentials.username,
+                    ip: 'unknown'
                 });
                 return null;
             }
@@ -42,23 +60,26 @@ export const authOptions: AuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async signIn({ user, account, profile }) {
+        async signIn({ user }) {
             // Log successful sign-ins
             logger.info('User signed in', {
                 userId: user.id,
-                name: user.name
+                name: user.name,
+                role: (user as any).role
             });
             return true;
         },
         async jwt({ token, user }) {
             if (user) {
                 token.userId = user.id;
+                token.role = (user as any).role;
             }
             return token;
         },
         async session({ session, token }) {
-            if (token.userId && session.user) {
+            if (session.user) {
                 (session.user as any).id = token.userId;
+                (session.user as any).role = token.role;
             }
             return session;
         }

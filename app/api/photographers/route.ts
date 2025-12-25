@@ -5,7 +5,6 @@ import {
   createPhotographer,
   updatePhotographer,
   deletePhotographer,
-  type Photographer
 } from '@/lib/photographers';
 import { requireAuth } from '@/lib/auth';
 import { z } from 'zod';

@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth';
 import { updateBookingSchema } from '@/lib/validation';
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
-import { safeString, safeNumber, safeProperty } from '@/lib/type-utils';
+import { safeString } from '@/lib/type-utils';
 
 export async function PUT(req: NextRequest) {
     const requestId = crypto.randomUUID();

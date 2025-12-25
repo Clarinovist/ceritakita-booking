@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Tag, Plus, Edit2, Trash2, Clock, TrendingUp, Users } from 'lucide-react';
+import { Tag, Plus, Edit2, Trash2, TrendingUp, Users } from 'lucide-react';
 
 interface Coupon {
     id: string;

@@ -2,7 +2,7 @@
   {
     "id": "2",
     "name": "Outdoor / On Location",
-    "basePrice": 2000000,
+    "basePrice": 3000000,
     "discountValue": 200000,
     "isActive": true,
     "badgeText": "Best deal"
@@ -26,9 +26,10 @@
   {
     "id": "5",
     "name": "Prewedding Silver",
-    "basePrice": 0,
+    "basePrice": 352000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "6",

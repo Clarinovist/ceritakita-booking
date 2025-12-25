@@ -2,3 +2,99 @@
 [2025-12-24T07:01:42.795Z] [WARN] Rate limit exceeded for auth endpoint | Context: {"ip":"::1"}
 [2025-12-24T07:01:42.817Z] [WARN] Rate limit exceeded for auth endpoint | Context: {"ip":"::1"}
 [2025-12-24T07:01:45.227Z] [WARN] Rate limit exceeded for auth endpoint | Context: {"ip":"::1"}
+[2025-12-25T04:38:24.380Z] [INFO] File uploaded successfully | Context: {"bookingId":"b3bf0cd3-3e61-42ed-a954-10470225e2da","paymentIndex":0,"filename":"b3bf0cd3-3e61-42ed-a954-10470225e2da_0_1766637504380_ff725ccb-c3c2-421c-b181-3908bb9aeb89.png","size":49895,"mimeType":"image/png"}
+[2025-12-25T04:38:24.380Z] [INFO] Payment proof uploaded | Context: {"requestId":"cbf8873f-2b62-4891-b9de-ab2ed15cb648","bookingId":"b3bf0cd3-3e61-42ed-a954-10470225e2da","filename":"2025-12/b3bf0cd3-3e61-42ed-a954-10470225e2da_0_1766637504380_ff725ccb-c3c2-421c-b181-3908bb9aeb89.png","size":49895}
+[2025-12-25T04:38:24.383Z] [INFO] AUDIT: CREATE_BOOKING on booking:b3bf0cd3-3e61-42ed-a954-10470225e2da | Context: {"action":"CREATE_BOOKING","resource":"booking:b3bf0cd3-3e61-42ed-a954-10470225e2da","bookingId":"b3bf0cd3-3e61-42ed-a954-10470225e2da","date":"2026-01-01T09:00"} | User: Nugroho Pramono
+[2025-12-25T04:38:24.383Z] [INFO] Booking created successfully | Context: {"requestId":"cbf8873f-2b62-4891-b9de-ab2ed15cb648","bookingId":"b3bf0cd3-3e61-42ed-a954-10470225e2da","customer":"Nugroho Pramono","date":"2026-01-01T09:00","total":2830000}
+[2025-12-25T04:38:58.545Z] [INFO] Successful admin login | Context: {"username":"admin"}
+[2025-12-25T04:38:58.545Z] [INFO] User signed in | Context: {"userId":"1","name":"Admin"}
+[2025-12-25T04:39:03.019Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:39:03.022Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:39:03.604Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:39:03.607Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:39:03.637Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:39:03.640Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:39:03.671Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:39:03.669Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:50:14.919Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:50:14.916Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:50:14.953Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:50:14.955Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:50:14.984Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:50:14.986Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T04:50:14.994Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T04:50:14.996Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T05:05:49.754Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T05:05:49.757Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T05:05:49.799Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T05:05:49.801Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T05:05:49.835Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T05:05:49.836Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T05:05:49.845Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T05:05:49.848Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T05:05:52.407Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:05:52.414Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:05:52.424Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:05:52.434Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:06:57.814Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:06:57.823Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:06:57.831Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:06:57.838Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:07:31.195Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:07:31.207Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:07:31.217Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:07:31.227Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:09:09.092Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:09:09.111Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T05:11:44.727Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:11:44.737Z] [INFO] Payment methods retrieved successfully | Context: {"count":1}
+[2025-12-25T05:13:06.377Z] [INFO] Payment method created successfully | Context: {"name":"Mandiri Transfer","provider":"Mandiri"}
+[2025-12-25T05:13:06.389Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:07:28.146Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:07:28.149Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:07:28.214Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:07:28.216Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:07:28.252Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:07:28.250Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:07:28.292Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:07:28.294Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:08:55.694Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T06:08:55.704Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T06:08:58.057Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:08:58.112Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:22:18.793Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:22:18.790Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:22:18.870Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:22:18.867Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:22:18.910Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:22:18.914Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:22:18.963Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:22:18.967Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:37:48.684Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:37:48.687Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:37:48.724Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:37:48.725Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:37:48.760Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:37:48.762Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:37:48.771Z] [INFO] Retrieved bookings from database | Context: {"count":21}
+[2025-12-25T06:37:48.773Z] [INFO] Bookings retrieved successfully | Context: {"count":21}
+[2025-12-25T06:38:31.614Z] [INFO] AUDIT: CREATE_BOOKING on booking:47e899c7-b771-4a26-9bc0-dfd618d288ee | Context: {"action":"CREATE_BOOKING","resource":"booking:47e899c7-b771-4a26-9bc0-dfd618d288ee","bookingId":"47e899c7-b771-4a26-9bc0-dfd618d288ee","date":"2025-12-19T13:41"} | User: Andi
+[2025-12-25T06:38:31.614Z] [INFO] Booking created successfully | Context: {"requestId":"006a46d4-0c6d-4a04-9d1e-1d11e2bbcb19","bookingId":"47e899c7-b771-4a26-9bc0-dfd618d288ee","customer":"Andi","date":"2025-12-19T13:41","total":2835000}
+[2025-12-25T06:39:36.432Z] [INFO] Retrieved bookings from database | Context: {"count":22}
+[2025-12-25T06:39:36.435Z] [INFO] Bookings retrieved successfully | Context: {"count":22}
+[2025-12-25T06:39:36.561Z] [INFO] Retrieved bookings from database | Context: {"count":22}
+[2025-12-25T06:39:36.564Z] [INFO] Bookings retrieved successfully | Context: {"count":22}
+[2025-12-25T06:39:36.607Z] [INFO] Retrieved bookings from database | Context: {"count":22}
+[2025-12-25T06:39:36.609Z] [INFO] Bookings retrieved successfully | Context: {"count":22}
+[2025-12-25T06:39:36.625Z] [INFO] Bookings retrieved successfully | Context: {"count":22}
+[2025-12-25T06:39:36.623Z] [INFO] Retrieved bookings from database | Context: {"count":22}
+[2025-12-25T06:39:50.324Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T06:39:50.333Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T06:40:02.261Z] [INFO] User created successfully | Context: {"username":"admin@kurirmoo.com","role":"staff"}
+[2025-12-25T06:40:02.269Z] [INFO] Users retrieved successfully | Context: {"count":2}
+[2025-12-25T06:40:13.847Z] [INFO] User deleted successfully | Context: {"userId":"036c80cc-7d92-4557-a20f-50058347b6fa","username":"admin@kurirmoo.com"}
+[2025-12-25T06:40:13.876Z] [INFO] Users retrieved successfully | Context: {"count":1}
+[2025-12-25T06:40:15.664Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:40:15.672Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:41:20.612Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-25T06:41:20.625Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}

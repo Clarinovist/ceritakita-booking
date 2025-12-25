@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readData as readDataSQLite, createBooking, updateBooking, type Booking } from '@/lib/storage-sqlite';
+import { readData as readDataSQLite, createBooking, type Booking } from '@/lib/storage-sqlite';
 import { readServices } from '@/lib/storage';
 import { requireAuth } from '@/lib/auth';
-import { createBookingSchema, updateBookingSchema } from '@/lib/validation';
+import { createBookingSchema } from '@/lib/validation';
 import formidable from 'formidable';
 import { IncomingMessage } from 'http';
 import { Readable } from 'stream';
 import { saveUploadedFile, validateFile } from '@/lib/file-storage';
 import { readFile } from 'fs/promises';
 import { rateLimiters } from '@/lib/rate-limit';
-import { csrfProtectionMiddleware } from '@/lib/csrf';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
-import { safeString, safeNumber, safeProperty } from '@/lib/type-utils';
+import { safeNumber, safeProperty } from '@/lib/type-utils';
 
 /**
  * Helper: Parse multipart form data
@@ -88,7 +87,6 @@ export async function POST(req: NextRequest) {
         const authCheck = await requireAuth(req);
         if (authCheck) {
             // If authenticated, check CSRF
-            const session = authCheck; // This would be null if auth passed
             // For now, we'll skip CSRF if auth check returns null (meaning authenticated)
             // In production, you'd get the user ID from session and validate CSRF
         }

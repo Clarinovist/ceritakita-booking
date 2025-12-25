@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import lockfile from 'proper-lockfile';
+import { getDb } from './db';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'db.txt');
 
@@ -61,6 +62,23 @@ export interface Booking {
   photographer_id?: string;
   addons?: BookingAddon[];
   reschedule_history?: RescheduleHistory[];
+}
+
+export interface PortfolioImage {
+  id: string;
+  service_id: string;
+  image_url: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface PaymentSettings {
+  id: string;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
+  qris_image_url?: string;
+  updated_at: string;
 }
 
 // Ensure DB exists
@@ -194,5 +212,79 @@ export async function writeData(data: Booking[]): Promise<void> {
     if (release) {
       await release();
     }
+  }
+}
+
+// Portfolio functions
+export function getPortfolioImages(serviceId: string): PortfolioImage[] {
+  const db = getDb();
+  return db.prepare(`
+    SELECT * FROM portfolio_images
+    WHERE service_id = ?
+    ORDER BY display_order ASC
+  `).all(serviceId) as PortfolioImage[];
+}
+
+export function addPortfolioImage(data: {
+  id: string;
+  service_id: string;
+  image_url: string;
+  display_order?: number;
+}): void {
+  const db = getDb();
+  db.prepare(`
+    INSERT INTO portfolio_images (id, service_id, image_url, display_order)
+    VALUES (?, ?, ?, ?)
+  `).run(data.id, data.service_id, data.image_url, data.display_order || 0);
+}
+
+export function deletePortfolioImage(id: string): void {
+  const db = getDb();
+  db.prepare('DELETE FROM portfolio_images WHERE id = ?').run(id);
+}
+
+// Payment Settings functions
+export function getPaymentSettings(): PaymentSettings | null {
+  const db = getDb();
+  return db.prepare('SELECT * FROM payment_settings ORDER BY updated_at DESC LIMIT 1').get() as PaymentSettings | null;
+}
+
+export function updatePaymentSettings(data: {
+  id: string;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
+  qris_image_url?: string;
+}): void {
+  const db = getDb();
+  
+  const existing = db.prepare('SELECT id FROM payment_settings LIMIT 1').get();
+  
+  if (existing) {
+    db.prepare(`
+      UPDATE payment_settings
+      SET bank_name = ?, account_name = ?, account_number = ?,
+          qris_image_url = COALESCE(?, qris_image_url), updated_at = ?
+      WHERE id = ?
+    `).run(
+      data.bank_name,
+      data.account_name,
+      data.account_number,
+      data.qris_image_url,
+      new Date().toISOString(),
+      data.id
+    );
+  } else {
+    db.prepare(`
+      INSERT INTO payment_settings (id, bank_name, account_name, account_number, qris_image_url, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(
+      data.id,
+      data.bank_name,
+      data.account_name,
+      data.account_number,
+      data.qris_image_url,
+      new Date().toISOString()
+    );
   }
 }

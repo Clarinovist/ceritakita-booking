@@ -37,6 +37,14 @@ interface FormData {
   addonsTotal: number;
   couponDiscount: number;
   couponCode: string;
+  
+  // Payment settings
+  paymentSettings: {
+    bank_name: string;
+    account_name: string;
+    account_number: string;
+    qris_image_url?: string;
+  } | null;
 }
 
 interface StepError {
@@ -109,6 +117,9 @@ export function MultiStepFormProvider({
     addonsTotal: initialData?.addonsTotal || 0,
     couponDiscount: initialData?.couponDiscount || 0,
     couponCode: initialData?.couponCode || '',
+    
+    // Payment settings
+    paymentSettings: initialData?.paymentSettings || null,
   });
   
   const [errors, setErrors] = useState<Record<number, StepError[]>>({});
@@ -124,6 +135,23 @@ export function MultiStepFormProvider({
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Fetch payment settings on mount
+  useEffect(() => {
+    const fetchPaymentSettings = async () => {
+      try {
+        const res = await fetch('/api/payment-settings');
+        if (res.ok) {
+          const settings = await res.json();
+          updateFormData({ paymentSettings: settings });
+        }
+      } catch (error) {
+        console.error('Failed to fetch payment settings:', error);
+      }
+    };
+
+    fetchPaymentSettings();
   }, []);
 
   // Persist form data to localStorage
@@ -278,6 +306,7 @@ export function MultiStepFormProvider({
       addonsTotal: 0,
       couponDiscount: 0,
       couponCode: '',
+      paymentSettings: null,
     });
     setErrors({});
     setCurrentStep(1);

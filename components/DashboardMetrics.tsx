@@ -13,7 +13,7 @@ export default function DashboardMetrics({ bookings }: Props) {
     const totalBookings = bookings.length;
     // Count only Active for revenue usually, but let's count all or filtered. 
     // Requirement says "Total Revenue" (sum of all booking values).
-    // Assuming "Active" means valid. If "Canceled", maybe we shouldn't count total price, 
+    // Assuming "Active" means valid. If "Cancelled", maybe we shouldn't count total price, 
     // but let's stick to requirements or common sense. I will count "Active" + "Rescheduled" revenue.
 
     const activeBookings = bookings.filter(b => b.status !== 'Canceled');

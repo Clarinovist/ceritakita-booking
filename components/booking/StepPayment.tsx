@@ -2,7 +2,7 @@
 
 import { useMultiStepForm } from './MultiStepForm';
 import { ValidationMessage, FieldValidationWrapper } from '@/components/ui/ValidationMessage';
-import { MessageSquare, Upload, ShoppingBag, Tag, CheckCircle2, Clock } from 'lucide-react';
+import { MessageSquare, Upload, Info } from 'lucide-react';
 import { fieldValidators } from '@/lib/validation/schemas';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -61,6 +61,46 @@ export function StepPayment() {
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
   const [suggestedCoupons, setSuggestedCoupons] = useState<any[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [selectedMethod, setSelectedMethod] = useState<string>('');
+
+  // Fetch payment methods
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const res = await fetch('/api/payment-methods?active=true');
+        if (res.ok) {
+          const methods = await res.json();
+          setPaymentMethods(methods);
+          // Auto-select first method
+          if (methods.length > 0) {
+            setSelectedMethod(methods[0].id);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch payment methods:', error);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
+
+  // Update formData when selected method changes
+  useEffect(() => {
+    if (selectedMethod) {
+      const method = paymentMethods.find(m => m.id === selectedMethod);
+      if (method) {
+        updateFormData({
+          paymentMethodId: selectedMethod,
+          paymentMethodName: method.name,
+          paymentProvider: method.provider_name,
+          paymentAccountName: method.account_name,
+          paymentAccountNumber: method.account_number,
+          paymentQrisUrl: method.qris_image_url
+        });
+      }
+    }
+  }, [selectedMethod, paymentMethods]);
 
   // Real-time validation
   useEffect(() => {
@@ -204,6 +244,27 @@ export function StepPayment() {
 
   // Calculate remaining balance
   const remainingBalance = formData.totalPrice - (Number(formData.dp_amount) || 0);
+
+  // Copy to clipboard handler with visual feedback
+  const [copyStatus, setCopyStatus] = useState<Record<string, boolean>>({});
+  
+  const copyToClipboard = async (text: string, methodId: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      
+      // Show visual feedback
+      setCopyStatus(prev => ({ ...prev, [methodId]: true }));
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        setCopyStatus(prev => ({ ...prev, [methodId]: false }));
+      }, 2000);
+      
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      alert('Gagal menyalin nomor rekening');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -401,66 +462,240 @@ export function StepPayment() {
         )}
       </div>
 
-      {/* Payment Input */}
-      <div className="space-y-4">
-        <FieldValidationWrapper
-          error={dpError?.message || null}
-          label="Jumlah DP (Rp)"
-        >
-          <input
-            required
-            type="number"
-            name="dp_amount"
-            value={formData.dp_amount}
-            onChange={handleDpChange}
-            onBlur={() => setTouched(prev => ({ ...prev, dp_amount: true }))}
-            placeholder="Masukkan jumlah DP"
-            className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none font-bold text-primary-700 touch-target"
-            aria-describedby={dpError ? 'dp_amount-error' : undefined}
-            aria-invalid={!!dpError}
-            inputMode="numeric"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            Minimal Rp 10.000, maksimal Rp {formData.totalPrice.toLocaleString('id-ID')}
-          </p>
-        </FieldValidationWrapper>
+      {/* Payment Methods Selection */}
+      {paymentMethods.length > 0 && (
+        <div className="space-y-4">
+          {/* Selection Header */}
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-6 bg-primary-600 rounded-full"></div>
+            <h4 className="font-bold text-gray-800 text-lg">Pilih Metode Pembayaran</h4>
+          </div>
+
+          {/* Compact Selection Chips */}
+          <div className="grid grid-cols-2 gap-3">
+            {paymentMethods.map((method) => (
+              <button
+                key={method.id}
+                type="button"
+                onClick={() => setSelectedMethod(method.id)}
+                className={`relative p-4 rounded-xl border-2 transition-all duration-300 touch-target min-h-[56px] flex items-center justify-center font-bold text-sm ${
+                  selectedMethod === method.id
+                    ? 'border-primary-600 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-sm'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {/* Selection Indicator */}
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
+                    selectedMethod === method.id
+                      ? 'border-primary-600 bg-primary-600'
+                      : 'border-gray-400'
+                  }`}>
+                    {selectedMethod === method.id && (
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    )}
+                  </div>
+                  {/* Provider Name Only */}
+                  <span className="text-gray-800">{method.provider_name}</span>
+                </div>
+
+                {/* Small QRIS Indicator */}
+                {method.qris_image_url && selectedMethod === method.id && (
+                  <div className="absolute top-1 right-1 w-5 h-5">
+                    <Image
+                      src={method.qris_image_url}
+                      alt="QRIS"
+                      fill
+                      className="object-contain opacity-70"
+                      sizes="20px"
+                      unoptimized
+                    />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Focused Detail Card - Only shows when method is selected */}
+          {selectedMethod && (() => {
+            const method = paymentMethods.find(m => m.id === selectedMethod);
+            if (!method) return null;
+            
+            return (
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl border-2 border-blue-200 shadow-lg space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                {/* Card Header */}
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-blue-700 mb-1 uppercase tracking-wider">Detail Transfer</p>
+                    <p className="font-black text-gray-900 text-xl">{method.provider_name}</p>
+                  </div>
+                  {/* Copy Button - Right aligned, easy to reach */}
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(method.account_number, method.id)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 touch-target min-h-[48px] shadow-sm ${
+                      copyStatus[method.id]
+                        ? 'bg-success-600 text-white scale-105'
+                        : 'bg-primary-600 hover:bg-primary-700 text-white hover:scale-105'
+                    }`}
+                  >
+                    {copyStatus[method.id] ? (
+                      <>
+                        <span className="text-lg">✓</span>
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-lg">📋</span>
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Account Details */}
+                <div className="space-y-3">
+                  <div className="bg-white p-4 rounded-xl border-2 border-blue-200 shadow-sm">
+                    <p className="text-xs font-bold text-gray-500 mb-1">Atas Nama</p>
+                    <p className="font-bold text-gray-800 text-lg">{method.account_name}</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border-2 border-blue-200 shadow-sm">
+                    <p className="text-xs font-bold text-gray-500 mb-1">Nomor Rekening</p>
+                    <p className="font-mono text-2xl font-black text-primary-800 tracking-wider">
+                      {method.account_number}
+                    </p>
+                  </div>
+                </div>
+
+                {/* QRIS Display - Prominent */}
+                {method.qris_image_url && (
+                  <div className="bg-white p-5 rounded-2xl border-2 border-blue-200 shadow-sm">
+                    <div className="text-center">
+                      <p className="text-xs font-bold text-gray-600 mb-3 flex items-center justify-center gap-2">
+                        <span className="text-base">📱</span>
+                        <span>Scan QRIS untuk Pembayaran Instan</span>
+                      </p>
+                      <div className="inline-block p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-blue-200 shadow-md">
+                        <Image
+                          src={method.qris_image_url}
+                          alt={`QRIS ${method.provider_name}`}
+                          width={240}
+                          height={240}
+                          className="object-contain rounded-lg"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-[11px] text-gray-500 mt-2 font-medium">
+                        Gunakan aplikasi e-wallet atau mobile banking Anda
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Payment Input Section */}
+      <div className="space-y-6 pt-4 border-t-2 border-gray-200">
+        {/* DP Amount Input */}
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <FieldValidationWrapper
+            error={dpError?.message || null}
+            label="Jumlah DP (Rp)"
+          >
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">Rp</span>
+              <input
+                required
+                type="number"
+                name="dp_amount"
+                value={formData.dp_amount}
+                onChange={handleDpChange}
+                onBlur={() => setTouched(prev => ({ ...prev, dp_amount: true }))}
+                placeholder="0"
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none font-bold text-primary-700 text-lg transition-all touch-target hover:bg-white"
+                aria-describedby={dpError ? 'dp_amount-error' : undefined}
+                aria-invalid={!!dpError}
+                inputMode="numeric"
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+              <span className="text-primary-600 font-semibold">💡</span>
+              <span>Minimal Rp 10.000, maksimal Rp {formData.totalPrice.toLocaleString('id-ID')}</span>
+            </p>
+          </FieldValidationWrapper>
+        </div>
 
         {/* Proof Upload */}
-        <FieldValidationWrapper
-          error={proofError?.message || null}
-          label="Bukti Transfer"
-        >
-          <div className="relative group overflow-hidden bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-4 transition-all hover:bg-white hover:border-primary-300">
-            <input
-              required={!formData.proofPreview}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="absolute inset-0 opacity-0 cursor-pointer z-10 touch-target"
-              aria-label="Upload bukti transfer"
-            />
-            
-            {!formData.proofPreview ? (
-              <div className="flex flex-col items-center gap-2 text-gray-500">
-                <Upload size={32} strokeWidth={1.5} className="group-hover:text-primary-500 transition-colors" />
-                <p className="text-sm font-medium">Klik untuk upload bukti transfer</p>
-                <p className="text-[10px]">JPG, PNG, GIF, WEBP max 5MB</p>
-              </div>
-            ) : (
-              <div className="text-center">
-                <Image
-                  src={formData.proofPreview}
-                  alt="Preview bukti transfer"
-                  width={300}
-                  height={128}
-                  className="h-32 mx-auto rounded-lg object-contain shadow-sm border bg-white"
-                  unoptimized
-                />
-                <p className="text-xs text-primary-600 mt-2 font-bold italic">Bukti terpilih (klik untuk ganti)</p>
-              </div>
-            )}
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <FieldValidationWrapper
+            error={proofError?.message || null}
+            label="Bukti Transfer"
+          >
+            <div className="relative group overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-xl p-6 transition-all duration-300 hover:border-primary-400 hover:from-primary-50 hover:to-indigo-50">
+              <input
+                required={!formData.proofPreview}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="absolute inset-0 opacity-0 cursor-pointer z-10 touch-target"
+                aria-label="Upload bukti transfer"
+              />
+              
+              {!formData.proofPreview ? (
+                <div className="flex flex-col items-center gap-3 text-gray-600">
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-200">
+                    <Upload size={24} strokeWidth={1.5} className="text-primary-600 group-hover:text-primary-700 transition-colors" />
+                  </div>
+                  <p className="text-sm font-bold text-gray-700">Klik atau seret file di sini</p>
+                  <p className="text-[11px] text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
+                    JPG, PNG, GIF, WEBP • Maks 5MB
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center space-y-3">
+                  <div className="inline-block relative">
+                    <Image
+                      src={formData.proofPreview}
+                      alt="Preview bukti transfer"
+                      width={320}
+                      height={180}
+                      className="h-40 w-auto rounded-lg object-contain shadow-lg border-4 border-white bg-white"
+                      unoptimized
+                    />
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-success-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md">
+                      ✓
+                    </div>
+                  </div>
+                  <p className="text-sm font-bold text-primary-700">Bukti transfer terpilih</p>
+                  <p className="text-xs text-gray-500">(Klik untuk mengganti gambar)</p>
+                </div>
+              )}
+            </div>
+          </FieldValidationWrapper>
+        </div>
+
+        {/* Visual Separation & Summary */}
+        <div className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 p-4 rounded-xl border border-blue-100 space-y-2">
+          <div className="flex justify-between items-center text-sm">
+            <span className="font-bold text-gray-700">Total Pesanan:</span>
+            <span className="font-bold text-gray-900">Rp {formData.totalPrice.toLocaleString('id-ID')}</span>
           </div>
-        </FieldValidationWrapper>
+          {formData.dp_amount && Number(formData.dp_amount) > 0 && (
+            <div className="flex justify-between items-center text-sm">
+              <span className="font-bold text-success-700">DP yang dibayarkan:</span>
+              <span className="font-bold text-success-700">Rp {Number(formData.dp_amount).toLocaleString('id-ID')}</span>
+            </div>
+          )}
+          {formData.dp_amount && Number(formData.dp_amount) > 0 && (
+            <div className="flex justify-between items-center pt-2 border-t border-blue-200">
+              <span className="font-black text-gray-800">Sisa Pembayaran:</span>
+              <span className="font-black text-lg text-orange-600">Rp {(formData.totalPrice - Number(formData.dp_amount)).toLocaleString('id-ID')}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Validation Summary */}
@@ -471,38 +706,34 @@ export function StepPayment() {
         </div>
       )}
 
-      {/* Help Text */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-        <strong>Petunjuk:</strong> Upload bukti transfer setelah melakukan DP. 
-        Admin akan verifikasi dan konfirmasi jadwal Anda.
-      </div>
+      {/* Help Text & Instructions */}
+      <div className="space-y-3">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3">
+          <Info size={20} className="text-primary-600 mt-0.5 shrink-0" />
+          <div className="flex-1 text-sm text-gray-700 space-y-1">
+            <p className="font-bold text-gray-900">Petunjuk Pembayaran:</p>
+            <ul className="list-disc list-inside space-y-0.5 text-xs">
+              <li>Upload bukti transfer setelah melakukan DP</li>
+              <li>Admin akan verifikasi dalam 15 menit</li>
+              <li>Konfirmasi jadwal akan dikirim via WhatsApp</li>
+            </ul>
+          </div>
+        </div>
 
-      {/* Submit Info */}
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-xs text-purple-800">
-        <strong>Info:</strong> Setelah menekan tombol "Selesaikan", data akan terkirim ke admin.
-        Anda akan menerima konfirmasi via WhatsApp.
-      </div>
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-4">
+          <p className="text-sm font-bold text-purple-900 mb-1">Info Penting:</p>
+          <p className="text-xs text-purple-800 leading-relaxed">
+            Setelah menekan tombol "Selesaikan", data booking akan terkirim ke admin.
+            Anda akan menerima konfirmasi dan detail jadwal melalui WhatsApp.
+          </p>
+        </div>
 
-      {/* Submit Button - Desktop */}
-      <div className="hidden md:block">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-primary-200 disabled:opacity-50 disabled:cursor-not-allowed touch-target"
-        >
-          {isSubmitting ? (
-            <span className="flex items-center justify-center gap-2">
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              Memproses...
-            </span>
-          ) : (
-            'Selesaikan Booking'
-          )}
-        </button>
-        
-        <p className="text-center text-[10px] text-gray-400 mt-2">
-          Dengan menekan tombol di atas, Anda menyetujui semua data yang telah diisi
-        </p>
+        {/* Desktop Instructions */}
+        <div className="hidden md:block text-center">
+          <p className="text-[11px] text-gray-500 bg-gray-50 inline-block px-4 py-2 rounded-full border border-gray-200">
+            💡 Klik "Selesaikan" di navigasi bawah → Dengan menekan tombol, Anda menyetujui semua data yang diisi
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import { randomUUID } from 'crypto';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'bookings.db');
 
@@ -205,6 +206,79 @@ function initializeSchema() {
     )
   `);
 
+  // Create portfolio images table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS portfolio_images (
+      id TEXT PRIMARY KEY,
+      service_id TEXT NOT NULL,
+      image_url TEXT NOT NULL,
+      display_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    )
+  `);
+
+  // Create users table for NextAuth credentials
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      username TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'staff' CHECK(role IN ('admin', 'staff')),
+      is_active INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create payment_methods table (multiple payment options)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS payment_methods (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      provider_name TEXT NOT NULL,
+      account_name TEXT NOT NULL,
+      account_number TEXT NOT NULL,
+      qris_image_url TEXT,
+      is_active INTEGER DEFAULT 1,
+      display_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Migrate existing single payment_settings to payment_methods
+  try {
+    const existingSettings = db.prepare('SELECT * FROM payment_settings LIMIT 1').get() as any;
+    if (existingSettings) {
+      // Check if already migrated
+      const hasMethods = db.prepare('SELECT COUNT(*) as count FROM payment_methods').get() as { count: number };
+      if (hasMethods.count === 0) {
+        db.prepare(`
+          INSERT INTO payment_methods (id, name, provider_name, account_name, account_number, qris_image_url, display_order)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `).run(
+          randomUUID(),
+          existingSettings.bank_name,
+          existingSettings.bank_name,
+          existingSettings.account_name,
+          existingSettings.account_number,
+          existingSettings.qris_image_url,
+          0
+        );
+      }
+    }
+  } catch (e) {
+    // Table doesn't exist or no data to migrate
+  }
+
+  // Drop old single payment_settings table if it exists
+  try {
+    db.exec('DROP TABLE IF EXISTS payment_settings');
+  } catch (e) {
+    // Table doesn't exist
+  }
+
   // Create indexes for better query performance
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
@@ -221,6 +295,7 @@ function initializeSchema() {
     CREATE INDEX IF NOT EXISTS idx_coupons_is_active ON coupons(is_active);
     CREATE INDEX IF NOT EXISTS idx_coupon_usage_coupon_id ON coupon_usage(coupon_id);
     CREATE INDEX IF NOT EXISTS idx_coupon_usage_booking_id ON coupon_usage(booking_id);
+    CREATE INDEX IF NOT EXISTS idx_portfolio_service_id ON portfolio_images(service_id);
   `);
 }
 
