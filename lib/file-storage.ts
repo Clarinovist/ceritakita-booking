@@ -2,11 +2,20 @@ import fs from 'fs/promises';
 import path from 'path';
 import { logger, AppError } from './logger';
 import { withLock } from './file-lock';
+import { uploadToB2 } from './b2-s3-client';
 
 const UPLOADS_DIR = path.join(process.cwd(), 'uploads', 'payment-proofs');
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+// Use B2 if credentials are configured
+const USE_B2 = !!(
+  process.env.B2_APPLICATION_KEY_ID &&
+  process.env.B2_APPLICATION_KEY &&
+  process.env.B2_ENDPOINT &&
+  process.env.B2_BUCKET_NAME
+);
 
 export class FileStorageError extends Error {
   constructor(
@@ -24,7 +33,9 @@ export interface UploadedFile {
   originalName: string;        // User's original filename
   mimeType: string;
   size: number;
-  relativePath: string;        // Relative path from uploads/
+  relativePath: string;        // Relative path from uploads/ or B2 key
+  url?: string;                // B2 URL if uploaded to B2
+  storage: 'local' | 'b2';     // Storage backend used
 }
 
 /**
@@ -105,7 +116,7 @@ export async function getUploadPath(filename: string): Promise<string> {
 }
 
 /**
- * Save uploaded file to filesystem with file locking
+ * Save uploaded file to B2 or local filesystem with file locking
  */
 export async function saveUploadedFile(
   fileBuffer: Buffer,
@@ -115,7 +126,7 @@ export async function saveUploadedFile(
   mimeType: string
 ): Promise<UploadedFile> {
   const lockResource = `upload:${bookingId}:${paymentIndex}`;
-  
+
   try {
     const result = await withLock(
       lockResource,
@@ -123,26 +134,56 @@ export async function saveUploadedFile(
         // Generate filename
         const filename = generateFilename(bookingId, paymentIndex, originalName);
         const yearMonth = getYearMonthDir();
+
+        // Upload to B2 if configured
+        if (USE_B2) {
+          try {
+            const b2Key = `payment-proofs/${yearMonth}/${filename}`;
+            const url = await uploadToB2(fileBuffer, b2Key, mimeType);
+
+            logger.info('File uploaded successfully to B2', {
+              bookingId,
+              paymentIndex,
+              filename,
+              size: fileBuffer.length,
+              mimeType,
+              b2Key,
+              storage: 'b2'
+            });
+
+            return {
+              filename,
+              originalName,
+              mimeType,
+              size: fileBuffer.length,
+              relativePath: `${yearMonth}/${filename}`,
+              url,
+              storage: 'b2' as const
+            };
+          } catch (b2Error) {
+            logger.warn('B2 upload failed, falling back to local storage', {
+              bookingId,
+              paymentIndex,
+              error: b2Error
+            });
+            // Fall through to local storage
+          }
+        }
+
+        // Upload to local filesystem (default or fallback)
         const subdirPath = path.join(UPLOADS_DIR, yearMonth);
-
-        // Ensure subdirectory exists
         await fs.mkdir(subdirPath, { recursive: true });
-
-        // Full path
         const fullPath = path.join(subdirPath, filename);
-
-        // Write file
         await fs.writeFile(fullPath, fileBuffer);
-
-        // Set permissions (readable by all, writable by owner)
         await fs.chmod(fullPath, 0o644);
 
-        logger.info('File uploaded successfully', {
+        logger.info('File uploaded successfully to local storage', {
           bookingId,
           paymentIndex,
           filename,
           size: fileBuffer.length,
-          mimeType
+          mimeType,
+          storage: 'local'
         });
 
         return {
@@ -150,7 +191,8 @@ export async function saveUploadedFile(
           originalName,
           mimeType,
           size: fileBuffer.length,
-          relativePath: `${yearMonth}/${filename}`
+          relativePath: `${yearMonth}/${filename}`,
+          storage: 'local' as const
         };
       },
       60000 // 1 minute timeout for file uploads

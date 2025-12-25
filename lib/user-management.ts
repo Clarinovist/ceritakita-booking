@@ -194,20 +194,28 @@ export function verifyUserCredentials(username: string, password: string): User 
  * Seed default admin user if none exists
  */
 export function seedDefaultAdmin(): void {
-  const db = getDb();
-  
-  const existing = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
-  
-  if (existing.count === 0) {
-    const username = process.env.ADMIN_USERNAME || 'admin';
-    const password = process.env.ADMIN_PASSWORD || 'admin123';
-    
-    createUser({
-      username,
-      password,
-      role: 'admin'
-    });
-    
-    console.log('✅ Default admin user created:', username);
+  try {
+    const db = getDb();
+
+    const existing = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
+
+    if (existing.count === 0) {
+      const username = process.env.ADMIN_USERNAME || 'admin';
+      const password = process.env.ADMIN_PASSWORD || 'admin123';
+
+      createUser({
+        username,
+        password,
+        role: 'admin'
+      });
+
+      console.log('✅ Default admin user created:', username);
+    }
+  } catch (error) {
+    // Silently ignore errors during seeding (e.g., user already exists, database locked)
+    // This is expected during build time or when the database is already seeded
+    if (error instanceof Error && !error.message.includes('Username already exists')) {
+      console.warn('Warning during admin seed:', error.message);
+    }
   }
 }

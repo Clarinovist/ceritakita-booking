@@ -15,6 +15,8 @@ export interface Payment {
   amount: number;
   note: string;
   proof_filename?: string;
+  proof_url?: string;
+  storage_backend?: 'local' | 'b2';
 }
 
 export interface RescheduleHistory {
@@ -97,7 +99,7 @@ function rowToBooking(row: any, payments: Payment[], addons?: BookingAddon[], re
 function getPaymentsForBooking(bookingId: string): Payment[] {
   const db = getDb();
   const stmt = db.prepare(`
-    SELECT date, amount, note, proof_filename
+    SELECT date, amount, note, proof_filename, proof_url, storage_backend
     FROM payments
     WHERE booking_id = ?
     ORDER BY date ASC, id ASC
@@ -109,6 +111,8 @@ function getPaymentsForBooking(bookingId: string): Payment[] {
     amount: row.amount,
     note: row.note || '',
     ...(row.proof_filename && { proof_filename: row.proof_filename }),
+    ...(row.proof_url && { proof_url: row.proof_url }),
+    ...(row.storage_backend && { storage_backend: row.storage_backend }),
   }));
 }
 
@@ -215,14 +219,14 @@ export async function writeData(bookings: Booking[]): Promise<void> {
         `);
 
         const insertPayment = db.prepare(`
-          INSERT INTO payments (booking_id, date, amount, note, proof_filename)
-          VALUES (?, ?, ?, ?, ?)
+          INSERT INTO payments (booking_id, date, amount, note, proof_filename, proof_url, storage_backend)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
         `);
 
         for (const booking of bookings) {
           // Validate and normalize status
           const normalizedStatus = normalizeBookingStatus(booking.status);
-          
+
           // Insert booking
           insertBooking.run(
             booking.id,
@@ -251,7 +255,9 @@ export async function writeData(bookings: Booking[]): Promise<void> {
               payment.date,
               safeNumber(payment.amount),
               payment.note || null,
-              payment.proof_filename || null
+              payment.proof_filename || null,
+              payment.proof_url || null,
+              payment.storage_backend || 'local'
             );
           }
         }
@@ -324,8 +330,8 @@ export async function createBooking(booking: Booking): Promise<void> {
             // Insert payments
             if (booking.finance.payments.length > 0) {
               const paymentStmt = db.prepare(`
-                INSERT INTO payments (booking_id, date, amount, note, proof_filename)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO payments (booking_id, date, amount, note, proof_filename, proof_url, storage_backend)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
               `);
 
               for (const payment of booking.finance.payments) {
@@ -334,7 +340,9 @@ export async function createBooking(booking: Booking): Promise<void> {
                   payment.date,
                   safeNumber(payment.amount),
                   payment.note || null,
-                  payment.proof_filename || null
+                  payment.proof_filename || null,
+                  payment.proof_url || null,
+                  payment.storage_backend || 'local'
                 );
               }
             }
@@ -432,8 +440,8 @@ export async function updateBooking(booking: Booking): Promise<void> {
 
             if (booking.finance.payments.length > 0) {
               const paymentStmt = db.prepare(`
-                INSERT INTO payments (booking_id, date, amount, note, proof_filename)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO payments (booking_id, date, amount, note, proof_filename, proof_url, storage_backend)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
               `);
 
               for (const payment of booking.finance.payments) {
@@ -442,7 +450,9 @@ export async function updateBooking(booking: Booking): Promise<void> {
                   payment.date,
                   safeNumber(payment.amount),
                   payment.note || null,
-                  payment.proof_filename || null
+                  payment.proof_filename || null,
+                  payment.proof_url || null,
+                  payment.storage_backend || 'local'
                 );
               }
             }

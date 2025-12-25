@@ -182,6 +182,8 @@ export async function POST(req: NextRequest) {
 
         // Process uploaded file if present
         let proofFilename: string | undefined;
+        let proofUrl: string | undefined;
+        let storageBackend: 'local' | 'b2' = 'local';
         if (uploadedFile && uploadedFile.filepath) {
             try {
                 // Validate file
@@ -194,7 +196,7 @@ export async function POST(req: NextRequest) {
                 // Read file buffer
                 const fileBuffer = await readFile(uploadedFile.filepath);
 
-                // Save file with locking
+                // Save file with locking (will use B2 if configured)
                 const savedFile = await saveUploadedFile(
                     fileBuffer,
                     bookingId,
@@ -204,19 +206,23 @@ export async function POST(req: NextRequest) {
                 );
 
                 proofFilename = savedFile.relativePath;
-                
+                proofUrl = savedFile.url;
+                storageBackend = savedFile.storage;
+
                 logger.info('Payment proof uploaded', {
                     requestId,
                     bookingId,
                     filename: proofFilename,
-                    size: fileBuffer.length
+                    size: fileBuffer.length,
+                    storage: storageBackend,
+                    url: proofUrl
                 });
             } catch (fileError) {
                 logger.error('File upload failed', {
                     requestId,
                     bookingId
                 }, fileError as Error);
-                
+
                 return NextResponse.json(
                     { error: 'Failed to save uploaded file', code: 'FILE_UPLOAD_FAILED' },
                     { status: 400 }
@@ -227,11 +233,13 @@ export async function POST(req: NextRequest) {
         // Update payment with proof filename or keep base64 (backward compat)
         const payments = (finance?.payments || []).map((payment, index) => {
             if (index === 0 && proofFilename) {
-                // First payment: add proof_filename, remove proof_base64
+                // First payment: add proof data, remove proof_base64
                 const { proof_base64: _, ...paymentWithoutBase64 } = payment;
                 return {
                     ...paymentWithoutBase64,
-                    proof_filename: proofFilename
+                    proof_filename: proofFilename,
+                    proof_url: proofUrl,
+                    storage_backend: storageBackend
                 };
             }
             return payment;

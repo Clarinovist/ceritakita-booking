@@ -3,10 +3,14 @@ import { requireAuth } from '@/lib/auth';
 import { getUploadPath } from '@/lib/file-storage';
 import { stat } from 'fs/promises';
 import path from 'path';
+import getDb from '@/lib/db';
 
 /**
  * Serve uploaded files with authentication
  * Route: /api/uploads/[...path]
+ *
+ * Supports both local filesystem and B2-stored files.
+ * For B2 files, redirects to the B2 URL.
  */
 export async function GET(
   req: NextRequest,
@@ -35,8 +39,24 @@ export async function GET(
       }
     }
 
-    // Get full filesystem path
+    // Get filename from path
     const filename = params.path.slice(1).join('/'); // Remove 'payment-proofs' prefix
+
+    // Check database to see if this file is stored in B2
+    const db = getDb();
+    const payment = db.prepare(`
+      SELECT proof_url, storage_backend
+      FROM payments
+      WHERE proof_filename = ?
+      LIMIT 1
+    `).get(filename) as { proof_url?: string; storage_backend?: string } | undefined;
+
+    // If file is in B2, redirect to B2 URL
+    if (payment?.storage_backend === 'b2' && payment?.proof_url) {
+      return NextResponse.redirect(payment.proof_url);
+    }
+
+    // Otherwise, serve from local filesystem
     const fullPath = await getUploadPath(filename);
 
     // Check if file exists

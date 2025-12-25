@@ -247,6 +247,19 @@ function initializeSchema() {
     )
   `);
 
+  // Add B2 support columns to payments table
+  try {
+    db.exec(`ALTER TABLE payments ADD COLUMN proof_url TEXT`);
+  } catch (e) {
+    // Column already exists
+  }
+
+  try {
+    db.exec(`ALTER TABLE payments ADD COLUMN storage_backend TEXT DEFAULT 'local'`);
+  } catch (e) {
+    // Column already exists
+  }
+
   // Migrate existing single payment_settings to payment_methods
   try {
     const existingSettings = db.prepare('SELECT * FROM payment_settings LIMIT 1').get() as any;
