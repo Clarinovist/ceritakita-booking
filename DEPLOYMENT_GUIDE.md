@@ -11,11 +11,12 @@ This guide covers the complete setup, deployment, and ongoing maintenance of the
 2. [Environment Variables Configuration](#environment-variables-configuration)
 3. [Installation & Build Process](#installation--build-process)
 4. [Database Management](#database-management)
-5. [Process Management with PM2](#process-management-with-pm2)
-6. [Production Web Server Setup](#production-web-server-setup)
-7. [SSL/HTTPS Configuration](#sslhttps-configuration)
-8. [Monitoring & Maintenance](#monitoring--maintenance)
-9. [Troubleshooting](#troubleshooting)
+5. [File Storage with Backblaze B2](#file-storage-with-backblaze-b2)
+6. [Process Management with PM2](#process-management-with-pm2)
+7. [Production Web Server Setup](#production-web-server-setup)
+8. [SSL/HTTPS Configuration](#sslhttps-configuration)
+9. [Monitoring & Maintenance](#monitoring--maintenance)
+10. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -77,10 +78,10 @@ ADMIN_PASSWORD=your_secure_password
 
 # Database (SQLite - no configuration needed for local file)
 
-# Optional: Backblaze B2 (for file storage)
+# Backblaze B2 Cloud Storage (recommended for production)
 B2_APPLICATION_KEY_ID=your_b2_key_id
 B2_APPLICATION_KEY=your_b2_key
-B2_BUCKET_ID=your_bucket_id
+B2_ENDPOINT=s3.us-west-004.backblazeb2.com
 B2_BUCKET_NAME=your_bucket_name
 ```
 
@@ -220,6 +221,210 @@ sqlite3 /var/www/ceritakita-booking/data/bookings.db "SELECT COUNT(*) FROM booki
 # View recent bookings
 sqlite3 /var/www/ceritakita-booking/data/bookings.db "SELECT id, customer_name, booking_date, status FROM bookings ORDER BY created_at DESC LIMIT 10;"
 ```
+
+---
+
+## File Storage with Backblaze B2
+
+The system supports **Backblaze B2 cloud storage** for payment proof uploads, providing scalable, cost-effective, and durable file storage.
+
+### Overview
+
+**Storage Backends:**
+- **B2 Cloud Storage** (Recommended for Production): Automatic upload to Backblaze B2
+- **Local Filesystem** (Fallback): Files stored in `uploads/payment-proofs/`
+- **Hybrid Mode**: Automatic fallback if B2 is unavailable
+
+**Key Features:**
+- ✅ Automatic B2 upload when credentials configured
+- ✅ Graceful fallback to local storage on B2 failure
+- ✅ Smart file retrieval (redirects to B2 or serves locally)
+- ✅ 100% backward compatible with existing files
+- ✅ Database tracks storage backend per file
+
+### B2 Setup
+
+#### 1. Create Backblaze B2 Account
+
+1. Sign up at https://www.backblaze.com/b2/
+2. Navigate to **Buckets** → **Create a Bucket**
+3. Configure bucket:
+   - **Bucket Name**: `your-bucket-name` (e.g., `ceritakita-images`)
+   - **Files in Bucket**: Private
+   - **Object Lock**: Disabled
+   - **Encryption**: Server-Side Encryption (recommended)
+
+#### 2. Create Application Key
+
+1. Navigate to **App Keys** → **Add a New Application Key**
+2. Configure key:
+   - **Name**: `ceritakita-booking-production`
+   - **Type of Access**: Read and Write
+   - **Allow access to bucket(s)**: Select your bucket
+3. **IMPORTANT**: Copy the Application Key ID and Application Key immediately (shown only once)
+
+#### 3. Get Bucket Endpoint
+
+Find your bucket's S3-compatible endpoint:
+- Navigate to **Buckets** → Select your bucket
+- Look for **Endpoint**: Format is `s3.{region}.backblazeb2.com`
+- Example: `s3.us-west-004.backblazeb2.com` or `s3.eu-central-003.backblazeb2.com`
+
+#### 4. Configure Environment Variables
+
+Add to `.env.production` or `.env.local`:
+
+```bash
+# Backblaze B2 Configuration
+B2_APPLICATION_KEY_ID=0032a1de4950f2e0000000002
+B2_APPLICATION_KEY=K002Xyz...YourActualKey...789
+B2_ENDPOINT=s3.us-west-004.backblazeb2.com
+B2_BUCKET_NAME=ceritakita-images
+```
+
+**Security Notes:**
+- Never commit B2 credentials to git
+- Rotate keys periodically
+- Use read-only keys for retrieval if possible
+
+### Testing B2 Connection
+
+```bash
+# Test connection and permissions
+curl https://your-domain.com/api/test-b2
+
+# Test file upload
+curl -X POST https://your-domain.com/api/test-b2
+
+# Expected response
+{
+  "success": true,
+  "message": "Backblaze B2 connection successful!",
+  "connection": {
+    "status": "connected",
+    "canListObjects": true
+  }
+}
+```
+
+### How It Works
+
+**Upload Flow:**
+```
+Payment proof uploaded
+    ↓
+B2 credentials configured? → YES → Upload to B2 → Store URL + 'b2'
+                           → NO  → Save locally → Store path + 'local'
+    ↓
+If B2 upload fails → Fallback to local storage
+```
+
+**Retrieval Flow:**
+```
+Admin views payment proof (/api/uploads/...)
+    ↓
+Query database for storage_backend
+    ↓
+storage_backend = 'b2' → Redirect to B2 URL (authenticated)
+storage_backend = 'local' → Serve from local filesystem
+```
+
+**Database Schema:**
+```sql
+-- Payments table includes:
+proof_filename TEXT       -- Relative path/filename
+proof_url TEXT           -- B2 URL (if stored in B2)
+storage_backend TEXT     -- 'b2' or 'local'
+```
+
+### File Organization
+
+**B2 Bucket Structure:**
+```
+ceritakita-images/
+├── payment-proofs/
+│   ├── 2024-12/
+│   │   ├── {bookingId}_0_{timestamp}_{uuid}.jpg
+│   │   └── {bookingId}_0_{timestamp}_{uuid}.png
+│   └── 2025-01/
+│       └── {bookingId}_0_{timestamp}_{uuid}.jpg
+├── portfolio/
+│   └── {serviceId}_{timestamp}.jpg
+└── qris/
+    └── qris_{timestamp}.png
+```
+
+**Local Filesystem (Fallback):**
+```
+/var/www/ceritakita-booking/uploads/
+└── payment-proofs/
+    ├── 2024-12/
+    └── 2025-01/
+```
+
+### Monitoring B2 Usage
+
+**Check Storage Stats:**
+```bash
+# View bucket size and object count in B2 dashboard
+# B2 Console → Buckets → Your Bucket → Browse Files
+```
+
+**Database Query:**
+```bash
+# Count files by storage backend
+sqlite3 data/bookings.db "
+  SELECT storage_backend, COUNT(*)
+  FROM payments
+  WHERE proof_filename IS NOT NULL
+  GROUP BY storage_backend;
+"
+
+# Expected output:
+# b2|150
+# local|25
+```
+
+### Cost Optimization
+
+**Backblaze B2 Pricing (as of 2024):**
+- Storage: $6/TB/month
+- Download: $0.01/GB
+- API calls: Free (2,500/day)
+- No egress fees within Cloudflare CDN
+
+**Recommendations:**
+- Enable **Lifecycle Rules** to delete old files (optional)
+- Use **B2 + Cloudflare** for free bandwidth
+- Monitor storage in B2 dashboard monthly
+
+### Troubleshooting B2
+
+**Connection Failed:**
+```bash
+# Check credentials
+curl https://your-domain.com/api/test-b2
+
+# Common errors:
+# - "InvalidAccessKeyId": Check B2_APPLICATION_KEY_ID
+# - "SignatureDoesNotMatch": Check B2_APPLICATION_KEY
+# - "NoSuchBucket": Verify bucket name and access permissions
+```
+
+**Files Not Uploading to B2:**
+```bash
+# Check environment variables loaded
+docker exec ceritakita-booking env | grep B2_
+
+# Check application logs
+docker logs ceritakita-booking | grep -i "b2\|storage"
+
+# Expected: "File uploaded successfully to B2"
+# If fallback: "B2 upload failed, falling back to local storage"
+```
+
+**Migration from Local to B2:**
+Existing files remain on local filesystem and work seamlessly. New uploads automatically use B2 when configured. No migration needed.
 
 ---
 
