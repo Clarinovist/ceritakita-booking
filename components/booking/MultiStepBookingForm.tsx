@@ -32,16 +32,17 @@ function StepContent() {
 
 // Main form wrapper
 function MultiStepBookingFormContent() {
-  const { 
-    currentStep, 
-    totalSteps, 
-    errors, 
-    isSubmitting, 
-    nextStep, 
-    prevStep, 
+  const {
+    currentStep,
+    totalSteps,
+    errors,
+    isSubmitting,
+    nextStep,
+    prevStep,
     submitForm,
     validateCurrentStep,
-    isMobile 
+    isMobile,
+    formData
   } = useMultiStepForm();
 
   const stepLabels = [
@@ -155,48 +156,48 @@ function MultiStepBookingFormContent() {
                   <div className="flex justify-between items-start">
                     <span className="text-gray-600">Layanan:</span>
                     <span className="font-bold text-gray-800 text-right">
-                      {formDataSummary.serviceName || '-'}
+                      {formData.serviceName || '-'}
                     </span>
                   </div>
                 )}
 
                 {/* Add-ons */}
-                {currentStep >= 2 && formDataSummary.addonsCount > 0 && (
+                {currentStep >= 2 && formData.addons.length > 0 && (
                   <div className="flex justify-between items-start">
                     <span className="text-gray-600">Tambahan:</span>
                     <span className="font-bold text-gray-800 text-right">
-                      {formDataSummary.addonsCount} item
+                      {formData.addons.length} item
                     </span>
                   </div>
                 )}
 
                 {/* Schedule */}
-                {currentStep >= 3 && (formDataSummary.date || formDataSummary.time) && (
+                {currentStep >= 3 && (formData.date || formData.time) && (
                   <div className="flex justify-between items-start">
                     <span className="text-gray-600">Jadwal:</span>
                     <span className="font-bold text-gray-800 text-right">
-                      {formDataSummary.date} {formDataSummary.time}
+                      {formData.date} {formData.time}
                     </span>
                   </div>
                 )}
 
                 {/* Customer */}
-                {currentStep >= 4 && formDataSummary.name && (
+                {currentStep >= 4 && formData.name && (
                   <div className="flex justify-between items-start">
                     <span className="text-gray-600">Nama:</span>
                     <span className="font-bold text-gray-800 text-right">
-                      {formDataSummary.name}
+                      {formData.name}
                     </span>
                   </div>
                 )}
 
                 {/* Total */}
-                {currentStep >= 1 && formDataSummary.totalPrice > 0 && (
+                {currentStep >= 1 && formData.totalPrice > 0 && (
                   <div className="border-t-2 border-blue-200 pt-2 mt-2">
                     <div className="flex justify-between items-center">
                       <span className="font-black text-gray-900">Total:</span>
                       <span className="font-black text-primary-600 text-lg">
-                        Rp {formDataSummary.totalPrice.toLocaleString('id-ID')}
+                        Rp {formData.totalPrice.toLocaleString('id-ID')}
                       </span>
                     </div>
                   </div>
@@ -257,45 +258,10 @@ function getStepTip(step: number): string {
   }
 }
 
-// Helper component to access formData for summary
-function FormDataSummary() {
-  const { formData } = useMultiStepForm();
-  return null; // This is just to trigger re-renders
-}
-
-// Global summary object
-let formDataSummary = {
-  serviceName: '',
-  addonsCount: 0,
-  date: '',
-  time: '',
-  name: '',
-  totalPrice: 0,
-};
-
-// Wrapper component that manages the summary state
-function SummaryUpdater() {
-  const { formData, currentStep } = useMultiStepForm();
-
-  useEffect(() => {
-    formDataSummary = {
-      serviceName: formData.serviceName,
-      addonsCount: formData.addons.length,
-      date: formData.date,
-      time: formData.time,
-      name: formData.name,
-      totalPrice: formData.totalPrice,
-    };
-  }, [formData, currentStep]);
-
-  return null;
-}
-
 // Main exported component
 export default function MultiStepBookingForm() {
   return (
     <MultiStepFormProvider>
-      <SummaryUpdater />
       <MultiStepBookingFormContent />
     </MultiStepFormProvider>
   );
