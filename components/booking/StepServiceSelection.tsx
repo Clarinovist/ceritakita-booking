@@ -15,7 +15,7 @@ interface Service {
 }
 
 export function StepServiceSelection() {
-  const { formData, updateFormData, errors, setFieldError, clearFieldError } = useMultiStepForm();
+  const { formData, updateFormData, errors, setFieldError, clearFieldError, fetchPortfolioImages } = useMultiStepForm();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +37,8 @@ export function StepServiceSelection() {
               baseDiscount: firstService.discountValue,
               // totalPrice will be auto-calculated by useEffect in MultiStepForm
             });
+            // Fetch portfolio images for the auto-selected service
+            fetchPortfolioImages(firstService.id);
           }
         }
       })
@@ -61,6 +63,9 @@ export function StepServiceSelection() {
       couponCode: '',
       // totalPrice will be auto-calculated by useEffect in MultiStepForm
     });
+
+    // Fetch portfolio images for the selected service
+    fetchPortfolioImages(service.id);
 
     clearFieldError('serviceId');
   };

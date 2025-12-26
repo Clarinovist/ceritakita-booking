@@ -45,6 +45,9 @@ interface FormData {
     account_number: string;
     qris_image_url?: string;
   } | null;
+  
+  // Portfolio images
+  portfolioImages: string[];
 }
 
 interface StepError {
@@ -70,9 +73,15 @@ interface MultiStepFormContextType {
   validateCurrentStep: () => boolean;
   submitForm: () => Promise<void>;
   resetForm: () => void;
+  fetchPortfolioImages: (serviceId: string) => Promise<void>;
   
   // UI State
   setIsSubmitting: (value: boolean) => void;
+  
+  // Lightbox state
+  selectedPortfolioImage: string | null;
+  openLightbox: (imageUrl: string) => void;
+  closeLightbox: () => void;
 }
 
 const MultiStepFormContext = createContext<MultiStepFormContextType | undefined>(undefined);
@@ -120,11 +129,15 @@ export function MultiStepFormProvider({
     
     // Payment settings
     paymentSettings: initialData?.paymentSettings || null,
+    
+    // Portfolio
+    portfolioImages: initialData?.portfolioImages || [],
   });
   
   const [errors, setErrors] = useState<Record<number, StepError[]>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedPortfolioImage, setSelectedPortfolioImage] = useState<string | null>(null);
 
   // Detect mobile
   useEffect(() => {
@@ -153,6 +166,28 @@ export function MultiStepFormProvider({
 
     fetchPaymentSettings();
   }, []);
+
+  // Portfolio fetching function
+  const fetchPortfolioImages = async (serviceId: string) => {
+    if (!serviceId) {
+      updateFormData({ portfolioImages: [] });
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/portfolio?serviceId=${serviceId}`);
+      if (res.ok) {
+        const data = await res.json();
+        const urls = data.map((item: any) => item.image_url);
+        updateFormData({ portfolioImages: urls });
+      } else {
+        updateFormData({ portfolioImages: [] });
+      }
+    } catch (error) {
+      console.error('Failed to fetch portfolio images:', error);
+      updateFormData({ portfolioImages: [] });
+    }
+  };
 
   // Persist form data to localStorage
   useEffect(() => {
@@ -326,10 +361,12 @@ export function MultiStepFormProvider({
       couponDiscount: 0,
       couponCode: '',
       paymentSettings: null,
+      portfolioImages: [],
     });
     setErrors({});
     setCurrentStep(1);
     localStorage.removeItem('bookingFormProgress');
+    setSelectedPortfolioImage(null);
   };
 
   const submitForm = async () => {
@@ -414,6 +451,15 @@ export function MultiStepFormProvider({
     }
   };
 
+  // Lightbox handlers
+  const openLightbox = (imageUrl: string) => {
+    setSelectedPortfolioImage(imageUrl);
+  };
+
+  const closeLightbox = () => {
+    setSelectedPortfolioImage(null);
+  };
+
   const contextValue: MultiStepFormContextType = {
     currentStep,
     totalSteps,
@@ -430,7 +476,11 @@ export function MultiStepFormProvider({
     validateCurrentStep,
     submitForm,
     resetForm,
+    fetchPortfolioImages,
     setIsSubmitting,
+    selectedPortfolioImage,
+    openLightbox,
+    closeLightbox,
   };
 
   return (

@@ -88,7 +88,7 @@ export const useBookingForm = () => {
 
     const fetchPortfolioImages = async (serviceId: string) => {
         try {
-            const res = await fetch(`/api/portfolio?service_id=${serviceId}`);
+            const res = await fetch(`/api/portfolio?serviceId=${serviceId}`);
             if (res.ok) {
                 const data = await res.json();
                 const urls = data.map((item: any) => item.image_url);

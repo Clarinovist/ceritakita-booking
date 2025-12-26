@@ -4,13 +4,34 @@ import { uploadToB2 } from '@/lib/b2-s3-client';
 import { randomUUID } from 'crypto';
 import { getDb } from '@/lib/db';
 
-// GET - Fetch payment settings
+interface PaymentMethod {
+  id: string;
+  name: string;
+  account_name: string;
+  account_number: string;
+  qris_image_url: string | null;
+  updated_at: string;
+}
+
+// GET - Fetch payment settings (returns first active payment method)
 export async function GET() {
   try {
     const db = getDb();
-    const settings = db.prepare('SELECT * FROM payment_settings ORDER BY updated_at DESC LIMIT 1').get();
+    const method = db.prepare('SELECT * FROM payment_methods WHERE is_active = 1 ORDER BY display_order ASC LIMIT 1').get() as PaymentMethod | null;
     
-    return NextResponse.json(settings || {
+    if (method) {
+      return NextResponse.json({
+        id: method.id,
+        bank_name: method.name,
+        account_name: method.account_name,
+        account_number: method.account_number,
+        qris_image_url: method.qris_image_url,
+        updated_at: method.updated_at
+      });
+    }
+    
+    // Return empty default if no payment methods exist
+    return NextResponse.json({
       id: 'default',
       bank_name: '',
       account_name: '',
@@ -24,7 +45,7 @@ export async function GET() {
   }
 }
 
-// POST - Update payment settings
+// POST - Update payment settings (creates/updates payment method)
 export async function POST(req: NextRequest) {
   try {
     const authCheck = await requireAuth(req);
@@ -44,7 +65,6 @@ export async function POST(req: NextRequest) {
 
     // Upload QRIS image if provided
     if (qrisFile) {
-      // Validate file type
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(qrisFile.type)) {
         return NextResponse.json({ error: 'Invalid QRIS file type' }, { status: 400 });
@@ -57,25 +77,25 @@ export async function POST(req: NextRequest) {
     }
 
     const db = getDb();
-    const settingsId = randomUUID();
+    const methodId = randomUUID();
     
-    // Check if settings exist
-    const existing = db.prepare('SELECT id FROM payment_settings LIMIT 1').get() as { id: string } | null;
+    // Check if payment methods exist
+    const existing = db.prepare('SELECT id FROM payment_methods WHERE is_active = 1 LIMIT 1').get() as { id: string } | null;
     
     if (existing) {
       // Update existing
       db.prepare(`
-        UPDATE payment_settings
-        SET bank_name = ?, account_name = ?, account_number = ?,
+        UPDATE payment_methods
+        SET name = ?, account_name = ?, account_number = ?,
             qris_image_url = COALESCE(?, qris_image_url), updated_at = ?
         WHERE id = ?
       `).run(bankName, accountName, accountNumber, qrisImageUrl, new Date().toISOString(), existing.id);
     } else {
       // Create new
       db.prepare(`
-        INSERT INTO payment_settings (id, bank_name, account_name, account_number, qris_image_url, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `).run(settingsId, bankName, accountName, accountNumber, qrisImageUrl, new Date().toISOString());
+        INSERT INTO payment_methods (id, name, provider_name, account_name, account_number, qris_image_url, display_order, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(methodId, bankName, bankName, accountName, accountNumber, qrisImageUrl, 0, new Date().toISOString());
     }
 
     return NextResponse.json({ success: true });

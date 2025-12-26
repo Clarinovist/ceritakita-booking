@@ -1,8 +1,9 @@
 'use client';
 
 import { useMultiStepForm } from './MultiStepForm';
-import { ShoppingBag, Plus, Minus } from 'lucide-react';
+import { ShoppingBag, Plus, Minus, Camera } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Addon {
   id: string;
@@ -13,7 +14,7 @@ interface Addon {
 }
 
 export function StepAddons() {
-  const { formData, updateFormData, isMobile } = useMultiStepForm();
+  const { formData, updateFormData, isMobile, portfolioImages, openLightbox } = useMultiStepForm();
   const [availableAddons, setAvailableAddons] = useState<Addon[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -118,6 +119,36 @@ export function StepAddons() {
 
   return (
     <div className="space-y-6">
+      {/* Portfolio Showcase */}
+      {portfolioImages.length > 0 && (
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-in slide-in-from-top-4 duration-300">
+          <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold">
+            <Camera className="text-blue-600" size={20} />
+            <h3>Portfolio {formData.serviceName}</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {portfolioImages.map((imageUrl, index) => (
+              <div
+                key={index}
+                className="relative group cursor-pointer overflow-hidden rounded-lg aspect-square"
+                onClick={() => openLightbox(imageUrl)}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={`Portfolio ${index + 1}`}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-3">Klik gambar untuk memperbesar</p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
         <ShoppingBag className="text-primary-600" size={24} />

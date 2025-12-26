@@ -8,6 +8,7 @@ import { StepSchedule } from './StepSchedule';
 import { StepCustomerInfo } from './StepCustomerInfo';
 import { StepPayment } from './StepPayment';
 import { ValidationSummary } from '@/components/ui/ValidationMessage';
+import { Lightbox } from './components/Lightbox';
 import { useEffect } from 'react';
 
 // Step content component
@@ -42,7 +43,9 @@ function MultiStepBookingFormContent() {
     submitForm,
     validateCurrentStep,
     isMobile,
-    formData
+    formData,
+    selectedPortfolioImage,
+    closeLightbox
   } = useMultiStepForm();
 
   const stepLabels = [
@@ -236,6 +239,12 @@ function MultiStepBookingFormContent() {
           <span className="ml-4">Gunakan tombol panah keyboard untuk navigasi</span>
         </p>
       </div>
+
+      {/* Lightbox Modal */}
+      <Lightbox
+        imageUrl={selectedPortfolioImage}
+        onClose={closeLightbox}
+      />
     </div>
   );
 }
