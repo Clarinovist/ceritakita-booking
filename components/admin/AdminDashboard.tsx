@@ -15,6 +15,7 @@ import PortfolioManagement from '../PortfolioManagement';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
 
+import AdsPerformance from './AdsPerformance';
 // Tables
 import { BookingsTable } from './tables/BookingsTable';
 import { ServicesTable } from './tables/ServicesTable';
@@ -360,6 +361,14 @@ export default function AdminDashboard() {
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    )}
+
+
+                    {/* ADS VIEW */}
+                    {viewMode === 'ads' && (
+                        <div className="animate-in fade-in">
+                            <AdsPerformance bookings={bookingsHook.filteredBookings} />
                         </div>
                     )}
 

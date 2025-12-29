@@ -2,26 +2,79 @@
 
 import { Booking } from "@/lib/storage";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { DollarSign, Users, CalendarX } from 'lucide-react';
+import { DollarSign, Users, CalendarX, Target, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { MetaInsightsData } from "@/app/api/meta/insights/route";
+import { useState, useEffect } from 'react';
 
 interface Props {
     bookings: Booking[];
 }
 
+interface AdsData {
+    spend: number;
+    impressions: number;
+    inlineLinkClicks: number;
+    reach: number;
+    isLoading: boolean;
+    error: string | null;
+}
+
 export default function DashboardMetrics({ bookings }: Props) {
+    const [adsData, setAdsData] = useState<AdsData>({
+        spend: 0,
+        impressions: 0,
+        inlineLinkClicks: 0,
+        reach: 0,
+        isLoading: true,
+        error: null
+    });
+
+    // Fetch ads data on mount
+    useEffect(() => {
+        const fetchAdsData = async () => {
+            try {
+                const response = await fetch('/api/meta/insights');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    setAdsData({
+                        ...result.data,
+                        isLoading: false,
+                        error: null
+                    });
+                } else {
+                    setAdsData(prev => ({
+                        ...prev,
+                        isLoading: false,
+                        error: result.error || 'Failed to fetch ads data'
+                    }));
+                }
+            } catch (error) {
+                console.error('Error fetching ads data:', error);
+                setAdsData(prev => ({
+                    ...prev,
+                    isLoading: false,
+                    error: error instanceof Error ? error.message : 'Connection error'
+                }));
+            }
+        };
+
+        fetchAdsData();
+    }, []);
+
     // 1. Calculate Summary
     const totalBookings = bookings.length;
-    // Count only Active for revenue usually, but let's count all or filtered. 
-    // Requirement says "Total Revenue" (sum of all booking values).
-    // Assuming "Active" means valid. If "Cancelled", maybe we shouldn't count total price, 
-    // but let's stick to requirements or common sense. I will count "Active" + "Rescheduled" revenue.
-
     const activeBookings = bookings.filter(b => b.status !== 'Canceled');
     const totalRevenue = activeBookings.reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
-
     const canceledOrRescheduled = bookings.filter(b => b.status === 'Canceled' || b.status === 'Rescheduled').length;
 
-    // 2. Prepare Chart Data
+    // 2. Calculate ROI Metrics
+    const adsSpend = adsData.spend;
+    const adsRevenue = totalRevenue; // Revenue from bookings
+    const roi = adsSpend > 0 ? ((adsRevenue - adsSpend) / adsSpend) * 100 : 0;
+    const roas = adsSpend > 0 ? (adsRevenue / adsSpend) : 0;
+
+    // 3. Prepare Chart Data
     const categories = [
         'Wedding', 'Prewedding Bronze', 'Prewedding Gold', 'Prewedding Silver',
         'Wisuda', 'Family', 'Birthday', 'Pas Foto', 'Self Photo', 'Indoor', 'Outdoor'
@@ -30,13 +83,13 @@ export default function DashboardMetrics({ bookings }: Props) {
     const chartData = categories.map(cat => ({
         name: cat,
         count: bookings.filter(b => b.customer.category === cat).length
-    })).filter(d => d.count > 0); // Only show used categories
+    })).filter(d => d.count > 0);
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28DFF', '#FF6699'];
 
     return (
         <div className="space-y-6">
-            {/* Cards */}
+            {/* Booking Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow border border-gray-100 flex items-center gap-4">
                     <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
@@ -68,6 +121,87 @@ export default function DashboardMetrics({ bookings }: Props) {
                     </div>
                 </div>
             </div>
+
+            {/* Ads Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                        <Target size={20} className="text-purple-600" />
+                        {adsData.isLoading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>}
+                    </div>
+                    <p className="text-sm text-gray-500">Ads Spend (This Month)</p>
+                    <p className="text-2xl font-bold text-purple-700">
+                        {adsData.isLoading ? '...' : `Rp ${adsSpend.toLocaleString()}`}
+                    </p>
+                    {adsData.error && <p className="text-xs text-red-500 mt-1">{adsData.error}</p>}
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                        <TrendingUp size={20} className="text-orange-600" />
+                    </div>
+                    <p className="text-sm text-gray-500">WhatsApp Clicks</p>
+                    <p className="text-2xl font-bold text-orange-700">
+                        {adsData.isLoading ? '...' : adsData.inlineLinkClicks.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">from {adsData.impressions.toLocaleString()} impressions</p>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                        <Users size={20} className="text-teal-600" />
+                    </div>
+                    <p className="text-sm text-gray-500">Reach</p>
+                    <p className="text-2xl font-bold text-teal-700">
+                        {adsData.isLoading ? '...' : adsData.reach.toLocaleString()}
+                    </p>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
+                    <div className="flex items-center justify-between mb-2">
+                        <DollarSign size={20} className="text-indigo-600" />
+                    </div>
+                    <p className="text-sm text-gray-500">ROAS</p>
+                    <p className="text-2xl font-bold text-indigo-700">
+                        {adsData.isLoading ? '...' : (roas > 0 ? `${roas.toFixed(2)}x` : 'N/A')}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                        {adsSpend > 0 ? `${roi > 0 ? '+' : ''}${roi.toFixed(1)}% ROI` : 'No spend data'}
+                    </p>
+                </div>
+            </div>
+
+            {/* ROI Comparison */}
+            {adsSpend > 0 && (
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
+                    <h3 className="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
+                        <DollarSign size={20} /> ROI & Performance Summary
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <p className="text-sm text-gray-500 mb-1">Total Spend</p>
+                            <p className="text-xl font-bold text-purple-700">Rp {adsSpend.toLocaleString()}</p>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <p className="text-sm text-gray-500 mb-1">Revenue Generated</p>
+                            <p className="text-xl font-bold text-green-700">Rp {adsRevenue.toLocaleString()}</p>
+                        </div>
+                        <div className={`p-4 rounded-lg border ${roi >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                            <p className="text-sm text-gray-500 mb-1">Net Profit / ROI</p>
+                            <p className={`text-xl font-bold ${roi >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                                {roi >= 0 ? '+' : ''}Rp {(adsRevenue - adsSpend).toLocaleString()}
+                            </p>
+                            <p className={`text-sm font-semibold ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {roi >= 0 ? <ArrowUpRight size={14} className="inline" /> : <ArrowDownRight size={14} className="inline" />}
+                                {roi.toFixed(1)}%
+                            </p>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">
+                        * ROI calculated as: ((Revenue - Spend) / Spend) × 100
+                    </p>
+                </div>
+            )}
 
             {/* Chart */}
             <div className="bg-white p-6 rounded-xl shadow border border-gray-100">

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Calendar, List, Tag, Camera, ShoppingBag, 
-  Users, Image as ImageIcon, CreditCard, LogOut, Menu, X 
+  Users, Image as ImageIcon, CreditCard, LogOut, Menu, X, Target
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -25,6 +25,7 @@ export default function AdminSidebar({ viewMode, setViewMode }: AdminSidebarProp
 
   const menuItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'ads', icon: Target, label: 'Ads Performance' },
     { id: 'calendar', icon: Calendar, label: 'Calendar' },
     { id: 'table', icon: List, label: 'Bookings' },
     { id: 'services', icon: Tag, label: 'Services' },

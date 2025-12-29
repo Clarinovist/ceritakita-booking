@@ -1,5 +1,4 @@
-
-export type ViewMode = 'dashboard' | 'calendar' | 'table' | 'services' | 'portfolio' | 'photographers' | 'addons' | 'coupons' | 'users' | 'payment-settings';
+export type ViewMode = 'dashboard' | 'calendar' | 'table' | 'services' | 'portfolio' | 'photographers' | 'addons' | 'coupons' | 'users' | 'payment-settings' | 'ads';
 
 export type FilterStatus = 'All' | 'Active' | 'Canceled';
 
@@ -74,3 +73,4 @@ export interface RescheduleFormData {
     newTime: string;
     reason: string;
 }
+
