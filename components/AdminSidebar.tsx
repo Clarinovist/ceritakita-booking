@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, Calendar, List, Tag, Camera, ShoppingBag, 
-  Users, Image as ImageIcon, CreditCard, LogOut, Menu, X, Target
+import {
+  LayoutDashboard, Calendar, List, Tag, Camera, ShoppingBag,
+  Users, Image as ImageIcon, CreditCard, LogOut, Menu, X, Target, Settings
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -35,6 +35,7 @@ export default function AdminSidebar({ viewMode, setViewMode }: AdminSidebarProp
     { id: 'coupons', icon: Tag, label: 'Kupon' },
     { id: 'users', icon: Users, label: 'Users' },
     { id: 'payment-settings', icon: CreditCard, label: 'Payment Settings' },
+    { id: 'settings', icon: Settings, label: 'Settings' },
   ];
 
   const SidebarContent = () => (

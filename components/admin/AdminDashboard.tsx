@@ -14,6 +14,7 @@ import CouponManagement from '../CouponManagement';
 import PortfolioManagement from '../PortfolioManagement';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
+import SettingsManagement from './SettingsManagement';
 
 import AdsPerformance from './AdsPerformance';
 // Tables
@@ -47,6 +48,7 @@ export default function AdminDashboard() {
     const exportHook = useExport();
 
     const [viewMode, setViewMode] = React.useState<ViewMode>('dashboard');
+    const [showPresets, setShowPresets] = React.useState(false);
 
     // Fetch all data on mount
     useEffect(() => {
@@ -257,6 +259,57 @@ export default function AdminDashboard() {
         }
     };
 
+    // Preset handlers
+    const applyPreset = (preset: string) => {
+        const today = new Date();
+        let start, end;
+
+        switch (preset) {
+            case 'today':
+                start = today.toISOString().split('T')[0];
+                end = start;
+                break;
+            case 'yesterday':
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                start = yesterday;
+                end = yesterday;
+                break;
+            case 'last7days':
+                const last7Days = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+                start = last7Days;
+                end = today.toISOString().split('T')[0];
+                break;
+            case 'last30days':
+                const last30Days = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
+                start = last30Days;
+                end = today.toISOString().split('T')[0];
+                break;
+            case 'thisMonth':
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const lastDay = new Date(year, today.getMonth() + 1, 0).getDate();
+                start = `${year}-${month}-01`;
+                end = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+                break;
+            case 'lastMonth':
+                const lastMonth = today.getMonth() === 0 ? 11 : today.getMonth() - 1;
+                const lastMonthYear = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
+                const lastMonthStr = String(lastMonth + 1).padStart(2, '0');
+                const lastDayLastMonth = new Date(lastMonthYear, lastMonth + 1, 0).getDate();
+                start = `${lastMonthYear}-${lastMonthStr}-01`;
+                end = `${lastMonthYear}-${lastMonthStr}-${String(lastDayLastMonth).padStart(2, '0')}`;
+                break;
+            case 'thisYear':
+                const currentYear = today.getFullYear();
+                start = `${currentYear}-01-01`;
+                end = today.toISOString().split('T')[0];
+                break;
+        }
+
+        bookingsHook.setDateRange({ start, end });
+        setShowPresets(false);
+    };
+
     // Calendar events
     const events = bookingsHook.bookings.filter(b => b.status === 'Active' || b.status === 'Rescheduled').map(b => ({
         id: b.id,
@@ -271,94 +324,35 @@ export default function AdminDashboard() {
             <AdminSidebar viewMode={viewMode} setViewMode={(mode: any) => setViewMode(mode)} />
             
             <div className="flex-1 ml-0 md:ml-64 p-6 overflow-auto">
-                {/* Top Bar */}
-                <div className="bg-white border rounded-xl p-4 mb-6 sticky top-0 z-10">
-                    {/* Date Presets */}
-                    <div className="flex flex-wrap gap-2 mb-3 pb-3 border-b border-gray-200">
-                        <button
-                            onClick={() => {
-                                const today = new Date().toISOString().split('T')[0];
-                                bookingsHook.setDateRange({ start: today, end: today });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            Today
-                        </button>
-                        <button
-                            onClick={() => {
-                                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-                                bookingsHook.setDateRange({ start: yesterday, end: yesterday });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            Yesterday
-                        </button>
-                        <button
-                            onClick={() => {
-                                const today = new Date();
-                                const last7Days = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
-                                bookingsHook.setDateRange({ start: last7Days, end: today.toISOString().split('T')[0] });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            Last 7 Days
-                        </button>
-                        <button
-                            onClick={() => {
-                                const today = new Date();
-                                const last30Days = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
-                                bookingsHook.setDateRange({ start: last30Days, end: today.toISOString().split('T')[0] });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            Last 30 Days
-                        </button>
-                        <button
-                            onClick={() => {
-                                const now = new Date();
-                                const year = now.getFullYear();
-                                const month = String(now.getMonth() + 1).padStart(2, '0');
-                                const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
-                                bookingsHook.setDateRange({
-                                    start: `${year}-${month}-01`,
-                                    end: `${year}-${month}-${String(lastDay).padStart(2, '0')}`
-                                });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            This Month
-                        </button>
-                        <button
-                            onClick={() => {
-                                const now = new Date();
-                                const lastMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
-                                const year = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
-                                const month = String(lastMonth + 1).padStart(2, '0');
-                                const lastDay = new Date(year, lastMonth + 1, 0).getDate();
-                                bookingsHook.setDateRange({
-                                    start: `${year}-${month}-01`,
-                                    end: `${year}-${month}-${String(lastDay).padStart(2, '0')}`
-                                });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            Last Month
-                        </button>
-                        <button
-                            onClick={() => {
-                                const today = new Date().toISOString().split('T')[0];
-                                const year = new Date().getFullYear();
-                                bookingsHook.setDateRange({ start: `${year}-01-01`, end: today });
-                            }}
-                            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                            This Year
-                        </button>
-                    </div>
+                {/* Command Bar - Single Line */}
+                <div className="bg-white border rounded-xl p-4 mb-6 sticky top-0 z-10 flex justify-between items-center">
+                    {/* Left Side: Date Range Picker + Presets */}
+                    <div className="flex items-center gap-3">
+                        {/* Presets Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowPresets(!showPresets)}
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                            >
+                                <span>📅</span>
+                                <span>Presets</span>
+                                <span className="text-xs">▼</span>
+                            </button>
+                            {showPresets && (
+                                <div className="absolute top-full left-0 mt-2 bg-white border rounded-lg shadow-lg p-2 min-w-[180px] z-20">
+                                    <button onClick={() => applyPreset('today')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Today</button>
+                                    <button onClick={() => applyPreset('yesterday')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Yesterday</button>
+                                    <button onClick={() => applyPreset('last7days')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Last 7 Days</button>
+                                    <button onClick={() => applyPreset('last30days')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Last 30 Days</button>
+                                    <button onClick={() => applyPreset('thisMonth')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">This Month</button>
+                                    <button onClick={() => applyPreset('lastMonth')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">Last Month</button>
+                                    <button onClick={() => applyPreset('thisYear')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">This Year</button>
+                                </div>
+                            )}
+                        </div>
 
-                    {/* Custom Date Range & Export Buttons */}
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="flex items-center gap-2 bg-gray-50 border rounded-lg px-3 py-1.5 font-bold text-xs text-gray-600">
+                        {/* Date Range Picker */}
+                        <div className="flex items-center gap-2 bg-gray-50 border rounded-lg px-3 py-2 font-bold text-xs text-gray-600">
                             <Calendar size={14} />
                             <input
                                 type="date"
@@ -374,34 +368,16 @@ export default function AdminDashboard() {
                                 className="bg-transparent outline-none cursor-pointer"
                             />
                         </div>
+                    </div>
 
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => exportHook.handleExportBookings(bookingsHook.filterStatus, bookingsHook.dateRange)}
-                                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors border border-green-200"
-                                title="Export filtered bookings to Excel"
-                            >
-                                <span>📥</span>
-                                <span className="hidden lg:inline">Bookings</span>
-                            </button>
-                            <button
-                                onClick={() => exportHook.handleExportFinancial(bookingsHook.dateRange)}
-                                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
-                                title="Export financial report to Excel"
-                            >
-                                <span>📥</span>
-                                <span className="hidden lg:inline">Financial</span>
-                            </button>
+                    {/* Right Side: Admin Profile */}
+                    <div className="flex items-center gap-3 px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
+                        <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center">
+                            <User size={14} />
                         </div>
-
-                        <div className="flex items-center gap-3 px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
-                            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center">
-                                <User size={14} />
-                            </div>
-                            <span className="text-sm font-bold text-blue-900">
-                                Hello, {session?.user?.name || 'Admin'}
-                            </span>
-                        </div>
+                        <span className="text-sm font-bold text-blue-900">
+                            Hello, {session?.user?.name || 'Admin'}
+                        </span>
                     </div>
                 </div>
 
@@ -491,6 +467,8 @@ export default function AdminDashboard() {
                             handleDeleteBooking={bookingsHook.handleDeleteBooking}
                             handleOpenCreateBookingModal={handleOpenCreateBookingModal}
                             calculateFinance={bookingsHook.calculateFinance}
+                            exportHook={exportHook}
+                            dateRange={bookingsHook.dateRange}
                         />
                     )}
 
@@ -553,6 +531,13 @@ export default function AdminDashboard() {
                     {viewMode === 'payment-settings' && (
                         <div className="animate-in fade-in">
                             <PaymentMethodsManagement />
+                        </div>
+                    )}
+
+                    {/* SETTINGS VIEW */}
+                    {viewMode === 'settings' && (
+                        <div className="animate-in fade-in">
+                            <SettingsManagement />
                         </div>
                     )}
                 </div>

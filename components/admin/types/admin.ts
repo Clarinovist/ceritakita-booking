@@ -1,6 +1,6 @@
 import { Booking, FinanceData } from '@/lib/storage';
 
-export type ViewMode = 'dashboard' | 'calendar' | 'table' | 'services' | 'portfolio' | 'photographers' | 'addons' | 'coupons' | 'users' | 'payment-settings' | 'ads';
+export type ViewMode = 'dashboard' | 'calendar' | 'table' | 'services' | 'portfolio' | 'photographers' | 'addons' | 'coupons' | 'users' | 'payment-settings' | 'ads' | 'settings';
 
 export type FilterStatus = 'All' | 'Active' | 'Canceled' | 'Completed';
 

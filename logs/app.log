@@ -207,3 +207,193 @@
 [2025-12-30T04:14:18.743Z] [INFO] Retrieved bookings from database | Context: {"count":0}
 [2025-12-30T04:14:18.743Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
 [2025-12-30T05:15:54.353Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-30","spend":30232,"impressions":3273,"clicks":13,"reach":2786}
+[2025-12-30T06:41:56.220Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T06:41:56.220Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T06:41:56.267Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T06:41:56.267Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T06:41:57.553Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827585,"impressions":90064,"clicks":363,"reach":33207}
+[2025-12-30T06:42:39.492Z] [INFO] AUDIT: CREATE_BOOKING on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"CREATE_BOOKING","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","date":"2025-12-31T13:44"} | User: Nugroho
+[2025-12-30T06:42:39.492Z] [INFO] Booking created successfully | Context: {"requestId":"2d6f9edc-bd2d-4bca-81fa-780df664265f","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho","date":"2025-12-31T13:44","total":2800000}
+[2025-12-30T06:46:32.460Z] [INFO] Bookings retrieved successfully | Context: {"count":1}
+[2025-12-30T06:46:32.457Z] [INFO] Retrieved bookings from database | Context: {"count":1}
+[2025-12-30T06:46:32.527Z] [INFO] Retrieved bookings from database | Context: {"count":1}
+[2025-12-30T06:46:32.527Z] [INFO] Bookings retrieved successfully | Context: {"count":1}
+[2025-12-30T06:46:32.555Z] [INFO] Retrieved bookings from database | Context: {"count":1}
+[2025-12-30T06:46:32.555Z] [INFO] Bookings retrieved successfully | Context: {"count":1}
+[2025-12-30T06:46:32.573Z] [INFO] Retrieved bookings from database | Context: {"count":1}
+[2025-12-30T06:46:32.573Z] [INFO] Bookings retrieved successfully | Context: {"count":1}
+[2025-12-30T06:46:33.102Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827767,"impressions":90082,"clicks":363,"reach":33207}
+[2025-12-30T06:46:33.492Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827767,"impressions":90082,"clicks":363,"reach":33207}
+[2025-12-30T06:47:11.937Z] [INFO] Booking created successfully | Context: {"requestId":"a2225247-f052-4066-8e1e-4d12c692bd17","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","customer":"andi","date":"2025-12-31T13:49","total":2800000}
+[2025-12-30T06:47:11.937Z] [INFO] AUDIT: CREATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"CREATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","date":"2025-12-31T13:49"} | User: andi
+[2025-12-30T06:47:31.319Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","date":"2025-12-31T13:49","status":"Active"} | User: andi
+[2025-12-30T06:47:31.320Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","requestId":"d1667d64-6aaf-4a8f-95d1-697337134661","updates":["finance"]} | User: andi
+[2025-12-30T06:48:33.813Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:48:33.814Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:48:33.909Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:48:33.909Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:48:33.932Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:48:33.932Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:48:33.951Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:48:33.950Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:48:34.396Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:48:34.785Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:49:34.988Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:49:34.988Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:49:35.113Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:49:35.114Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:49:35.151Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:49:35.150Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:49:35.173Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:49:35.173Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:49:35.453Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:49:35.846Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:52:16.027Z] [WARN] Attempted to complete booking with outstanding balance | Context: {"requestId":"0e40b0fd-36bf-4787-b9c5-4ef08153a4dd","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","balance":2780000,"totalPrice":2800000,"totalPaid":20000}
+[2025-12-30T06:52:19.385Z] [WARN] Attempted to complete booking with outstanding balance | Context: {"requestId":"144183ba-1343-420a-87b7-49587eb3dd26","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","balance":2780000,"totalPrice":2800000,"totalPaid":20000}
+[2025-12-30T06:52:32.842Z] [INFO] AUDIT: UPDATE_BOOKING on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"UPDATE_BOOKING","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","date":"2025-12-31T13:44","status":"Active"} | User: Nugroho
+[2025-12-30T06:52:32.842Z] [INFO] AUDIT: UPDATE_BOOKING on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"UPDATE_BOOKING","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","requestId":"83160ca6-199f-418c-9b0d-777a79762151","updates":["finance"]} | User: Nugroho
+[2025-12-30T06:52:44.559Z] [INFO] AUDIT: BOOKING_COMPLETED on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"BOOKING_COMPLETED","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","requestId":"b020df09-8870-4717-b1d3-c2110e5bb2f3","totalPrice":2800000,"totalPaid":2800000,"bookingDate":"2025-12-31T13:44"} | User: Nugroho
+[2025-12-30T06:52:44.562Z] [INFO] AUDIT: UPDATE_BOOKING on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"UPDATE_BOOKING","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","date":"2025-12-31T13:44","status":"Completed"} | User: Nugroho
+[2025-12-30T06:52:44.562Z] [INFO] AUDIT: UPDATE_BOOKING on booking:ee38ec90-6bdb-4611-8725-d17775c2e40e | Context: {"action":"UPDATE_BOOKING","resource":"booking:ee38ec90-6bdb-4611-8725-d17775c2e40e","requestId":"b020df09-8870-4717-b1d3-c2110e5bb2f3","updates":["status"]} | User: Nugroho
+[2025-12-30T06:53:00.573Z] [INFO] Booking retrieved successfully | Context: {"requestId":"f555fb82-1a12-49b0-ae3d-be06ad7ae7e6","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho"}
+[2025-12-30T06:53:00.629Z] [INFO] Booking retrieved successfully | Context: {"requestId":"aba891c8-40c7-4478-9440-7bc029a80c62","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho"}
+[2025-12-30T06:53:22.267Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:53:22.269Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:53:22.327Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:53:22.327Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:53:22.362Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:53:22.361Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:53:22.387Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:53:22.387Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:53:24.186Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:53:24.594Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":827990,"impressions":90104,"clicks":363,"reach":33207}
+[2025-12-30T06:57:49.912Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:57:49.920Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:57:50.579Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":828696,"impressions":90209,"clicks":363,"reach":33286}
+[2025-12-30T06:57:51.887Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:57:51.888Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:57:51.944Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:57:51.944Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:59:50.937Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:59:50.933Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:59:51.015Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:59:51.016Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:59:51.038Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:59:51.038Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:59:51.053Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T06:59:51.052Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T06:59:51.584Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":828953,"impressions":90244,"clicks":363,"reach":33286}
+[2025-12-30T06:59:51.997Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":828953,"impressions":90244,"clicks":363,"reach":33286}
+[2025-12-30T07:21:34.451Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:21:34.453Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:21:34.555Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:21:34.556Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:21:34.593Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:21:34.592Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:21:34.611Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:21:34.611Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:21:35.516Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":830793,"impressions":90488,"clicks":363,"reach":33343}
+[2025-12-30T07:21:36.183Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":830793,"impressions":90488,"clicks":363,"reach":33343}
+[2025-12-30T07:28:21.476Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:28:21.478Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:28:21.587Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:28:21.588Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:28:21.633Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:28:21.633Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:28:21.645Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:28:21.646Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:28:22.472Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:28:23.667Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:28:32.234Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:28:32.927Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:28:49.744Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:28:51.118Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:29:23.942Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:29:24.366Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:47.401Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:32:47.404Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:32:47.837Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:32:47.838Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:32:47.940Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:32:47.939Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:32:47.985Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:32:47.985Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:32:48.052Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:49.508Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:53.481Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:53.837Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:57.625Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:32:57.996Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831314,"impressions":90569,"clicks":363,"reach":33378}
+[2025-12-30T07:35:04.148Z] [INFO] Booking retrieved successfully | Context: {"requestId":"cd5da236-2c2a-4e3e-9660-e6da0be328c8","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho"}
+[2025-12-30T07:35:04.200Z] [INFO] Booking retrieved successfully | Context: {"requestId":"e45480c7-a339-4d21-818f-e8d3ca359037","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho"}
+[2025-12-30T07:35:27.837Z] [INFO] Booking retrieved successfully | Context: {"requestId":"5eb783c3-aa6f-4224-ab6e-fc17f9c432a8","bookingId":"ee38ec90-6bdb-4611-8725-d17775c2e40e","customer":"Nugroho"}
+[2025-12-30T07:35:58.681Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:35:58.683Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:35:58.815Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:35:58.816Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:35:58.872Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:35:58.871Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:35:58.899Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T07:35:58.900Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T07:36:00.312Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831911,"impressions":90668,"clicks":365,"reach":33424}
+[2025-12-30T07:36:01.360Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":831911,"impressions":90668,"clicks":365,"reach":33424}
+[2025-12-30T07:36:48.543Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-30T07:36:48.555Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-30T07:37:13.100Z] [WARN] Attempted to complete booking with outstanding balance | Context: {"requestId":"4dcc12b1-ca4c-4b72-a267-72e9cf6c6ff6","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","balance":2730000,"totalPrice":2800000,"totalPaid":70000}
+[2025-12-30T07:37:35.425Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","requestId":"5475f7e6-f209-4e79-a8e1-4fe34690f771","updates":["finance"]} | User: andi
+[2025-12-30T07:37:35.424Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","date":"2025-12-31T13:49","status":"Active"} | User: andi
+[2025-12-30T07:37:47.632Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","date":"2025-12-31T13:49","status":"Active"} | User: andi
+[2025-12-30T07:37:47.632Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","requestId":"97ecad71-a79c-4a3b-99d1-a0eefa6a9863","updates":["finance"]} | User: andi
+[2025-12-30T07:38:10.274Z] [INFO] AUDIT: BOOKING_COMPLETED on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"BOOKING_COMPLETED","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","requestId":"9af6f906-eb85-482a-8598-98242b858f9c","totalPrice":2800000,"totalPaid":2800000,"bookingDate":"2025-12-31T13:49"} | User: andi
+[2025-12-30T07:38:10.277Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","date":"2025-12-31T13:49","status":"Completed"} | User: andi
+[2025-12-30T07:38:10.278Z] [INFO] AUDIT: UPDATE_BOOKING on booking:28501a90-e978-4c56-adb8-19568c38b2ea | Context: {"action":"UPDATE_BOOKING","resource":"booking:28501a90-e978-4c56-adb8-19568c38b2ea","requestId":"9af6f906-eb85-482a-8598-98242b858f9c","updates":["status"]} | User: andi
+[2025-12-30T07:38:20.308Z] [INFO] Booking retrieved successfully | Context: {"requestId":"eb14f382-8d9b-45a5-9fd7-42185073a1e2","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","customer":"andi"}
+[2025-12-30T07:38:20.375Z] [INFO] Booking retrieved successfully | Context: {"requestId":"9d1dc3a2-5f19-441b-a55f-682e04a4eaf9","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","customer":"andi"}
+[2025-12-30T07:38:26.025Z] [INFO] Booking retrieved successfully | Context: {"requestId":"1e15ac46-4de8-4313-a0bf-36f15a27f5dd","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","customer":"andi"}
+[2025-12-30T07:38:26.075Z] [INFO] Booking retrieved successfully | Context: {"requestId":"772899d4-af44-42b0-8228-f51c3ad3a0a4","bookingId":"28501a90-e978-4c56-adb8-19568c38b2ea","customer":"andi"}
+[2025-12-30T07:38:57.395Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832114,"impressions":90703,"clicks":366,"reach":33447}
+[2025-12-30T07:38:57.803Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832114,"impressions":90703,"clicks":366,"reach":33447}
+[2025-12-30T07:39:01.707Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832114,"impressions":90703,"clicks":366,"reach":33447}
+[2025-12-30T07:39:02.188Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832114,"impressions":90703,"clicks":366,"reach":33447}
+[2025-12-30T07:42:43.960Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832607,"impressions":90777,"clicks":366,"reach":33447}
+[2025-12-30T07:42:44.424Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":832607,"impressions":90777,"clicks":366,"reach":33447}
+[2025-12-30T08:00:28.569Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:00:28.571Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:00:28.618Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:00:28.617Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:00:28.635Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:00:28.635Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:00:28.648Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:00:28.648Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:00:29.418Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834614,"impressions":91042,"clicks":367,"reach":33572}
+[2025-12-30T08:00:29.814Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834614,"impressions":91042,"clicks":367,"reach":33572}
+[2025-12-30T08:02:07.863Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:02:07.865Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:02:08.001Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:02:08.001Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:02:08.026Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:02:08.025Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:02:08.038Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:02:08.038Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:02:08.962Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834614,"impressions":91042,"clicks":367,"reach":33572}
+[2025-12-30T08:02:09.511Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834614,"impressions":91042,"clicks":367,"reach":33572}
+[2025-12-30T08:04:44.964Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:04:44.966Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:04:45.017Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:04:45.017Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:04:45.051Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:04:45.052Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:04:45.069Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:04:45.070Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:04:45.256Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834844,"impressions":91079,"clicks":367,"reach":33578}
+[2025-12-30T08:04:45.627Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":834844,"impressions":91079,"clicks":367,"reach":33578}
+[2025-12-30T08:05:19.234Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:05:19.235Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:05:19.283Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:05:19.282Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:05:19.331Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:05:19.332Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:05:19.351Z] [INFO] Retrieved bookings from database | Context: {"count":2}
+[2025-12-30T08:05:19.352Z] [INFO] Bookings retrieved successfully | Context: {"count":2}
+[2025-12-30T08:05:19.790Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":835193,"impressions":91115,"clicks":367,"reach":33598}
+[2025-12-30T08:05:20.296Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-11-30","spend":835193,"impressions":91115,"clicks":367,"reach":33598}

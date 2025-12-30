@@ -1,5 +1,6 @@
 import { Booking } from '@/lib/storage';
 import { FilterStatus } from '../types/admin';
+import { useExport } from '../hooks/useExport';
 
 interface BookingsTableProps {
     bookings: Booking[];
@@ -10,6 +11,8 @@ interface BookingsTableProps {
     handleDeleteBooking: (bookingId: string) => void;
     handleOpenCreateBookingModal: () => void;
     calculateFinance: (b: Booking) => { total: number; paid: number; balance: number; isPaidOff: boolean };
+    exportHook: ReturnType<typeof useExport>;
+    dateRange: { start: string; end: string };
 }
 
 export const BookingsTable = ({
@@ -20,7 +23,9 @@ export const BookingsTable = ({
     handleUpdateStatus,
     handleDeleteBooking,
     handleOpenCreateBookingModal,
-    calculateFinance
+    calculateFinance,
+    exportHook,
+    dateRange
 }: BookingsTableProps) => {
     // Helper function to determine if booking is paid off
     const isBookingPaid = (booking: Booking): boolean => {
@@ -59,12 +64,22 @@ export const BookingsTable = ({
                         ))}
                     </div>
                 </div>
-                <button
-                    onClick={handleOpenCreateBookingModal}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
-                >
-                    <span>➕</span> Create Booking
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => exportHook.handleExportBookings(filterStatus, dateRange)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 rounded-lg transition-colors border border-gray-300"
+                        title="Export filtered bookings to CSV"
+                    >
+                        <span>📥</span>
+                        <span>Export CSV</span>
+                    </button>
+                    <button
+                        onClick={handleOpenCreateBookingModal}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
+                    >
+                        <span>➕</span> Create Booking
+                    </button>
+                </div>
             </div>
 
             <div className="overflow-x-auto">

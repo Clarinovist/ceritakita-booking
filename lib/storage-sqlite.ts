@@ -575,6 +575,7 @@ export interface AdsData {
   reach: number;
   date_start?: string;
   date_end?: string;
+  updated_at?: string;  // Added for history tracking
 }
 
 /**
@@ -620,7 +621,7 @@ export function saveAdsLog(data: AdsData): void {
   } else {
     // Fallback to today's date
     const now = new Date();
-    dateRecord = now.toISOString().split('T')[0];
+    dateRecord = now.toISOString().split('T')[0] || '';
   }
 
   try {
@@ -778,7 +779,8 @@ export function getAdsLog(
       inlineLinkClicks: row.clicks,
       reach: row.reach,
       date_start: row.date_record,
-      date_end: row.date_record
+      date_end: row.date_record,
+      updated_at: row.updated_at  // Include updated_at for history tracking
     });
 
     if (dateRecord) {
@@ -824,4 +826,115 @@ export function getAdsLog(
     // Return empty array instead of throwing to prevent UI breakage
     return [];
   }
+}
+
+/**
+ * System Settings Interface
+ */
+export interface SystemSettings {
+  site_name: string;
+  site_logo: string;
+  business_phone: string;
+  business_address: string;
+  [key: string]: string;
+}
+
+/**
+ * Get all system settings as an object
+ */
+export function getSystemSettings(): SystemSettings {
+  const db = getDb();
+  const stmt = db.prepare('SELECT key, value FROM system_settings ORDER BY key');
+  const rows = stmt.all() as Array<{ key: string; value: string }>;
+  
+  const settings: SystemSettings = {
+    site_name: 'Cerita Kita',
+    site_logo: '/images/default-logo.png',
+    business_phone: '+62 812 3456 7890',
+    business_address: 'Jalan Raya No. 123, Jakarta'
+  };
+
+  // Override with database values
+  rows.forEach(row => {
+    settings[row.key] = row.value;
+  });
+
+  return settings;
+}
+
+/**
+ * Get a single system setting by key
+ */
+export function getSystemSetting(key: string): string | null {
+  const db = getDb();
+  const stmt = db.prepare('SELECT value FROM system_settings WHERE key = ?');
+  const result = stmt.get(key) as { value: string } | undefined;
+  return result ? result.value : null;
+}
+
+/**
+ * Update system settings (supports batch updates)
+ * Includes audit trail logging
+ */
+export function updateSystemSettings(settings: Record<string, string>, updatedBy: string = 'system'): void {
+  const db = getDb();
+
+  const selectStmt = db.prepare('SELECT value FROM system_settings WHERE key = ?');
+  const updateStmt = db.prepare(`
+    INSERT OR REPLACE INTO system_settings (key, value, updated_at)
+    VALUES (?, ?, CURRENT_TIMESTAMP)
+  `);
+  const auditStmt = db.prepare(`
+    INSERT INTO system_settings_audit (key, old_value, new_value, updated_by, updated_at)
+    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+  `);
+
+  const transaction = db.transaction(() => {
+    Object.entries(settings).forEach(([key, value]) => {
+      // Get old value for audit trail
+      const oldRow = selectStmt.get(key) as { value: string } | undefined;
+      const oldValue = oldRow ? oldRow.value : null;
+
+      // Update setting
+      updateStmt.run(key, value);
+
+      // Log change to audit table
+      auditStmt.run(key, oldValue, value, updatedBy);
+
+      logger.info(`Setting updated: ${key}`, {
+        oldValue: oldValue || '(none)',
+        newValue: value,
+        updatedBy
+      });
+    });
+  });
+
+  transaction();
+}
+
+/**
+ * Initialize system settings with defaults (if not exists)
+ */
+export function initializeSystemSettings(): void {
+  const db = getDb();
+  const defaults: Record<string, string> = {
+    site_name: 'Cerita Kita',
+    site_logo: '/images/default-logo.png',
+    business_phone: '+62 812 3456 7890',
+    business_address: 'Jalan Raya No. 123, Jakarta'
+  };
+
+  const checkStmt = db.prepare('SELECT key FROM system_settings WHERE key = ?');
+  const insertStmt = db.prepare('INSERT OR IGNORE INTO system_settings (key, value) VALUES (?, ?)');
+
+  const transaction = db.transaction(() => {
+    Object.entries(defaults).forEach(([key, value]) => {
+      const exists = checkStmt.get(key);
+      if (!exists) {
+        insertStmt.run(key, value);
+      }
+    });
+  });
+
+  transaction();
 }

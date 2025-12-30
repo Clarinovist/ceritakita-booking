@@ -2,7 +2,7 @@
 
 import { Booking } from "@/lib/storage";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { DollarSign, Users, CalendarX, Target, TrendingUp, ArrowUpRight, ArrowDownRight, Megaphone, MousePointerClick, CheckCircle } from 'lucide-react';
+import { DollarSign, Users, CalendarX, Target, TrendingUp, ArrowUpRight, ArrowDownRight, Megaphone, MousePointerClick, CheckCircle, CheckCircle2, History } from 'lucide-react';
 import { MetaInsightsData } from "@/app/api/meta/insights/route";
 import { useState, useEffect } from 'react';
 
@@ -29,6 +29,10 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
         isLoading: true,
         error: null
     });
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [historyData, setHistoryData] = useState<any[]>([]);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
     // Fetch ads data on mount and when dateRange changes
     useEffect(() => {
@@ -53,6 +57,14 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
                         isLoading: false,
                         error: null
                     });
+                    // Update last updated timestamp on successful fetch
+                    const now = new Date();
+                    setLastUpdated(now.toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }));
                 } else {
                     setAdsData(prev => ({
                         ...prev,
@@ -72,6 +84,33 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
 
         fetchAdsData();
     }, [dateRange]);
+
+    // Function to fetch history data
+    const fetchHistoryData = async () => {
+        setHistoryLoading(true);
+        try {
+            const response = await fetch('/api/meta/history?limit=7');
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                setHistoryData(result.data);
+            } else {
+                console.error('Failed to fetch history:', result.error);
+                setHistoryData([]);
+            }
+        } catch (error) {
+            console.error('Error fetching history:', error);
+            setHistoryData([]);
+        } finally {
+            setHistoryLoading(false);
+        }
+    };
+
+    // Function to open history modal
+    const openHistoryModal = () => {
+        setShowHistoryModal(true);
+        fetchHistoryData();
+    };
 
     // 1. Calculate Summary
     const totalBookings = bookings.length;
@@ -166,6 +205,13 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
                         {adsData.isLoading ? '...' : `Rp ${adsSpend.toLocaleString()}`}
                     </p>
                     {adsData.error && <p className="text-xs text-red-500 mt-1">{adsData.error}</p>}
+                    {/* Last Updated Indicator */}
+                    {lastUpdated && !adsData.isLoading && !adsData.error && (
+                        <div className="flex items-center gap-1 mt-2 text-xs text-gray-400 justify-end">
+                            <CheckCircle2 size={12} className="text-green-500" />
+                            <span>Data synced: {lastUpdated}</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
@@ -201,6 +247,17 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
                         {adsSpend > 0 ? `${roi > 0 ? '+' : ''}${roi.toFixed(1)}% ROI` : 'No spend data'}
                     </p>
                 </div>
+            </div>
+
+            {/* History Button in Ads Performance Section */}
+            <div className="flex justify-end">
+                <button
+                    onClick={openHistoryModal}
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium shadow-md"
+                >
+                    <History size={16} />
+                    View Ads History
+                </button>
             </div>
 
             {/* ROI Comparison */}
@@ -377,6 +434,85 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
                     </ResponsiveContainer>
                 </div>
             </div>
+
+            {/* History Modal */}
+            {showHistoryModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowHistoryModal(false)}>
+                    <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                            <div className="flex items-center gap-2">
+                                <History size={20} className="text-purple-600" />
+                                <h3 className="text-lg font-bold text-gray-800">Ads Performance History</h3>
+                            </div>
+                            <button
+                                onClick={() => setShowHistoryModal(false)}
+                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <span className="text-2xl font-bold">×</span>
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="p-6 overflow-y-auto max-h-[60vh]">
+                            {historyLoading ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                                    <span className="ml-3 text-gray-600">Loading history...</span>
+                                </div>
+                            ) : historyData.length === 0 ? (
+                                <div className="text-center py-8 text-gray-500">
+                                    <p>No history data available</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {/* Table Header */}
+                                    <div className="grid grid-cols-6 gap-2 text-xs font-semibold text-gray-600 pb-2 border-b border-gray-200">
+                                        <div className="col-span-1">Date</div>
+                                        <div className="text-right">Spend</div>
+                                        <div className="text-right">Clicks</div>
+                                        <div className="text-right">Impressions</div>
+                                        <div className="text-right">Reach</div>
+                                        <div className="text-right">Updated</div>
+                                    </div>
+                                    
+                                    {/* Table Rows */}
+                                    {historyData.map((record, index) => (
+                                        <div key={index} className="grid grid-cols-6 gap-2 text-sm py-2 hover:bg-gray-50 rounded">
+                                            <div className="col-span-1 font-medium text-gray-900">
+                                                {record.date_record}
+                                            </div>
+                                            <div className="text-right text-purple-700 font-semibold">
+                                                Rp {record.spend.toLocaleString()}
+                                            </div>
+                                            <div className="text-right text-orange-700">
+                                                {record.clicks.toLocaleString()}
+                                            </div>
+                                            <div className="text-right text-gray-600">
+                                                {record.impressions.toLocaleString()}
+                                            </div>
+                                            <div className="text-right text-teal-700">
+                                                {record.reach.toLocaleString()}
+                                            </div>
+                                            <div className="text-right text-xs text-gray-400">
+                                                {new Date(record.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-4 border-t border-gray-200 bg-gray-50">
+                            <div className="flex items-center justify-between text-xs text-gray-500">
+                                <span>Showing last 7 records</span>
+                                <span>Total: {historyData.length} entries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -5,9 +5,17 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { Booking } from '@/lib/storage';
 
+interface Settings {
+  site_name: string;
+  site_logo: string;
+  business_phone: string;
+  business_address: string;
+}
+
 export default function InvoicePage({ params }: { params: { id: string } }) {
     const { data: session, status } = useSession();
     const [booking, setBooking] = useState<Booking | null>(null);
+    const [settings, setSettings] = useState<Settings | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -19,22 +27,30 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
             redirect('/login');
         }
 
-        // Fetch booking data using RESTful endpoint
-        const fetchBooking = async () => {
+        // Fetch booking data and settings
+        const fetchData = async () => {
             try {
-                const res = await fetch(`/api/bookings/${params.id}`);
-                if (!res.ok) {
+                // Fetch booking
+                const bookingRes = await fetch(`/api/bookings/${params.id}`);
+                if (!bookingRes.ok) {
                     throw new Error('Booking not found or access denied');
                 }
-                const data = await res.json();
-                setBooking(data);
+                const bookingData = await bookingRes.json();
+                setBooking(bookingData);
+
+                // Fetch settings
+                const settingsRes = await fetch('/api/settings');
+                if (settingsRes.ok) {
+                    const settingsData = await settingsRes.json();
+                    setSettings(settingsData);
+                }
 
                 // SECURITY: Log invoice access for audit trail
                 console.info('[INVOICE_ACCESS]', {
                     bookingId: params.id,
                     accessedBy: session.user?.email || session.user?.name || 'unknown',
                     accessedAt: new Date().toISOString(),
-                    customer: data.customer.name
+                    customer: bookingData.customer.name
                 });
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to load booking');
@@ -43,7 +59,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
             }
         };
 
-        fetchBooking();
+        fetchData();
     }, [session, status, params.id]);
 
     // Auto-trigger print when page loads (after data is loaded)
@@ -157,11 +173,25 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 {/* Studio Header */}
                 <div className="border-2 border-gray-900 p-6 bg-gray-50">
                     <div className="flex justify-between items-start">
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-1">CERITAKITA STUDIO</h2>
-                            <p className="text-gray-600 text-sm">Professional Photography Services</p>
-                            <p className="text-gray-500 text-xs mt-1">Jl. Raya No. 123, Jakarta</p>
-                            <p className="text-gray-500 text-xs">Phone: +62 812 3456 7890</p>
+                        <div className="flex items-center gap-4">
+                            {settings?.site_logo && (
+                                <img
+                                    src={settings.site_logo}
+                                    alt="Logo"
+                                    className="h-12 w-auto object-contain"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = '/images/default-logo.png';
+                                    }}
+                                />
+                            )}
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                                    {(settings?.site_name || 'CERITAKITA STUDIO').toUpperCase()}
+                                </h2>
+                                <p className="text-gray-600 text-sm">Professional Photography Services</p>
+                                <p className="text-gray-500 text-xs mt-1">{settings?.business_address || 'Jl. Raya No. 123, Jakarta'}</p>
+                                <p className="text-gray-500 text-xs">Phone: {settings?.business_phone || '+62 812 3456 7890'}</p>
+                            </div>
                         </div>
                         <div className="text-right">
                             <p className="text-sm font-semibold">Invoice Date</p>
@@ -372,7 +402,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 <div className="border-t-2 border-gray-300 pt-6 text-center text-sm text-gray-600">
                     <p className="font-semibold mb-2">THANK YOU FOR YOUR BUSINESS!</p>
                     <p className="text-xs mb-1">For questions or concerns, please contact us at:</p>
-                    <p className="text-xs">WhatsApp: +62 812 3456 7890 | Email: info@ceritakita.com</p>
+                    <p className="text-xs">WhatsApp: {settings?.business_phone || '+62 812 3456 7890'} | Email: info@ceritakita.com</p>
                     <p className="text-xs mt-3 text-gray-500">
                         This is a computer-generated invoice. No signature required.
                     </p>
@@ -387,7 +417,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
             {/* Print-only Payment Instructions */}
             <div className="hidden print:block mt-8 p-4 border-2 border-dashed border-gray-300 bg-gray-50 text-center">
                 <p className="font-semibold text-sm mb-2">PAYMENT INSTRUCTIONS</p>
-                <p className="text-xs">Transfer to: BCA 1234567890 a.n. Ceritakita Studio</p>
+                <p className="text-xs">Transfer to: BCA 1234567890 a.n. {settings?.site_name || 'Ceritakita Studio'}</p>
                 <p className="text-xs mt-1">Please send proof of payment to our WhatsApp</p>
             </div>
 

@@ -304,6 +304,46 @@ function initializeSchema() {
     )
   `);
 
+  // Create system_settings table for dynamic business info
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS system_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Seed default system settings if empty
+  const settingsCount = db.prepare('SELECT COUNT(*) as count FROM system_settings').get() as { count: number };
+  if (settingsCount.count === 0) {
+    const defaultSettings = [
+      { key: 'site_name', value: 'Cerita Kita' },
+      { key: 'site_logo', value: '/images/default-logo.png' },
+      { key: 'business_phone', value: '+62 812 3456 7890' },
+      { key: 'business_address', value: 'Jalan Raya No. 123, Jakarta' }
+    ];
+
+    const insertStmt = db.prepare('INSERT INTO system_settings (key, value) VALUES (?, ?)');
+    const insertMany = db.transaction(() => {
+      defaultSettings.forEach(setting => {
+        insertStmt.run(setting.key, setting.value);
+      });
+    });
+    insertMany();
+  }
+
+  // Create system_settings_audit table for tracking changes
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS system_settings_audit (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      key TEXT NOT NULL,
+      old_value TEXT,
+      new_value TEXT,
+      updated_by TEXT NOT NULL,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Create indexes for better query performance
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
@@ -322,6 +362,8 @@ function initializeSchema() {
     CREATE INDEX IF NOT EXISTS idx_coupon_usage_booking_id ON coupon_usage(booking_id);
     CREATE INDEX IF NOT EXISTS idx_portfolio_service_id ON portfolio_images(service_id);
     CREATE INDEX IF NOT EXISTS idx_ads_performance_log_date ON ads_performance_log(date_record);
+    CREATE INDEX IF NOT EXISTS idx_system_settings_audit_key ON system_settings_audit(key);
+    CREATE INDEX IF NOT EXISTS idx_system_settings_audit_updated_at ON system_settings_audit(updated_at);
   `);
 }
 
