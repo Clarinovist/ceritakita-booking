@@ -440,7 +440,8 @@ export default function AdminDashboard() {
                                                 <td className="px-4 py-3">
                                                     <span className={`px-2 py-1 rounded-full text-xs font-medium
                                   ${b.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                                                            b.status === 'Rescheduled' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                                                            b.status === 'Rescheduled' ? 'bg-orange-100 text-orange-700' :
+                                                            b.status === 'Completed' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
                                                         {b.status}
                                                     </span>
                                                 </td>
@@ -595,7 +596,8 @@ export default function AdminDashboard() {
                             <div>
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="font-semibold text-gray-500 text-sm uppercase">Customer</h3>
-                                    <span className={`px-2 py-0.5 rounded text-xs font-bold border ${bookingsHook.selectedBooking.status === 'Cancelled' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-green-50 text-green-600 border-green-200'}`}>
+                                    <span className={`px-2 py-0.5 rounded text-xs font-bold border ${bookingsHook.selectedBooking.status === 'Cancelled' ? 'bg-red-50 text-red-600 border-red-200' : 
+                                        bookingsHook.selectedBooking.status === 'Completed' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-green-50 text-green-600 border-green-200'}`}>
                                         {bookingsHook.selectedBooking.status}
                                     </span>
                                 </div>
@@ -619,20 +621,50 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
+                            {/* Immutability Warning for Completed Bookings */}
+                            {bookingsHook.selectedBooking.status === 'Completed' && (
+                                <div className="bg-blue-50 p-4 rounded border border-blue-200">
+                                    <div className="flex items-start gap-2">
+                                        <span className="text-blue-600 font-bold text-lg">ℹ️</span>
+                                        <div>
+                                            <h4 className="font-bold text-blue-800 text-sm mb-1">Booking Completed</h4>
+                                            <p className="text-blue-700 text-xs">
+                                                This booking is marked as completed and cannot be modified or deleted.
+                                                Contact a system administrator if changes are required.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="bg-orange-50 p-4 rounded border border-orange-100">
                                 <h4 className="font-bold text-orange-800 text-sm mb-2">Manage Status</h4>
-                                <select
-                                    value={bookingsHook.selectedBooking.status}
-                                    onChange={(e) => bookingsHook.handleUpdateStatus(bookingsHook.selectedBooking.id, e.target.value as any)}
-                                    className="w-full p-2 border rounded"
-                                >
-                                    <option value="Active">Active (Confirmed)</option>
-                                    <option value="Rescheduled">Rescheduled</option>
-                                    <option value="Canceled">Canceled</option>
-                                </select>
+                                {bookingsHook.selectedBooking.status === 'Completed' ? (
+                                    <div className="p-2 bg-blue-50 border border-blue-200 rounded text-center">
+                                        <span className="text-blue-600 font-bold text-sm">
+                                            Status: Completed ✓ (Immutable)
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <select
+                                        value={bookingsHook.selectedBooking.status}
+                                        onChange={(e) => bookingsHook.handleUpdateStatus(bookingsHook.selectedBooking.id, e.target.value as any)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="Active">Active (Confirmed)</option>
+                                        <option value="Rescheduled">Rescheduled</option>
+                                        <option value="Canceled">Canceled</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                )}
                                 <button
                                     onClick={() => bookingsHook.selectedBooking && handleOpenRescheduleModal(bookingsHook.selectedBooking.id, bookingsHook.selectedBooking.booking.date)}
-                                    className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2"
+                                    disabled={bookingsHook.selectedBooking.status === 'Completed'}
+                                    className={`mt-3 w-full px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 ${
+                                        bookingsHook.selectedBooking.status === 'Completed'
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    }`}
                                 >
                                     <span>📅</span>
                                     Reschedule Date/Time
@@ -671,7 +703,12 @@ export default function AdminDashboard() {
                                 <select
                                     value={bookingsHook.selectedBooking.photographer_id || ''}
                                     onChange={(e) => bookingsHook.handleUpdate(bookingsHook.selectedBooking.id, { photographer_id: e.target.value || undefined })}
-                                    className="w-full p-2 border rounded bg-white"
+                                    disabled={bookingsHook.selectedBooking.status === 'Completed'}
+                                    className={`w-full p-2 border rounded ${
+                                        bookingsHook.selectedBooking.status === 'Completed'
+                                            ? 'bg-gray-100 cursor-not-allowed'
+                                            : 'bg-white'
+                                    }`}
                                 >
                                     <option value="">-- Not Assigned --</option>
                                     {photographersHook.photographers.filter(p => p.is_active).map(photographer => (
@@ -860,39 +897,48 @@ export default function AdminDashboard() {
                                         </div>
                                     </div>
 
-                                    <form
-                                        className="border-t pt-4 mt-4"
-                                        onSubmit={(e) => {
-                                            e.preventDefault();
-                                            const form = e.target as HTMLFormElement;
-                                            const formData = new FormData(form);
-                                            const amount = Number(formData.get('amount'));
-                                            const note = formData.get('note') ?? '';
-                                            if (!amount) return;
-
-                                            const newPayment = {
-                                                date: new Date().toISOString().split('T')[0] ?? '',
-                                                amount,
-                                                note: String(note),
-                                                proof_base64: ''
-                                            };
-
-                                            bookingsHook.handleUpdateFinance(bookingsHook.selectedBooking.id, {
-                                                ...bookingsHook.selectedBooking.finance,
-                                                payments: [...bookingsHook.selectedBooking.finance.payments, newPayment]
-                                            });
-                                            form.reset();
-                                        }}
-                                    >
-                                        <h4 className="font-bold text-sm mb-2">Add Payment (Pelunasan)</h4>
-                                        <div className="grid grid-cols-2 gap-2 mb-2">
-                                            <input name="amount" type="number" placeholder="Amount" className="border rounded p-2 text-sm" required />
-                                            <input name="note" type="text" placeholder="Note (e.g. Cash)" className="border rounded p-2 text-sm" required />
+                                    {/* Add Payment Form - Disabled for Completed Bookings */}
+                                    {bookingsHook.selectedBooking.status === 'Completed' ? (
+                                        <div className="border-t pt-4 mt-4 bg-gray-50 p-3 rounded text-center">
+                                            <p className="text-xs text-gray-600">
+                                                Payment editing disabled for completed bookings
+                                            </p>
                                         </div>
-                                        <button type="submit" className="w-full bg-green-600 text-white text-sm font-bold py-2 rounded hover:bg-green-700">
-                                            Add Payment
-                                        </button>
-                                    </form>
+                                    ) : (
+                                        <form
+                                            className="border-t pt-4 mt-4"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const form = e.target as HTMLFormElement;
+                                                const formData = new FormData(form);
+                                                const amount = Number(formData.get('amount'));
+                                                const note = formData.get('note') ?? '';
+                                                if (!amount) return;
+
+                                                const newPayment = {
+                                                    date: new Date().toISOString().split('T')[0] ?? '',
+                                                    amount,
+                                                    note: String(note),
+                                                    proof_base64: ''
+                                                };
+
+                                                bookingsHook.handleUpdateFinance(bookingsHook.selectedBooking.id, {
+                                                    ...bookingsHook.selectedBooking.finance,
+                                                    payments: [...bookingsHook.selectedBooking.finance.payments, newPayment]
+                                                });
+                                                form.reset();
+                                            }}
+                                        >
+                                            <h4 className="font-bold text-sm mb-2">Add Payment (Pelunasan)</h4>
+                                            <div className="grid grid-cols-2 gap-2 mb-2">
+                                                <input name="amount" type="number" placeholder="Amount" className="border rounded p-2 text-sm" required />
+                                                <input name="note" type="text" placeholder="Note (e.g. Cash)" className="border rounded p-2 text-sm" required />
+                                            </div>
+                                            <button type="submit" className="w-full bg-green-600 text-white text-sm font-bold py-2 rounded hover:bg-green-700">
+                                                Add Payment
+                                            </button>
+                                        </form>
+                                    )}
                                 </div>
                             </div>
                         </div>

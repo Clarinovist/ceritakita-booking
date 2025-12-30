@@ -22,6 +22,24 @@ export const BookingsTable = ({
     handleOpenCreateBookingModal,
     calculateFinance
 }: BookingsTableProps) => {
+    // Helper function to determine if booking is paid off
+    const isBookingPaid = (booking: Booking): boolean => {
+        const finance = calculateFinance(booking);
+        return finance.isPaidOff;
+    };
+
+    // Helper function to handle "Mark as Completed"
+    const handleMarkCompleted = (bookingId: string) => {
+        if (confirm("Mark this booking as Completed? This action cannot be undone.")) {
+            handleUpdateStatus(bookingId, 'Completed');
+        }
+    };
+
+    // Helper function to navigate to invoice page
+    const handleViewInvoice = (bookingId: string) => {
+        window.open(`/admin/invoices/${bookingId}`, '_blank');
+    };
+
     return (
         <div className="bg-white rounded-xl shadow overflow-hidden animate-in fade-in min-h-[500px]">
             <div className="p-4 border-b flex gap-4 items-center bg-gray-50 justify-between">
@@ -30,7 +48,7 @@ export const BookingsTable = ({
                         <span>📋</span> All Bookings
                     </h3>
                     <div className="flex bg-white border rounded-lg overflow-hidden text-sm">
-                        {(['All', 'Active', 'Canceled'] as const).map(s => (
+                        {(['All', 'Active', 'Canceled', 'Completed'] as const).map(s => (
                             <button
                                 key={s}
                                 onClick={() => setFilterStatus(s)}
@@ -86,16 +104,26 @@ export const BookingsTable = ({
                                     <td className="px-4 py-3">{b.customer.whatsapp}</td>
                                     <td className="px-4 py-3">{b.customer.category}</td>
                                     <td className="px-4 py-3">
-                                        <select
-                                            value={b.status}
-                                            onChange={(e) => handleUpdateStatus(b.id, e.target.value as Booking['status'])}
-                                            className={`border-none bg-transparent text-xs font-bold focus:ring-0 cursor-pointer
-                                      ${b.status === 'Cancelled' ? 'text-red-600' : b.status === 'Rescheduled' ? 'text-orange-600' : 'text-green-600'}`}
-                                        >
-                                            <option value="Active">Active</option>
-                                            <option value="Rescheduled">Rescheduled</option>
-                                            <option value="Canceled">Canceled</option>
-                                        </select>
+                                        {/* Disable dropdown for Completed bookings (immutable final state) */}
+                                        {b.status === 'Completed' ? (
+                                            <span className="text-blue-600 font-bold text-xs bg-blue-50 px-2 py-1 rounded border border-blue-200">
+                                                Completed ✓
+                                            </span>
+                                        ) : (
+                                            <select
+                                                value={b.status}
+                                                onChange={(e) => handleUpdateStatus(b.id, e.target.value as Booking['status'])}
+                                                className={`border-none bg-transparent text-xs font-bold focus:ring-0 cursor-pointer
+                                          ${b.status === 'Cancelled' ? 'text-red-600' :
+                                            b.status === 'Rescheduled' ? 'text-orange-600' :
+                                            'text-green-600'}`}
+                                            >
+                                                <option value="Active">Active</option>
+                                                <option value="Rescheduled">Rescheduled</option>
+                                                <option value="Canceled">Canceled</option>
+                                                <option value="Completed">Completed</option>
+                                            </select>
+                                        )}
                                     </td>
                                     <td className="px-4 py-3 text-right">
                                         {isPaidOff ? (
@@ -105,13 +133,37 @@ export const BookingsTable = ({
                                         )}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-2 flex-wrap">
                                             <button onClick={() => setSelectedBooking(b)} className="text-blue-600 hover:text-blue-800 font-medium text-xs border border-blue-200 px-3 py-1 rounded hover:bg-blue-50">
                                                 Details
                                             </button>
-                                            <button onClick={() => handleDeleteBooking(b.id)} className="text-red-600 hover:text-red-800 font-medium text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50">
-                                                Delete
-                                            </button>
+                                            
+                                            {/* Mark as Completed button - visible when status is Active/Rescheduled and paid */}
+                                            {(b.status === 'Active' || b.status === 'Rescheduled') && isPaidOff && (
+                                                <button 
+                                                    onClick={() => handleMarkCompleted(b.id)} 
+                                                    className="text-green-600 hover:text-green-800 font-medium text-xs border border-green-200 px-3 py-1 rounded hover:bg-green-50"
+                                                >
+                                                    Mark Completed
+                                                </button>
+                                            )}
+
+                                            {/* View Invoice button - visible when paid or completed */}
+                                            {(isPaidOff || b.status === 'Completed') && (
+                                                <button 
+                                                    onClick={() => handleViewInvoice(b.id)} 
+                                                    className="text-purple-600 hover:text-purple-800 font-medium text-xs border border-purple-200 px-3 py-1 rounded hover:bg-purple-50"
+                                                >
+                                                    Invoice
+                                                </button>
+                                            )}
+
+                                            {/* Hide delete button for Completed bookings (immutable) */}
+                                            {b.status !== 'Completed' && (
+                                                <button onClick={() => handleDeleteBooking(b.id)} className="text-red-600 hover:text-red-800 font-medium text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50">
+                                                    Delete
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

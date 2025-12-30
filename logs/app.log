@@ -98,3 +98,112 @@
 [2025-12-25T06:40:15.672Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
 [2025-12-25T06:41:20.612Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
 [2025-12-25T06:41:20.625Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-30T02:55:15.286Z] [WARN] Failed login attempt | Context: {"username":"admin","ip":"unknown"}
+[2025-12-30T02:55:28.575Z] [WARN] Failed login attempt | Context: {"username":"admin","ip":"unknown"}
+[2025-12-30T03:24:54.558Z] [INFO] User signed in | Context: {"userId":"6862da46-2e30-4df4-ada0-86a0ac49b568","name":"admin","role":"admin"}
+[2025-12-30T03:24:54.558Z] [INFO] Successful login | Context: {"username":"admin","role":"admin"}
+[2025-12-30T03:25:01.192Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:25:01.193Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:25:01.219Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:25:01.220Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:25:01.235Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:25:01.235Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:25:01.250Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:25:01.250Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:28:07.458Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:28:07.458Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:28:07.519Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:28:07.520Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:28:07.556Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:28:07.556Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:28:07.567Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:28:07.567Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:36:50.648Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:36:50.648Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:36:50.686Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:36:50.686Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:36:50.703Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:36:50.703Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:36:50.722Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:36:50.722Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:41:23.823Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:41:23.823Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:41:23.904Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:41:23.904Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:41:23.941Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:41:23.941Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:41:23.954Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:41:23.955Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:46:38.496Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:46:38.497Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:46:38.544Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:46:38.544Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:46:38.577Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:46:38.577Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:46:38.597Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:46:38.596Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:47:43.375Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:47:43.374Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:47:43.443Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:47:43.443Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:47:43.471Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:47:43.472Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:47:43.489Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:47:43.489Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:59:15.913Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:59:15.912Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:59:15.965Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:59:15.965Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:59:15.981Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:59:15.981Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T03:59:16.004Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T03:59:16.004Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:03:10.811Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:03:10.812Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:03:10.881Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:03:10.881Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:03:10.943Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:03:10.943Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:03:10.959Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:03:10.959Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:04:31.631Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:04:31.632Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:04:31.712Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:04:31.712Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:04:31.755Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:04:31.755Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:04:31.778Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:04:31.778Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:17.721Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:17.722Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:17.788Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:17.788Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:17.858Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:17.858Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:17.924Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:17.925Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:17.964Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:17.964Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:18.006Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:18.007Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:18.039Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:18.040Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:07:18.063Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:07:18.063Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:09:09.296Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:09:09.295Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:09:09.398Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:09:09.398Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:09:09.445Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:09:09.446Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:09:09.501Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:09:09.501Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:14:18.585Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:14:18.585Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:14:18.670Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:14:18.670Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:14:18.714Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:14:18.714Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T04:14:18.743Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2025-12-30T04:14:18.743Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2025-12-30T05:15:54.353Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-30","spend":30232,"impressions":3273,"clicks":13,"reach":2786}

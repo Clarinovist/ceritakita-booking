@@ -6,9 +6,34 @@ import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
 import { safeString } from '@/lib/type-utils';
 
+/**
+ * Valid status transition matrix
+ * Defines which status changes are allowed from each current status
+ */
+const VALID_TRANSITIONS: Record<Booking['status'], Booking['status'][]> = {
+    'Active': ['Rescheduled', 'Cancelled', 'Completed'],
+    'Rescheduled': ['Active', 'Cancelled', 'Completed'],
+    'Cancelled': [], // Cannot transition from Cancelled (final state)
+    'Completed': [] // Cannot transition from Completed (immutable final state)
+};
+
+/**
+ * Calculate total paid amount from payments
+ */
+function calculateTotalPaid(booking: Booking): number {
+    return booking.finance.payments.reduce((sum, payment) => sum + payment.amount, 0);
+}
+
+/**
+ * Validate if status transition is allowed
+ */
+function isValidStatusTransition(currentStatus: Booking['status'], newStatus: Booking['status']): boolean {
+    return VALID_TRANSITIONS[currentStatus].includes(newStatus);
+}
+
 export async function PUT(req: NextRequest) {
     const requestId = crypto.randomUUID();
-    
+
     try {
         // Rate limiting
         const rateLimitResult = rateLimiters.moderate(req);
@@ -47,6 +72,80 @@ export async function PUT(req: NextRequest) {
                 { error: 'Booking not found', code: 'BOOKING_NOT_FOUND' },
                 { status: 404 }
             );
+        }
+
+        // SECURITY: Prevent modification of completed bookings (immutable)
+        if (currentBooking.status === 'Completed') {
+            logger.warn('Attempted to modify completed booking', {
+                requestId,
+                bookingId: id,
+                currentStatus: currentBooking.status
+            });
+            return NextResponse.json(
+                {
+                    error: 'Cannot modify completed bookings',
+                    code: 'BOOKING_IMMUTABLE',
+                    message: 'Completed bookings are immutable and cannot be edited'
+                },
+                { status: 403 }
+            );
+        }
+
+        // VALIDATION: Check status transition if status is being updated
+        if (updates.status && updates.status !== currentBooking.status) {
+            const newStatus = updates.status as Booking['status'];
+
+            // Validate status transition
+            if (!isValidStatusTransition(currentBooking.status, newStatus)) {
+                logger.warn('Invalid status transition attempted', {
+                    requestId,
+                    bookingId: id,
+                    currentStatus: currentBooking.status,
+                    attemptedStatus: newStatus
+                });
+                return NextResponse.json(
+                    {
+                        error: `Invalid status transition: ${currentBooking.status} → ${newStatus}`,
+                        code: 'INVALID_STATUS_TRANSITION',
+                        validTransitions: VALID_TRANSITIONS[currentBooking.status]
+                    },
+                    { status: 400 }
+                );
+            }
+
+            // PAYMENT VERIFICATION: Check if booking is paid off when marking as Completed
+            if (newStatus === 'Completed') {
+                const totalPaid = calculateTotalPaid(currentBooking);
+                const balance = currentBooking.finance.total_price - totalPaid;
+
+                if (balance > 0) {
+                    logger.warn('Attempted to complete booking with outstanding balance', {
+                        requestId,
+                        bookingId: id,
+                        balance,
+                        totalPrice: currentBooking.finance.total_price,
+                        totalPaid
+                    });
+                    return NextResponse.json(
+                        {
+                            error: 'Cannot mark as completed - outstanding balance exists',
+                            code: 'OUTSTANDING_BALANCE',
+                            balance: balance,
+                            totalPrice: currentBooking.finance.total_price,
+                            totalPaid: totalPaid
+                        },
+                        { status: 400 }
+                    );
+                }
+
+                // Audit log for completion
+                logger.audit('BOOKING_COMPLETED', `booking:${id}`, currentBooking.customer.name, {
+                    requestId,
+                    totalPrice: currentBooking.finance.total_price,
+                    totalPaid,
+                    bookingDate: currentBooking.booking.date
+                });
+            }
         }
 
         // Only update allowed fields (no arbitrary field injection)

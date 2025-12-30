@@ -57,6 +57,28 @@ export async function GET(req: NextRequest) {
         const authCheck = await requireAuth(req);
         if (authCheck) return authCheck;
 
+        // Check if specific booking ID is requested
+        const { searchParams } = new URL(req.url);
+        const bookingId = searchParams.get('id');
+
+        if (bookingId) {
+            // Get single booking
+            const { readBooking } = await import('@/lib/storage-sqlite');
+            const booking = readBooking(bookingId);
+            
+            if (!booking) {
+                logger.warn('Booking not found', { bookingId });
+                return NextResponse.json(
+                    { error: 'Booking not found', code: 'NOT_FOUND' },
+                    { status: 404 }
+                );
+            }
+
+            logger.info('Booking retrieved successfully', { bookingId });
+            return NextResponse.json(booking);
+        }
+
+        // Get all bookings
         const data = readDataSQLite();
         
         logger.info('Bookings retrieved successfully', {
@@ -362,6 +384,23 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json(
                 { error: 'Booking not found', code: 'NOT_FOUND' },
                 { status: 404 }
+            );
+        }
+
+        // SECURITY: Prevent deletion of completed bookings (immutable)
+        if (existingBooking.status === 'Completed') {
+            logger.warn('Attempted to delete completed booking', {
+                bookingId,
+                customer: existingBooking.customer.name,
+                status: existingBooking.status
+            });
+            return NextResponse.json(
+                {
+                    error: 'Cannot delete completed bookings',
+                    code: 'BOOKING_IMMUTABLE',
+                    message: 'Completed bookings are immutable and cannot be deleted. Please contact an administrator if you need to remove this booking.'
+                },
+                { status: 403 }
             );
         }
 

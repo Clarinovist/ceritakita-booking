@@ -1,6 +1,8 @@
+import { Booking, FinanceData } from '@/lib/storage';
+
 export type ViewMode = 'dashboard' | 'calendar' | 'table' | 'services' | 'portfolio' | 'photographers' | 'addons' | 'coupons' | 'users' | 'payment-settings' | 'ads';
 
-export type FilterStatus = 'All' | 'Active' | 'Canceled';
+export type FilterStatus = 'All' | 'Active' | 'Canceled' | 'Completed';
 
 export interface Photographer {
     id: string;
@@ -73,4 +75,3 @@ export interface RescheduleFormData {
     newTime: string;
     reason: string;
 }
-

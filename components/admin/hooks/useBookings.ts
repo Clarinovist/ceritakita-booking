@@ -150,6 +150,8 @@ export const useBookings = () => {
                 statusMatch = b.status === 'Active' || b.status === 'Rescheduled';
             } else if (filterStatus === 'Canceled') {
                 statusMatch = b.status === 'Cancelled';
+            } else if (filterStatus === 'Completed') {
+                statusMatch = b.status === 'Completed';
             } else {
                 statusMatch = true; // 'All' status
             }

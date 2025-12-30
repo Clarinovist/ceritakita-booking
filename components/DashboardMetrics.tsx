@@ -75,9 +75,10 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
 
     // 1. Calculate Summary
     const totalBookings = bookings.length;
-    const activeBookings = bookings.filter(b => b.status !== 'Canceled');
+    const activeBookings = bookings.filter(b => b.status !== 'Cancelled');
     const totalRevenue = activeBookings.reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
-    const canceledOrRescheduled = bookings.filter(b => b.status === 'Canceled' || b.status === 'Rescheduled').length;
+    const canceledOrRescheduled = bookings.filter(b => b.status === 'Cancelled' || b.status === 'Rescheduled').length;
+    const completedBookings = bookings.filter(b => b.status === 'Completed').length;
 
     // 2. Calculate ROI Metrics
     const adsSpend = adsData.spend;
@@ -111,7 +112,7 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
     return (
         <div className="space-y-6">
             {/* Booking Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow border border-gray-100 flex items-center gap-4">
                     <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
                         <Users size={24} />
@@ -127,8 +128,18 @@ export default function DashboardMetrics({ bookings, dateRange }: Props) {
                         <DollarSign size={24} />
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Est. Revenue (Active)</p>
+                        <p className="text-sm text-gray-500">Est. Revenue</p>
                         <p className="text-2xl font-bold">Rp {totalRevenue.toLocaleString()}</p>
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow border border-gray-100 flex items-center gap-4">
+                    <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+                        <CheckCircle size={24} />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Completed</p>
+                        <p className="text-2xl font-bold">{completedBookings}</p>
                     </div>
                 </div>
 
