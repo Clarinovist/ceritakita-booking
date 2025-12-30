@@ -99,7 +99,8 @@ function getYearMonthDir(): string {
  */
 export async function getUploadPath(filename: string): Promise<string> {
   // Validate filename to prevent directory traversal
-  if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+  // Allow forward slash for year-month subdirectories, but prevent .. and backslash
+  if (filename.includes('..') || filename.includes('\\')) {
     throw new FileStorageError('Invalid filename: contains path separators', 'INVALID_PATH');
   }
 
@@ -108,10 +109,26 @@ export async function getUploadPath(filename: string): Promise<string> {
   if (parts.length === 2) {
     // Format: YYYY-MM/filename
     const [yearMonth, file] = parts;
+
+    // Additional validation: year-month should match expected format
+    if (!/^\d{4}-\d{2}$/.test(yearMonth ?? '')) {
+      throw new FileStorageError('Invalid year-month format in path', 'INVALID_PATH');
+    }
+
+    // File part should not contain any slashes
+    if ((file ?? '').includes('/') || (file ?? '').includes('\\')) {
+      throw new FileStorageError('Invalid filename in subdirectory', 'INVALID_PATH');
+    }
+
     return path.join(UPLOADS_DIR, yearMonth ?? '', file ?? '');
   }
 
   // Legacy: just filename without subdirectory
+  // Ensure no slashes in legacy filenames
+  if (filename.includes('/')) {
+    throw new FileStorageError('Invalid filename format', 'INVALID_PATH');
+  }
+
   return path.join(UPLOADS_DIR, filename);
 }
 
