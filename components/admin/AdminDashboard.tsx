@@ -389,44 +389,6 @@ export default function AdminDashboard() {
                                 bookings={bookingsHook.bookingsByDateRange}
                                 dateRange={bookingsHook.dateRange}
                             />
-
-                            <div className="bg-white rounded-xl shadow overflow-hidden">
-                                <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                                    <h3 className="font-bold text-gray-700 flex items-center gap-2">
-                                        <LayoutGrid size={18} /> Recent Activity (Filtered)
-                                    </h3>
-                                    <button onClick={() => setViewMode('table')} className="text-sm text-blue-600 hover:underline">View All</button>
-                                </div>
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-gray-50 text-gray-500">
-                                        <tr>
-                                            <th className="px-4 py-3">Customer</th>
-                                            <th className="px-4 py-3">Category</th>
-                                            <th className="px-4 py-3">Date</th>
-                                            <th className="px-4 py-3">Status</th>
-                                            <th className="px-4 py-3 text-right">Balance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y">
-                                        {bookingsHook.filteredBookings.slice(0, 5).map(b => (
-                                            <tr key={b.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => bookingsHook.setSelectedBooking(b)}>
-                                                <td className="px-4 py-3 font-medium">{b.customer.name}</td>
-                                                <td className="px-4 py-3">{b.customer.category}</td>
-                                                <td className="px-4 py-3">{new Date(b.booking.date).toLocaleDateString()}</td>
-                                                <td className="px-4 py-3">
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium
-                                  ${b.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                                                            b.status === 'Rescheduled' ? 'bg-orange-100 text-orange-700' :
-                                                            b.status === 'Completed' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
-                                                        {b.status}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-right">Rp {(b.finance.total_price - b.finance.payments.reduce((sum, p) => sum + p.amount, 0)).toLocaleString()}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     )}
 
