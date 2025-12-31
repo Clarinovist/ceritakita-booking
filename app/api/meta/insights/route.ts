@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveAdsLog, AdsData } from '@/lib';
+// ✅ Ganti import lama dengan ini:
+import { saveAdsLog } from '@/lib/storage-sqlite';
 import { logger } from '@/lib/logger';
 
 // Force dynamic rendering to handle search params properly

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readBooking, updateBooking, addRescheduleHistory, checkSlotAvailability, type Booking } from '@/lib';
+import { 
+  readBooking, 
+  updateBooking, 
+  checkSlotAvailability, 
+  addRescheduleHistory 
+} from '@/lib/storage-sqlite';
 import { requireAuth } from '@/lib/auth';
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse } from '@/lib/logger';

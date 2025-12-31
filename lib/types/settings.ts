@@ -8,6 +8,8 @@ export interface SystemSettings {
   site_logo: string;
   business_phone: string;
   business_address: string;
+  whatsapp_admin_number: string;
+  whatsapp_message_template: string;
 }
 
 export interface SettingsContextType {

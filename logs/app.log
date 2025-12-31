@@ -637,3 +637,27 @@
 [2025-12-31T14:55:14.105Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
 [2025-12-31T14:55:21.892Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
 [2025-12-31T14:55:21.902Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
+[2025-12-31T15:00:17.761Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:00:17.763Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:00:17.792Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:00:17.791Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:00:17.808Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:00:17.809Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:00:17.822Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:00:17.822Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:00:37.882Z] [INFO] Users retrieved successfully | Context: {"count":2}
+[2025-12-31T15:00:37.889Z] [INFO] Users retrieved successfully | Context: {"count":2}
+[2025-12-31T15:00:38.664Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-31T15:00:38.675Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2025-12-31T15:00:40.355Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
+[2025-12-31T15:00:40.363Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
+[2025-12-31T15:00:40.844Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
+[2025-12-31T15:00:40.851Z] [WARN] Database save failed (non-critical) | Context: {} | User: TypeError: (0 , _lib__WEBPACK_IMPORTED_MODULE_1__.saveAdsLog) is not a function
+[2025-12-31T15:51:30.711Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:51:30.709Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:51:30.741Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:51:30.741Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:51:30.768Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:51:30.769Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2025-12-31T15:51:30.781Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2025-12-31T15:51:30.782Z] [INFO] Bookings retrieved successfully | Context: {"count":3}

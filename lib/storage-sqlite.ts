@@ -852,7 +852,9 @@ export function getSystemSettings(): SystemSettings {
     site_name: 'Cerita Kita',
     site_logo: '/images/default-logo.png',
     business_phone: '+62 812 3456 7890',
-    business_address: 'Jalan Raya No. 123, Jakarta'
+    business_address: 'Jalan Raya No. 123, Jakarta',
+    whatsapp_admin_number: '+62 812 3456 7890',
+    whatsapp_message_template: 'Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!'
   };
 
   // Override with database values
@@ -922,7 +924,9 @@ export function initializeSystemSettings(): void {
     site_name: 'Cerita Kita',
     site_logo: '/images/default-logo.png',
     business_phone: '+62 812 3456 7890',
-    business_address: 'Jalan Raya No. 123, Jakarta'
+    business_address: 'Jalan Raya No. 123, Jakarta',
+    whatsapp_admin_number: '+62 812 3456 7890',
+    whatsapp_message_template: 'Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!'
   };
 
   const checkStmt = db.prepare('SELECT key FROM system_settings WHERE key = ?');

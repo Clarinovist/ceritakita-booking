@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { backfillAdsHistory } from '@/lib';
+// ✅ Ganti import lama dengan ini:
+import { backfillAdsHistory } from '@/lib/storage-sqlite';
 import { logger, createErrorResponse } from '@/lib/logger';
 
 export interface BackfillResponse {

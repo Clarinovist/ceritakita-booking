@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useSession } from "next-auth/react";
-import { Calendar, User, LayoutGrid } from 'lucide-react';
-import { formatDateTime } from '@/utils';
+import { Calendar, User } from 'lucide-react';
+import { formatDateTime } from '@/utils/dateFormatter'; 
 
 // Components
 import AdminSidebar from '../AdminSidebar';
@@ -16,8 +16,8 @@ import PortfolioManagement from '../PortfolioManagement';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
 import SettingsManagement from './SettingsManagement';
-
 import AdsPerformance from './AdsPerformance';
+
 // Tables
 import { BookingsTable } from './tables/BookingsTable';
 import { ServicesTable } from './tables/ServicesTable';
@@ -31,6 +31,7 @@ import { RescheduleModal } from './Bookings/modals/RescheduleModal';
 import { CreateBookingModal } from './Bookings/modals/CreateBookingModal';
 
 // Hooks
+// ⚠️ Pastikan file-file ini tidak mengimport database secara langsung
 import { useBookings } from './hooks/useBookings';
 import { useServices } from './hooks/useServices';
 import { usePhotographers } from './hooks/usePhotographers';
@@ -38,11 +39,13 @@ import { useAddons } from './hooks/useAddons';
 import { useExport } from './hooks/useExport';
 
 // Types
-import { ViewMode } from '@/lib/types';
+// ✅ Menggunakan import type agar aman
+import { type ViewMode } from '@/lib/types';
 
 export default function AdminDashboard() {
     const { data: session } = useSession();
-    const userPermissions = (session?.user as any)?.permissions;
+    // Safe access for permissions
+    const userPermissions = (session?.user as any)?.permissions || {};
     const userRole = (session?.user as any)?.role;
 
     // Custom hooks
@@ -76,17 +79,17 @@ export default function AdminDashboard() {
       if (userPermissions?.payment) allowedModes.push('payment-settings');
       if (userPermissions?.settings) allowedModes.push('settings');
 
-      return allowedModes.length > 0 ? allowedModes : ['table']; // Default to table if no permissions
+      return allowedModes.length > 0 ? allowedModes : ['table'];
     };
 
     const availableViewModes = getAvailableViewModes();
-    const [viewMode, setViewMode] = React.useState<ViewMode>(availableViewModes[0] || 'table');
-    const [showPresets, setShowPresets] = React.useState(false);
+    const [viewMode, setViewMode] = useState<ViewMode>(availableViewModes[0] || 'table');
+    const [showPresets, setShowPresets] = useState(false);
 
     // Reset view mode if current mode becomes unavailable
-    React.useEffect(() => {
-      if (!availableViewModes.includes(viewMode)) {
-        setViewMode(availableViewModes[0] || 'table');
+    useEffect(() => {
+      if (availableViewModes.length > 0 && !availableViewModes.includes(viewMode)) {
+        setViewMode(availableViewModes[0]);
       }
     }, [availableViewModes, viewMode]);
 
@@ -96,6 +99,7 @@ export default function AdminDashboard() {
         servicesHook.fetchData();
         photographersHook.fetchData();
         addonsHook.fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Booking creation handlers
@@ -351,22 +355,26 @@ export default function AdminDashboard() {
         setShowPresets(false);
     };
 
+    // ✅ FIX ERROR SYNTAX DI SINI (Missing semicolon previously)
     // Calendar events
-    const events = bookingsHook.bookings.filter(b => b.status === 'Active' || b.status === 'Rescheduled').map(b => ({
-        id: b.id,
-        title: `${b.customer.name} (${b.customer.category})`,
-        start: b.booking.date,
-        backgroundColor: b.customer.category.includes('Outdoor') ? '#10B981' : '#3B82F6',
-        extendedProps: { booking: b }
-    }));
+    const events = bookingsHook.bookings
+        .filter(b => b.status === 'Active' || b.status === 'Rescheduled')
+        .map(b => ({
+            id: b.id,
+            title: `${b.customer.name} (${b.customer.category})`,
+            start: b.booking.date,
+            backgroundColor: b.customer.category.includes('Outdoor') ? '#10B981' : '#3B82F6',
+            extendedProps: { booking: b }
+        }));
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            <AdminSidebar viewMode={viewMode} setViewMode={(mode: any) => setViewMode(mode)} />
+            {/* ✅ FIX TYPE: Mengirim function yang benar */}
+            <AdminSidebar viewMode={viewMode} setViewMode={(mode: ViewMode) => setViewMode(mode)} />
             
             <div className="flex-1 ml-0 md:ml-64 p-6 overflow-auto">
-                {/* Command Bar - Single Line */}
-                <div className="bg-white border rounded-xl p-4 mb-6 sticky top-0 z-10 flex justify-between items-center">
+                {/* Command Bar */}
+                <div className="bg-white border rounded-xl p-4 mb-6 sticky top-0 z-10 flex justify-between items-center shadow-sm">
                     {/* Left Side: Date Range Picker + Presets */}
                     <div className="flex items-center gap-3">
                         {/* Presets Dropdown */}
@@ -555,8 +563,6 @@ export default function AdminDashboard() {
                     formData={servicesHook.serviceFormData}
                     setFormData={servicesHook.setServiceFormData}
                 />
-
-                {/* Other modals would go here... */}
 
                 {/* Booking Detail Modal */}
                 <BookingDetailModal

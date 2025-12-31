@@ -1,5 +1,6 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Service, Addon, PaymentSettings, CouponValidation, BookingFormData, BookingPayload } from '@/lib/types';
+import { generateWhatsAppMessage, generateWhatsAppLink } from '@/lib/whatsapp-template';
 
 export const useBookingForm = () => {
     const [loading, setLoading] = useState(false);
@@ -334,7 +335,47 @@ export const useBookingForm = () => {
 
             if (!res.ok) throw new Error('Booking failed');
 
-            alert('Booking berhasil! Admin akan menghubungi Anda.');
+            const createdBooking = await res.json();
+
+            // Generate WhatsApp message after successful booking
+            try {
+                const settings = getSystemSettings();
+                if (settings.whatsapp_admin_number && settings.whatsapp_message_template) {
+                    const whatsappMessage = generateWhatsAppMessage(
+                        settings.whatsapp_message_template,
+                        {
+                            customer_name: formData.name,
+                            service: formData.category,
+                            date: formData.date,
+                            time: formData.time,
+                            total_price: calculateTotal(),
+                            booking_id: createdBooking.id
+                        }
+                    );
+
+                    const whatsappLink = generateWhatsAppLink(
+                        settings.whatsapp_admin_number,
+                        whatsappMessage
+                    );
+
+                    // Show WhatsApp link to user
+                    const message = `Booking berhasil! ID: ${createdBooking.id}\n\nKlik link WhatsApp berikut untuk konfirmasi:\n${whatsappLink}`;
+                    
+                    // Copy to clipboard
+                    await navigator.clipboard.writeText(whatsappLink);
+                    
+                    alert(message + '\n\nLink WhatsApp sudah disalin ke clipboard!');
+                    
+                    // Open WhatsApp in new tab
+                    window.open(whatsappLink, '_blank');
+                } else {
+                    alert(`Booking berhasil! ID: ${createdBooking.id}\n\nAdmin akan menghubungi Anda.`);
+                }
+            } catch (whatsappError) {
+                console.error('WhatsApp generation error:', whatsappError);
+                alert(`Booking berhasil! ID: ${createdBooking.id}\n\nAdmin akan menghubungi Anda.`);
+            }
+
             window.location.reload();
 
         } catch (error) {

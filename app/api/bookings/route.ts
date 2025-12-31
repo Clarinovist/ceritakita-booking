@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   readData as readDataSQLite,
   createBooking,
-  checkSlotAvailability
+  checkSlotAvailability,
+  getSystemSettings
 } from '@/lib/storage-sqlite';
 import { readServices } from '@/lib/storage';
 import { type Booking } from '@/lib/types';
@@ -12,11 +13,12 @@ import { saveUploadedFile, validateFile } from '@/lib/file-storage';
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
 import { safeNumber, safeProperty } from '@/lib/type-utils';
-import { 
-  recordCouponUsage, 
-  incrementCouponUsage, 
-  getCouponByCode 
+import {
+  recordCouponUsage,
+  incrementCouponUsage,
+  getCouponByCode
 } from '@/lib/coupons';
+import { generateWhatsAppMessage, generateWhatsAppLink } from '@/lib/whatsapp-template';
 import formidable from 'formidable';
 import { IncomingMessage } from 'http';
 import { Readable } from 'stream';
@@ -347,6 +349,50 @@ export async function POST(req: NextRequest) {
             date: newBooking.booking.date,
             total: newBooking.finance.total_price
         });
+
+        // Generate WhatsApp message and link if configured
+        try {
+            const settings = getSystemSettings();
+            if (settings.whatsapp_admin_number && settings.whatsapp_message_template) {
+                const whatsappMessage = generateWhatsAppMessage(
+                    settings.whatsapp_message_template,
+                    {
+                        customer_name: newBooking.customer.name,
+                        service: newBooking.customer.category,
+                        date: newBooking.booking.date?.split('T')[0] || '',
+                        time: newBooking.booking.date?.split('T')[1] || '',
+                        total_price: newBooking.finance.total_price,
+                        booking_id: newBooking.id
+                    }
+                );
+
+                const whatsappLink = generateWhatsAppLink(
+                    settings.whatsapp_admin_number,
+                    whatsappMessage
+                );
+
+                // Add WhatsApp link to response
+                const response = {
+                    ...newBooking,
+                    whatsapp_link: whatsappLink,
+                    whatsapp_message: whatsappMessage
+                };
+
+                logger.info('WhatsApp link generated', {
+                    requestId,
+                    bookingId: newBooking.id,
+                    whatsappNumber: settings.whatsapp_admin_number
+                });
+
+                return NextResponse.json(response, { status: 201 });
+            }
+        } catch (whatsappError) {
+            logger.error('WhatsApp generation failed', {
+                requestId,
+                bookingId: newBooking.id
+            }, whatsappError as Error);
+            // Continue without WhatsApp - don't fail the booking
+        }
 
         return NextResponse.json(newBooking, { status: 201 });
     } catch (error) {
