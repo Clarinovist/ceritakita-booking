@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Dashboard Enhancements - 2026-01-01
+
+#### DateFilterToolbar Component
+- **New Component**: Added DateFilterToolbar for consistent date filtering across admin views
+- **Quick Filters**: Today, Yesterday, This Week, This Month, Last Month, Custom Range
+- **Responsive Design**: Mobile-friendly date selection interface
+- **Integration**: Implemented in bookings and dashboard views
+
+#### Payment Methods Initialization
+- **Auto-Seeding**: Default payment methods now initialized on first GET request
+- **Improved UX**: No manual setup required for fresh installations
+- **Database Migration**: Automatic creation of default bank transfer method
+
 ### Admin Settings Refactor - 2026-01-01
 
 #### Comprehensive Settings Management with Tabbed Interface
@@ -67,6 +80,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Flexible Booking Rules**: Business owners control booking constraints
 - **Type Safety**: Reduced bugs through comprehensive TypeScript types
 - **Backward Compatible**: Existing functionality preserved while adding new features
+
+### Leads Management System - 2025-12-XX
+
+#### Mini CRM Implementation
+- **Lead Tracking**: Comprehensive system for managing customer inquiries
+- **Status Pipeline**: New → Contacted → Qualified → Converted → Lost
+- **Customer Data**: Name, phone, email, source, and custom notes
+- **Follow-up System**: Track last contact date and next follow-up
+- **Conversion Tracking**: Convert leads directly to bookings
+- **Filtering**: Status-based filtering and search functionality
+- **API Endpoints**: Full CRUD operations for lead management
+
+### Dynamic WhatsApp Settings - 2025-12-XX
+
+#### Template Management
+- **Dynamic Templates**: Configure WhatsApp message templates from admin settings
+- **Variable Support**: Use placeholders like {{customer_name}}, {{service}}, {{date}}, {{time}}
+- **Live Preview**: Test templates with sample data before sending
+- **Template Variables**: Full list of available variables with descriptions
+- **Auto-Replacement**: System automatically replaces variables when sending messages
 
 ### Code Quality Improvements - 2025-01-XX
 

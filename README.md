@@ -347,6 +347,40 @@ npx tsx scripts/migrate-images.ts
 - **Body**: System font stack
 - **Monospace**: For prices and codes
 
+## 👨‍💻 Development
+
+### Import Best Practices
+
+The project uses barrel exports for cleaner imports. Always import from barrel entry points:
+
+```typescript
+// ✅ Good - Use barrel exports
+import { useBookings, BookingsTable } from '@/components/admin';
+import { Service, Booking } from '@/lib/types';
+import { formatDate, formatDateTime } from '@/utils';
+
+// ❌ Avoid - Deep imports
+import { useBookings } from '@/components/admin/hooks/useBookings';
+import { Service } from '@/lib/types/service';
+import { formatDate } from '@/utils/dateFormatter';
+```
+
+**Available Barrel Exports:**
+- `@/components/admin` - Admin components, hooks, tables, modals
+- `@/components/booking` - Booking form components and steps
+- `@/components/ui` - Reusable UI components
+- `@/lib` - All library utilities and business logic
+- `@/lib/types` - All type definitions
+- `@/utils` - Utility functions
+
+### Code Standards
+
+- **TypeScript**: Use proper types, avoid `any`
+- **Error Handling**: Use `createErrorResponse` helper for API routes
+- **Logging**: Use `logger` utility instead of `console.log`
+- **Validation**: Use Zod schemas for all API inputs
+- **Components**: Keep components focused and under 300 lines
+
 ## 🤝 Contributing
 
 This is a private project for CeritaKita photography services. All changes should be documented and tested.
