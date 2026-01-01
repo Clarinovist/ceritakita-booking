@@ -28,7 +28,11 @@ export default function AdminSidebar({ viewMode, setViewMode }: AdminSidebarProp
   // Get filtered menu items based on user permissions
   const userPermissions = (session?.user as any)?.permissions;
   const userRole = (session?.user as any)?.role;
-  const menuItems = getFilteredMenuItems(userPermissions, userRole);
+  
+  // Filter out Users and Payment Methods as they are now consolidated into Settings
+  // Note: We filter by checking for standard ID names like 'users', 'payment-methods', etc.
+  const menuItems = getFilteredMenuItems(userPermissions, userRole)
+    .filter(item => !['users', 'payment-methods', 'payment_methods', 'payment-settings'].includes(item.id));
 
   // Map icon strings to actual icon components
   const getIconComponent = (iconName: string) => {

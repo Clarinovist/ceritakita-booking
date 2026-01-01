@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { SystemSettings } from '@/lib/types/settings';
 import { FILE_CONSTRAINTS, UPLOAD_FOLDERS } from '@/lib/constants';
-import { testTemplate } from '@/lib/whatsapp-template';
+import { Info } from 'lucide-react'; // Import icon untuk banner
 
 // Import tab components
 import GeneralTab from './settings/GeneralTab';
@@ -11,9 +11,11 @@ import ContactTab from './settings/ContactTab';
 import FinanceTab from './settings/FinanceTab';
 import RulesTab from './settings/RulesTab';
 import TemplatesTab from './settings/TemplatesTab';
+import UserManagement from './UserManagement';
+import PaymentMethodsManagement from './PaymentMethodsManagement';
 
-// Tab type definition
-type TabType = 'general' | 'contact' | 'finance' | 'rules' | 'templates';
+// Tab type definition - Updated
+type TabType = 'general' | 'contact' | 'finance' | 'rules' | 'templates' | 'payment_methods' | 'users';
 
 interface TabConfig {
   id: TabType;
@@ -21,12 +23,15 @@ interface TabConfig {
   icon: string;
 }
 
+// Updated TABS configuration
 const TABS: TabConfig[] = [
   { id: 'general', label: 'General & SEO', icon: '🏠' },
   { id: 'contact', label: 'Contact & Socials', icon: '📞' },
   { id: 'finance', label: 'Finance', icon: '💰' },
   { id: 'rules', label: 'Booking Rules', icon: '📅' },
-  { id: 'templates', label: 'Templates', icon: '💬' }
+  { id: 'templates', label: 'Templates', icon: '💬' },
+  { id: 'payment_methods', label: 'Payment Methods', icon: '💳' },
+  { id: 'users', label: 'Team Access', icon: '👥' }
 ];
 
 export default function SettingsManagement() {
@@ -166,6 +171,9 @@ export default function SettingsManagement() {
     setTimeout(() => setMessage(null), 2000);
   };
 
+  // Helper to determine if we are in a self-managed tab
+  const isSelfManagedTab = ['payment_methods', 'users'].includes(activeTab);
+
   if (loading) {
     return (
       <div className="bg-white border rounded-xl p-6">
@@ -182,11 +190,11 @@ export default function SettingsManagement() {
       {/* Header */}
       <div className="bg-white border rounded-xl p-6">
         <h2 className="text-2xl font-bold text-gray-900">System Settings</h2>
-        <p className="text-gray-600 mt-1">Manage your website configuration across all categories</p>
+        <p className="text-gray-600 mt-1">Manage your website configuration, team, and payment methods</p>
       </div>
 
-      {/* Messages */}
-      {message && (
+      {/* Messages - Only show for general settings tabs */}
+      {message && !isSelfManagedTab && (
         <div className={`p-4 rounded-lg border ${
           message.type === 'success' 
             ? 'bg-green-50 border-green-200 text-green-800' 
@@ -198,12 +206,15 @@ export default function SettingsManagement() {
 
       {/* Tab Navigation */}
       <div className="bg-white border rounded-xl overflow-hidden">
-        <div className="border-b">
-          <nav className="flex overflow-x-auto" aria-label="Settings tabs">
+        <div className="border-b overflow-x-auto">
+          <nav className="flex min-w-max" aria-label="Settings tabs">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setMessage(null); // Clear messages when switching tabs
+                }}
                 className={`flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'border-b-2 border-blue-600 text-blue-600 bg-blue-50'
@@ -257,87 +268,115 @@ export default function SettingsManagement() {
               onChange={handleInputChange}
             />
           )}
+
+          {activeTab === 'payment_methods' && (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
+                <Info size={18} className="flex-shrink-0" />
+                <span>Changes in Payment Methods are saved automatically and applied immediately.</span>
+              </div>
+              <PaymentMethodsManagement />
+            </div>
+          )}
+
+          {activeTab === 'users' && (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
+                <Info size={18} className="flex-shrink-0" />
+                <span>User management actions (create, update, delete) are effective immediately.</span>
+              </div>
+              <UserManagement />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Form Actions */}
-      <div className="bg-white border rounded-xl p-6 flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition-colors"
-        >
-          Reset
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={saving}
-          className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            saving 
-              ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-              : 'bg-blue-600 text-white hover:bg-blue-700'
-          }`}
-        >
-          {saving ? 'Saving...' : 'Save All Settings'}
-        </button>
-      </div>
+      {/* Form Actions - Hide for self-managed tabs */}
+      {!isSelfManagedTab && (
+        <div className="bg-white border rounded-xl p-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition-colors"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              saving 
+                ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            {saving ? 'Saving...' : 'Save All Settings'}
+          </button>
+        </div>
+      )}
 
-      {/* Global Preview */}
-      <div className="bg-white border rounded-xl p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Preview</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-700 mb-2">Branding</h3>
-            <div className="flex items-center gap-3">
-              {settings.site_logo && (
-                <img 
-                  src={settings.site_logo} 
-                  alt="Logo" 
-                  className="h-8 w-auto object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/default-logo.png';
-                  }}
-                />
-              )}
-              <div>
-                <div className="font-bold">{settings.site_name}</div>
-                <div className="text-xs text-gray-500">{settings.hero_title}</div>
+      {/* Global Preview - Hide when in admin management tabs to reduce noise */}
+      {!isSelfManagedTab && (
+        <div className="bg-white border rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Preview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Branding Preview */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-700 mb-2">Branding</h3>
+              <div className="flex items-center gap-3">
+                {settings.site_logo && (
+                  <img 
+                    src={settings.site_logo} 
+                    alt="Logo" 
+                    className="h-8 w-auto object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/images/default-logo.png';
+                    }}
+                  />
+                )}
+                <div>
+                  <div className="font-bold">{settings.site_name}</div>
+                  <div className="text-xs text-gray-500">{settings.hero_title}</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-700 mb-2">Contact</h3>
-            <div className="text-sm space-y-1">
-              <div>📞 {settings.business_phone}</div>
-              <div>📧 {settings.business_email}</div>
-              <div>📍 {settings.business_address}</div>
+            {/* Contact Preview */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-700 mb-2">Contact</h3>
+              <div className="text-sm space-y-1">
+                <div>📞 {settings.business_phone}</div>
+                <div>📧 {settings.business_email}</div>
+                <div>📍 {settings.business_address}</div>
+              </div>
             </div>
-          </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-700 mb-2">Finance</h3>
-            <div className="text-sm space-y-1">
-              <div>🏦 {settings.bank_name} - {settings.bank_number}</div>
-              <div>👤 {settings.bank_holder}</div>
-              {settings.requires_deposit && <div>💰 Deposit: {settings.deposit_amount}%</div>}
-              {settings.tax_rate > 0 && <div>📊 Tax: {settings.tax_rate}%</div>}
+            {/* Finance Preview */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-700 mb-2">Finance</h3>
+              <div className="text-sm space-y-1">
+                <div>🏦 {settings.bank_name} - {settings.bank_number}</div>
+                <div>👤 {settings.bank_holder}</div>
+                {settings.requires_deposit && <div>💰 Deposit: {settings.deposit_amount}%</div>}
+                {settings.tax_rate > 0 && <div>📊 Tax: {settings.tax_rate}%</div>}
+              </div>
             </div>
-          </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-700 mb-2">Booking Rules</h3>
-            <div className="text-sm space-y-1">
-              <div>📅 Min Notice: {settings.min_booking_notice} day(s)</div>
-              <div>📅 Max Ahead: {settings.max_booking_ahead} days</div>
-              <div className="text-xs text-gray-500 mt-1">
-                Window: {settings.min_booking_notice}-{settings.max_booking_ahead} days from today
+            {/* Rules Preview */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-700 mb-2">Booking Rules</h3>
+              <div className="text-sm space-y-1">
+                <div>📅 Min Notice: {settings.min_booking_notice} day(s)</div>
+                <div>📅 Max Ahead: {settings.max_booking_ahead} days</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  Window: {settings.min_booking_notice}-{settings.max_booking_ahead} days from today
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
