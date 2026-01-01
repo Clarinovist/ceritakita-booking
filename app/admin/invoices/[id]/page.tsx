@@ -10,6 +10,15 @@ interface Settings {
   site_logo: string;
   business_phone: string;
   business_address: string;
+  business_email: string;
+  bank_name: string;
+  bank_number: string;
+  bank_holder: string;
+  invoice_notes: string;
+  instagram_url?: string;
+  tiktok_url?: string;
+  maps_link?: string;
+  tax_rate: number;
 }
 
 export default function InvoicePage({ params }: { params: { id: string } }) {
@@ -136,6 +145,11 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
 
     const subtotal = breakdown.service_base_price - breakdown.base_discount + breakdown.addons_total - breakdown.coupon_discount;
 
+    // Calculate tax if configured
+    const taxRate = settings?.tax_rate || 0;
+    const taxAmount = subtotal * (taxRate / 100);
+    const totalWithTax = subtotal + taxAmount;
+
     return (
         <div className="min-h-screen bg-white p-8">
             {/* Print-only Header */}
@@ -191,6 +205,9 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                                 <p className="text-gray-600 text-sm">Professional Photography Services</p>
                                 <p className="text-gray-500 text-xs mt-1">{settings?.business_address || 'Jl. Raya No. 123, Jakarta'}</p>
                                 <p className="text-gray-500 text-xs">Phone: {settings?.business_phone || '+62 812 3456 7890'}</p>
+                                {settings?.business_email && (
+                                    <p className="text-gray-500 text-xs">Email: {settings.business_email}</p>
+                                )}
                             </div>
                         </div>
                         <div className="text-right">
@@ -217,8 +234,9 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                         <div>
                             <p className="text-gray-500">Contact Email</p>
                             <p className="font-semibold text-gray-900">
-                                {/* Generate email from WhatsApp number for contact purposes */}
-                                {booking.customer.whatsapp.replace(/[^0-9]/g, '')}@customer.ceritakita.studio
+                                {settings?.business_email || (
+                                    <>{booking.customer.whatsapp.replace(/[^0-9]/g, '')}@customer.ceritakita.studio</>
+                                )}
                             </p>
                         </div>
                         <div>
@@ -335,11 +353,11 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                                 <td className="p-3 text-right font-bold text-gray-900">Rp {subtotal.toLocaleString('id-ID')}</td>
                             </tr>
 
-                            {/* Tax (if applicable - currently 0%) */}
-                            {subtotal > 0 && (
+                            {/* Tax */}
+                            {taxRate > 0 && (
                                 <tr>
-                                    <td className="p-3 text-gray-700">Tax (0%)</td>
-                                    <td className="p-3 text-right font-semibold">Rp 0</td>
+                                    <td className="p-3 text-gray-700">Tax ({taxRate}%)</td>
+                                    <td className="p-3 text-right font-semibold">Rp {taxAmount.toLocaleString('id-ID')}</td>
                                 </tr>
                             )}
 
@@ -347,7 +365,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                             <tr className="bg-blue-50 border-t-2 border-blue-300">
                                 <td className="p-3 font-bold text-lg text-blue-900">TOTAL</td>
                                 <td className="p-3 text-right font-bold text-lg text-blue-900">
-                                    Rp {booking.finance.total_price.toLocaleString('id-ID')}
+                                    Rp {(taxRate > 0 ? totalWithTax : booking.finance.total_price).toLocaleString('id-ID')}
                                 </td>
                             </tr>
                         </tbody>
@@ -398,11 +416,64 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                     </div>
                 )}
 
+                {/* Bank Details */}
+                {settings?.bank_name && settings.bank_number && settings.bank_holder && (
+                    <div className="border rounded-lg p-6">
+                        <h3 className="font-bold text-gray-900 mb-3 text-lg">PAYMENT TRANSFER DETAILS</h3>
+                        <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-700 w-24">Bank:</span>
+                                <span className="text-gray-900">{settings.bank_name}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-700 w-24">Account No:</span>
+                                <span className="text-gray-900 font-mono">{settings.bank_number}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold text-gray-700 w-24">Holder:</span>
+                                <span className="text-gray-900">{settings.bank_holder}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Social Links */}
+                {(settings?.instagram_url || settings?.tiktok_url || settings?.maps_link) && (
+                    <div className="border rounded-lg p-6">
+                        <h3 className="font-bold text-gray-900 mb-3 text-lg">FIND US ONLINE</h3>
+                        <div className="flex flex-wrap gap-4 text-sm">
+                            {settings.instagram_url && (
+                                <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                    Instagram: @{settings.instagram_url.split('/').pop()}
+                                </a>
+                            )}
+                            {settings.tiktok_url && (
+                                <a href={settings.tiktok_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                    TikTok: @{settings.tiktok_url.split('/').pop()}
+                                </a>
+                            )}
+                            {settings.maps_link && (
+                                <a href={settings.maps_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                    Google Maps Location
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 {/* Footer */}
                 <div className="border-t-2 border-gray-300 pt-6 text-center text-sm text-gray-600">
                     <p className="font-semibold mb-2">THANK YOU FOR YOUR BUSINESS!</p>
                     <p className="text-xs mb-1">For questions or concerns, please contact us at:</p>
-                    <p className="text-xs">WhatsApp: {settings?.business_phone || '+62 812 3456 7890'} | Email: info@ceritakita.com</p>
+                    <p className="text-xs">
+                        WhatsApp: {settings?.business_phone || '+62 812 3456 7890'} 
+                        {settings?.business_email && ` | Email: ${settings.business_email}`}
+                    </p>
+                    {settings?.invoice_notes && (
+                        <div className="mt-3 text-xs text-gray-500 italic">
+                            {settings.invoice_notes}
+                        </div>
+                    )}
                     <p className="text-xs mt-3 text-gray-500">
                         This is a computer-generated invoice. No signature required.
                     </p>
@@ -417,7 +488,10 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
             {/* Print-only Payment Instructions */}
             <div className="hidden print:block mt-8 p-4 border-2 border-dashed border-gray-300 bg-gray-50 text-center">
                 <p className="font-semibold text-sm mb-2">PAYMENT INSTRUCTIONS</p>
-                <p className="text-xs">Transfer to: BCA 1234567890 a.n. {settings?.site_name || 'Ceritakita Studio'}</p>
+                <p className="text-xs">
+                    Transfer to: {settings?.bank_name || 'BCA'} {settings?.bank_number || '1234567890'} 
+                    a.n. {settings?.bank_holder || settings?.site_name || 'Ceritakita Studio'}
+                </p>
                 <p className="text-xs mt-1">Please send proof of payment to our WhatsApp</p>
             </div>
 

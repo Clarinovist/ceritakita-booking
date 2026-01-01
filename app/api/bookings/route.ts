@@ -211,6 +211,70 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // BOOKING RULES VALIDATION
+        // Fetch system settings for booking rules
+        const settings = getSystemSettings();
+        const minBookingNotice = parseInt(settings.min_booking_notice as string) || 1;
+        const maxBookingAhead = parseInt(settings.max_booking_ahead as string) || 90;
+
+        // Validate booking date against rules
+        const bookingDate = new Date(booking.date);
+        const today = new Date();
+        
+        // Reset time to midnight for accurate date comparison
+        bookingDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const daysDiff = Math.ceil((bookingDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+        // Check minimum booking notice
+        if (daysDiff < minBookingNotice) {
+            logger.warn('Booking violates minimum notice requirement', {
+                requestId,
+                bookingDate: booking.date,
+                daysDiff,
+                minBookingNotice
+            });
+            return NextResponse.json(
+                { 
+                    error: `Booking must be made at least ${minBookingNotice} day(s) in advance`, 
+                    code: 'MIN_BOOKING_NOTICE_VIOLATED',
+                    details: { minBookingNotice, daysDiff }
+                },
+                { status: 400 }
+            );
+        }
+
+        // Check maximum booking ahead
+        if (daysDiff > maxBookingAhead) {
+            logger.warn('Booking exceeds maximum advance booking', {
+                requestId,
+                bookingDate: booking.date,
+                daysDiff,
+                maxBookingAhead
+            });
+            return NextResponse.json(
+                { 
+                    error: `Cannot book more than ${maxBookingAhead} days in advance`, 
+                    code: 'MAX_BOOKING_AHEAD_VIOLATED',
+                    details: { maxBookingAhead, daysDiff }
+                },
+                { status: 400 }
+            );
+        }
+
+        // Check slot availability (existing validation)
+        if (!checkSlotAvailability(booking.date)) {
+            logger.warn('Slot not available for booking', {
+                requestId,
+                bookingDate: booking.date
+            });
+            return NextResponse.json(
+                { error: 'This time slot is already booked', code: 'SLOT_UNAVAILABLE' },
+                { status: 400 }
+            );
+        }
+
         // Create booking ID first (needed for file naming)
         const bookingId = crypto.randomUUID();
 

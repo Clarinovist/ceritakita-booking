@@ -28,6 +28,35 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
     const clearFieldError = isContextMode ? context.clearFieldError : () => {};
 
     const [touched, setTouched] = useState<Record<string, boolean>>({});
+    const [settings, setSettings] = useState<{
+        min_booking_notice: number;
+        max_booking_ahead: number;
+    } | null>(null);
+
+    // Fetch booking rules settings
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await fetch('/api/settings');
+                if (res.ok) {
+                    const data = await res.json();
+                    setSettings({
+                        min_booking_notice: data.min_booking_notice || 1,
+                        max_booking_ahead: data.max_booking_ahead || 90
+                    });
+                } else {
+                    // Default values if fetch fails
+                    setSettings({ min_booking_notice: 1, max_booking_ahead: 90 });
+                }
+            } catch (error) {
+                console.error('Failed to fetch settings:', error);
+                // Default values on error
+                setSettings({ min_booking_notice: 1, max_booking_ahead: 90 });
+            }
+        };
+
+        fetchSettings();
+    }, []);
 
     // Real-time validation (only in context mode)
     useEffect(() => {
@@ -70,9 +99,21 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
     }, [formData.location_link, touched.location_link, isContextMode]);
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = e.target.value;
+        
+        // Validate against booking rules
+        if (settings && isContextMode) {
+            const validationError = validateBookingDate(newDate);
+            if (validationError) {
+                setFieldError('date', validationError);
+                return; // Don't update if invalid
+            }
+        }
+
         if (isContextMode) {
-            updateFormData({ date: e.target.value });
+            updateFormData({ date: newDate });
             if (!touched.date) setTouched(prev => ({ ...prev, date: true }));
+            clearFieldError('date'); // Clear error if validation passes
         } else if (propHandleChange) {
             propHandleChange(e);
         }
@@ -96,12 +137,54 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
         }
     };
 
+    // Validate booking date against rules
+    const validateBookingDate = (date: string): string | null => {
+        if (!settings) return null;
+
+        const selectedDate = new Date(date);
+        const today = new Date();
+        
+        // Reset time to midnight for accurate date comparison
+        selectedDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const daysDiff = Math.ceil((selectedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+        // Check minimum booking notice
+        if (daysDiff < settings.min_booking_notice) {
+            return `Booking must be made at least ${settings.min_booking_notice} day(s) in advance`;
+        }
+
+        // Check maximum booking ahead
+        if (daysDiff > settings.max_booking_ahead) {
+            return `Cannot book more than ${settings.max_booking_ahead} days in advance`;
+        }
+
+        return null;
+    };
+
+    // Check if date is disabled based on rules
+    const isDateDisabled = (dateString: string): boolean => {
+        if (!settings) return false;
+
+        const checkDate = new Date(dateString);
+        const today = new Date();
+        
+        checkDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const daysDiff = Math.ceil((checkDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+        return daysDiff < settings.min_booking_notice || daysDiff > settings.max_booking_ahead;
+    };
+
     const dateError = isContextMode ? errors[3]?.find(e => e.field === 'date') : null;
     const timeError = isContextMode ? errors[3]?.find(e => e.field === 'time') : null;
     const locationError = isContextMode ? errors[3]?.find(e => e.field === 'location_link') : null;
 
     const category = isContextMode ? context.formData.serviceName : (propFormData?.category || '');
     const isOutdoorService = category.toLowerCase().includes('outdoor');
+    
     // Generate time slots (30-minute intervals)
     const timeSlots = Array.from({ length: 48 }, (_, i) => {
         const hour = Math.floor(i / 2);
@@ -111,19 +194,27 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
 
     // Quick action handlers (only for context mode)
     const setTomorrow = () => {
-        if (!isContextMode) return;
+        if (!isContextMode || !settings) return;
         const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        updateFormData({ date: tomorrow.toISOString().split('T')[0] || '' });
-        setTouched(prev => ({ ...prev, date: true }));
+        tomorrow.setDate(tomorrow.getDate() + settings.min_booking_notice);
+        
+        const dateString = tomorrow.toISOString().split('T')[0] || '';
+        if (!isDateDisabled(dateString)) {
+            updateFormData({ date: dateString });
+            setTouched(prev => ({ ...prev, date: true }));
+        }
     };
 
     const setNextWeek = () => {
-        if (!isContextMode) return;
+        if (!isContextMode || !settings) return;
         const nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
-        updateFormData({ date: nextWeek.toISOString().split('T')[0] || '' });
-        setTouched(prev => ({ ...prev, date: true }));
+        
+        const dateString = nextWeek.toISOString().split('T')[0] || '';
+        if (!isDateDisabled(dateString)) {
+            updateFormData({ date: dateString });
+            setTouched(prev => ({ ...prev, date: true }));
+        }
     };
 
     const setMorning = () => {
@@ -138,6 +229,21 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
         setTouched(prev => ({ ...prev, time: true }));
     };
 
+    // Get min and max dates for the date input
+    const getMinDate = () => {
+        if (!settings) return '';
+        const minDate = new Date();
+        minDate.setDate(minDate.getDate() + settings.min_booking_notice);
+        return minDate.toISOString().split('T')[0] || '';
+    };
+
+    const getMaxDate = () => {
+        if (!settings) return '';
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + settings.max_booking_ahead);
+        return maxDate.toISOString().split('T')[0] || '';
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -145,6 +251,13 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
                 <Calendar className="text-primary-600" size={24} />
                 <h2>Jadwal & Lokasi</h2>
             </div>
+
+            {/* Booking Rules Info */}
+            {settings && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                    <strong>Petunjuk Pemesanan:</strong> Minimal {settings.min_booking_notice} hari sebelumnya, maksimal {settings.max_booking_ahead} hari ke depan.
+                </div>
+            )}
 
             {/* Date & Time */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,6 +274,8 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
                             value={formData.date}
                             onChange={handleDateChange}
                             onBlur={() => setTouched(prev => ({ ...prev, date: true }))}
+                            min={getMinDate()}
+                            max={getMaxDate()}
                             className="w-full p-3 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 transition-all touch-target"
                             aria-describedby={dateError ? 'date-error' : undefined}
                             aria-invalid={!!dateError}
@@ -175,6 +290,8 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
                             name="date"
                             value={formData.date}
                             onChange={handleDateChange}
+                            min={getMinDate()}
+                            max={getMaxDate()}
                             className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -292,20 +409,22 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
             </div>
 
             {/* Quick Actions (context mode only) */}
-            {isContextMode && (
+            {isContextMode && settings && (
                 <div className="flex gap-2 flex-wrap">
                     <button
                         type="button"
                         onClick={setTomorrow}
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors touch-target"
+                        disabled={isDateDisabled(new Date(Date.now() + settings.min_booking_notice * 24 * 60 * 60 * 1000).toISOString().split('T')[0] || '')}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors touch-target disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Besok
+                        {settings.min_booking_notice === 0 ? 'Hari Ini' : `Besok (+${settings.min_booking_notice} hari)`}
                     </button>
                     
                     <button
                         type="button"
                         onClick={setNextWeek}
-                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors touch-target"
+                        disabled={isDateDisabled(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] || '')}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors touch-target disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         1 Minggu Lagi
                     </button>

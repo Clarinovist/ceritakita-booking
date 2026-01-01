@@ -781,3 +781,23 @@
 [2026-01-01T00:11:24.087Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
 [2026-01-01T00:11:24.100Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
 [2026-01-01T00:11:24.099Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:43:52.649Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:43:52.647Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:43:52.704Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:43:52.704Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:43:52.737Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:43:52.737Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:43:52.749Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:43:52.749Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:44:36.850Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2026-01-01T02:44:36.859Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2026-01-01T02:44:40.171Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2026-01-01T02:44:40.179Z] [INFO] Payment methods retrieved successfully | Context: {"count":2}
+[2026-01-01T02:47:25.700Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:47:25.702Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:47:26.287Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:47:26.290Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:47:27.190Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:47:27.188Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-01T02:47:27.207Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-01T02:47:27.206Z] [INFO] Retrieved bookings from database | Context: {"count":3}
