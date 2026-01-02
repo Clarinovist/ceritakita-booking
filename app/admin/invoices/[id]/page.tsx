@@ -99,7 +99,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md text-center">
                     <h2 className="text-red-800 font-bold text-lg mb-2">Error Loading Invoice</h2>
                     <p className="text-red-600">{error}</p>
-                    <button 
+                    <button
                         onClick={() => window.close()}
                         className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                     >
@@ -116,7 +116,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md text-center">
                     <h2 className="text-gray-800 font-bold text-lg mb-2">Invoice Not Found</h2>
                     <p className="text-gray-600">The requested booking could not be found.</p>
-                    <button 
+                    <button
                         onClick={() => window.close()}
                         className="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
                     >
@@ -151,30 +151,24 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
     const totalWithTax = subtotal + taxAmount;
 
     return (
-        <div className="min-h-screen bg-white p-8">
-            {/* Print-only Header */}
-            <div className="hidden print:block text-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">INVOICE</h1>
-                <p className="text-gray-600 mt-2">Booking #{booking.id}</p>
-            </div>
-
+        <div className="min-h-screen bg-white p-4 print:p-0">
             {/* Screen-only Header with Print Button */}
-            <div className="print:hidden bg-white border-b pb-4 mb-6">
+            <div className="print:hidden bg-white border-b pb-3 mb-4">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">INVOICE</h1>
-                        <p className="text-gray-600 mt-1">Booking #{booking.id}</p>
+                        <h1 className="text-2xl font-bold text-gray-900">INVOICE</h1>
+                        <p className="text-sm text-gray-600">Booking #{booking.id}</p>
                     </div>
                     <div className="flex gap-2">
-                        <button 
+                        <button
                             onClick={() => window.print()}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm"
                         >
-                            🖨️ Print / Save PDF
+                            Print / Save PDF
                         </button>
-                        <button 
+                        <button
                             onClick={() => window.close()}
-                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium text-sm"
                         >
                             Close
                         </button>
@@ -182,149 +176,131 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 </div>
             </div>
 
-            {/* Invoice Content */}
-            <div className="max-w-4xl mx-auto space-y-6">
-                {/* Studio Header */}
-                <div className="border-2 border-gray-900 p-6 bg-gray-50">
+            {/* Invoice Content - Compact Layout */}
+            <div className="max-w-4xl mx-auto space-y-3">
+                {/* Studio Header - Compact */}
+                <div className="border-2 border-gray-900 p-3 bg-gray-50">
                     <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                             {settings?.site_logo && (
                                 <img
                                     src={settings.site_logo}
                                     alt="Logo"
-                                    className="h-12 w-auto object-contain"
+                                    className="h-10 w-auto object-contain"
                                     onError={(e) => {
                                         (e.target as HTMLImageElement).src = '/images/default-logo.png';
                                     }}
                                 />
                             )}
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                                <h2 className="text-xl font-bold text-gray-900 mb-0.5">
                                     {(settings?.site_name || 'CERITAKITA STUDIO').toUpperCase()}
                                 </h2>
-                                <p className="text-gray-600 text-sm">Professional Photography Services</p>
-                                <p className="text-gray-500 text-xs mt-1">{settings?.business_address || 'Jl. Raya No. 123, Jakarta'}</p>
-                                <p className="text-gray-500 text-xs">Phone: {settings?.business_phone || '+62 812 3456 7890'}</p>
-                                {settings?.business_email && (
-                                    <p className="text-gray-500 text-xs">Email: {settings.business_email}</p>
-                                )}
+                                <p className="text-gray-600 text-xs">Professional Photography Services</p>
+                                <p className="text-gray-500 text-xs mt-0.5">{settings?.business_address || 'Jl. Raya No. 123, Jakarta'}</p>
+                                <p className="text-gray-500 text-xs">Ph: {settings?.business_phone || '+62 812 3456 7890'}</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="text-sm font-semibold">Invoice Date</p>
-                            <p className="text-gray-700">{new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-                            <p className="text-sm font-semibold mt-2">Invoice No.</p>
-                            <p className="text-gray-700">INV-{booking.id.slice(0, 8).toUpperCase()}</p>
+                            <p className="text-xs font-semibold">Invoice Date</p>
+                            <p className="text-gray-700 text-xs">{new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                            <p className="text-xs font-semibold mt-1">Invoice No.</p>
+                            <p className="text-gray-700 text-xs font-mono">INV-{booking.id.slice(0, 8).toUpperCase()}</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Customer Details */}
-                <div className="border rounded-lg p-6">
-                    <h3 className="font-bold text-gray-900 mb-3 text-lg">BILL TO</h3>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <p className="text-gray-500">Customer Name</p>
-                            <p className="font-semibold text-gray-900">{booking.customer.name}</p>
+                {/* Combined Customer & Booking Details - 2 Column Layout */}
+                <div className="grid grid-cols-2 gap-3">
+                    {/* Customer Details */}
+                    <div className="border rounded p-3">
+                        <h3 className="font-bold text-gray-900 mb-2 text-sm">BILL TO</h3>
+                        <div className="space-y-1.5 text-xs">
+                            <div>
+                                <p className="text-gray-500">Customer Name</p>
+                                <p className="font-semibold text-gray-900">{booking.customer.name}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">WhatsApp</p>
+                                <p className="font-semibold text-gray-900">{booking.customer.whatsapp}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">Service Category</p>
+                                <p className="font-semibold text-gray-900">{booking.customer.category}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-gray-500">WhatsApp</p>
-                            <p className="font-semibold text-gray-900">{booking.customer.whatsapp}</p>
-                        </div>
-                        <div>
-                            <p className="text-gray-500">Contact Email</p>
-                            <p className="font-semibold text-gray-900">
-                                {settings?.business_email || (
-                                    <>{booking.customer.whatsapp.replace(/[^0-9]/g, '')}@customer.ceritakita.studio</>
-                                )}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-gray-500">Service Category</p>
-                            <p className="font-semibold text-gray-900">{booking.customer.category}</p>
+                    </div>
+
+                    {/* Booking Details */}
+                    <div className="border rounded p-3">
+                        <h3 className="font-bold text-gray-900 mb-2 text-sm">BOOKING DETAILS</h3>
+                        <div className="space-y-1.5 text-xs">
+                            <div>
+                                <p className="text-gray-500">Session Date & Time</p>
+                                <p className="font-semibold text-gray-900">
+                                    {new Date(booking.booking.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                    {' at '}
+                                    {new Date(booking.booking.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">Status</p>
+                                <p className={`font-bold text-xs ${booking.status === 'Completed' ? 'text-blue-600' : 'text-green-600'}`}>
+                                    {booking.status.toUpperCase()}
+                                </p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">Booking Date</p>
+                                <p className="font-semibold text-gray-900">
+                                    {new Date(booking.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Booking Details */}
-                <div className="border rounded-lg p-6">
-                    <h3 className="font-bold text-gray-900 mb-3 text-lg">BOOKING DETAILS</h3>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <p className="text-gray-500">Session Date</p>
-                            <p className="font-semibold text-gray-900">
-                                {new Date(booking.booking.date).toLocaleDateString('id-ID', { 
-                                    day: '2-digit', 
-                                    month: 'long', 
-                                    year: 'numeric' 
-                                })}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-gray-500">Session Time</p>
-                            <p className="font-semibold text-gray-900">
-                                {new Date(booking.booking.date).toLocaleTimeString('id-ID', { 
-                                    hour: '2-digit', 
-                                    minute: '2-digit',
-                                    hour12: false 
-                                })}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-gray-500">Status</p>
-                            <p className={`font-bold ${booking.status === 'Completed' ? 'text-blue-600' : 'text-green-600'}`}>
-                                {booking.status.toUpperCase()}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-gray-500">Booking Date</p>
-                            <p className="font-semibold text-gray-900">
-                                {new Date(booking.created_at).toLocaleDateString('id-ID')}
-                            </p>
-                        </div>
+                {/* Notes - Only if exists */}
+                {booking.booking.notes && (
+                    <div className="border rounded p-2">
+                        <p className="text-gray-500 text-xs font-semibold">Notes:</p>
+                        <p className="text-gray-700 text-xs italic">{booking.booking.notes}</p>
                     </div>
-                    {booking.booking.notes && (
-                        <div className="mt-4">
-                            <p className="text-gray-500 text-sm">Notes:</p>
-                            <p className="text-gray-700 text-sm italic">{booking.booking.notes}</p>
-                        </div>
-                    )}
-                </div>
+                )}
 
-                {/* Itemized Charges */}
-                <div className="border rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
+                {/* Itemized Charges - Compact Table */}
+                <div className="border rounded overflow-hidden">
+                    <table className="w-full text-xs">
                         <thead className="bg-gray-50 border-b">
                             <tr>
-                                <th className="text-left p-3 font-semibold text-gray-700">Description</th>
-                                <th className="text-right p-3 font-semibold text-gray-700">Amount</th>
+                                <th className="text-left p-2 font-semibold text-gray-700">Description</th>
+                                <th className="text-right p-2 font-semibold text-gray-700">Amount</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y">
                             {/* Service Base Price */}
                             {breakdown.service_base_price > 0 && (
                                 <tr>
-                                    <td className="p-3 text-gray-700">Service Base Price</td>
-                                    <td className="p-3 text-right font-semibold">Rp {breakdown.service_base_price.toLocaleString('id-ID')}</td>
+                                    <td className="p-2 text-gray-700">Service Base Price</td>
+                                    <td className="p-2 text-right font-semibold">Rp {breakdown.service_base_price.toLocaleString('id-ID')}</td>
                                 </tr>
                             )}
 
                             {/* Base Discount */}
                             {breakdown.base_discount > 0 && (
                                 <tr>
-                                    <td className="p-3 text-red-600">Service Discount</td>
-                                    <td className="p-3 text-right font-semibold text-red-600">- Rp {breakdown.base_discount.toLocaleString('id-ID')}</td>
+                                    <td className="p-2 text-red-600">Service Discount</td>
+                                    <td className="p-2 text-right font-semibold text-red-600">- Rp {breakdown.base_discount.toLocaleString('id-ID')}</td>
                                 </tr>
                             )}
 
                             {/* Add-ons */}
                             {booking.addons && booking.addons.length > 0 && booking.addons.map((addon, idx) => (
                                 <tr key={idx}>
-                                    <td className="p-3 text-gray-700">
+                                    <td className="p-2 text-gray-700">
                                         {addon.addon_name}
                                         {addon.quantity > 1 && ` (x${addon.quantity})`}
                                     </td>
-                                    <td className="p-3 text-right font-semibold">
+                                    <td className="p-2 text-right font-semibold">
                                         Rp {(addon.price_at_booking * addon.quantity).toLocaleString('id-ID')}
                                     </td>
                                 </tr>
@@ -333,15 +309,15 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                             {/* Coupon Discount */}
                             {breakdown.coupon_discount > 0 && (
                                 <tr>
-                                    <td className="p-3 text-red-600">
+                                    <td className="p-2 text-red-600">
                                         Coupon Discount
                                         {breakdown.coupon_code && (
-                                            <span className="ml-1 text-xs font-mono bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
+                                            <span className="ml-1 text-xs font-mono bg-yellow-100 text-yellow-800 px-1 py-0.5 rounded">
                                                 {breakdown.coupon_code}
                                             </span>
                                         )}
                                     </td>
-                                    <td className="p-3 text-right font-semibold text-red-600">
+                                    <td className="p-2 text-right font-semibold text-red-600">
                                         - Rp {breakdown.coupon_discount.toLocaleString('id-ID')}
                                     </td>
                                 </tr>
@@ -349,22 +325,22 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
 
                             {/* Subtotal Row */}
                             <tr className="bg-gray-50 border-t-2 border-gray-300">
-                                <td className="p-3 font-bold text-gray-900">SUBTOTAL</td>
-                                <td className="p-3 text-right font-bold text-gray-900">Rp {subtotal.toLocaleString('id-ID')}</td>
+                                <td className="p-2 font-bold text-gray-900">SUBTOTAL</td>
+                                <td className="p-2 text-right font-bold text-gray-900">Rp {subtotal.toLocaleString('id-ID')}</td>
                             </tr>
 
                             {/* Tax */}
                             {taxRate > 0 && (
                                 <tr>
-                                    <td className="p-3 text-gray-700">Tax ({taxRate}%)</td>
-                                    <td className="p-3 text-right font-semibold">Rp {taxAmount.toLocaleString('id-ID')}</td>
+                                    <td className="p-2 text-gray-700">Tax ({taxRate}%)</td>
+                                    <td className="p-2 text-right font-semibold">Rp {taxAmount.toLocaleString('id-ID')}</td>
                                 </tr>
                             )}
 
                             {/* Total */}
                             <tr className="bg-blue-50 border-t-2 border-blue-300">
-                                <td className="p-3 font-bold text-lg text-blue-900">TOTAL</td>
-                                <td className="p-3 text-right font-bold text-lg text-blue-900">
+                                <td className="p-2 font-bold text-sm text-blue-900">TOTAL</td>
+                                <td className="p-2 text-right font-bold text-sm text-blue-900">
                                     Rp {(taxRate > 0 ? totalWithTax : booking.finance.total_price).toLocaleString('id-ID')}
                                 </td>
                             </tr>
@@ -372,180 +348,187 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                     </table>
                 </div>
 
-                {/* Payment History */}
+                {/* Payment History - Compact */}
                 {booking.finance.payments.length > 0 && (
-                    <div className="border rounded-lg p-6">
-                        <h3 className="font-bold text-gray-900 mb-3 text-lg">PAYMENT HISTORY</h3>
-                        <div className="space-y-2">
+                    <div className="border rounded p-3">
+                        <h3 className="font-bold text-gray-900 mb-2 text-sm">PAYMENT HISTORY</h3>
+                        <div className="space-y-1">
                             {booking.finance.payments.map((payment, idx) => (
-                                <div key={idx} className="flex justify-between items-center text-sm py-2 border-b border-gray-100 last:border-0">
+                                <div key={idx} className="flex justify-between items-center text-xs py-1 border-b border-gray-100 last:border-0">
                                     <div>
                                         <span className="font-semibold text-gray-700">{payment.note}</span>
-                                        <span className="text-gray-500 ml-2">
-                                            {new Date(payment.date).toLocaleDateString('id-ID')}
+                                        <span className="text-gray-500 ml-2 text-xs">
+                                            {new Date(payment.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                                         </span>
                                     </div>
                                     <span className="font-bold text-green-600">Rp {payment.amount.toLocaleString('id-ID')}</span>
                                 </div>
                             ))}
                         </div>
-                        
+
                         {/* Payment Summary */}
-                        <div className="mt-4 pt-4 border-t-2 border-gray-200 space-y-2">
-                            <div className="flex justify-between text-sm">
+                        <div className="mt-2 pt-2 border-t-2 border-gray-200 space-y-1">
+                            <div className="flex justify-between text-xs">
                                 <span className="text-gray-600">Total Amount:</span>
                                 <span className="font-semibold">Rp {finance.total.toLocaleString('id-ID')}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
+                            <div className="flex justify-between text-xs">
                                 <span className="text-gray-600">Total Paid:</span>
                                 <span className="font-semibold text-green-600">Rp {finance.paid.toLocaleString('id-ID')}</span>
                             </div>
                             {finance.balance > 0 && (
-                                <div className="flex justify-between text-sm font-bold bg-red-50 p-2 rounded">
+                                <div className="flex justify-between text-xs font-bold bg-red-50 p-1.5 rounded">
                                     <span className="text-red-700">Balance Due:</span>
                                     <span className="text-red-700">Rp {finance.balance.toLocaleString('id-ID')}</span>
                                 </div>
                             )}
                             {finance.balance === 0 && (
-                                <div className="flex justify-between text-sm font-bold bg-green-50 p-2 rounded">
+                                <div className="flex justify-between text-xs font-bold bg-green-50 p-1.5 rounded">
                                     <span className="text-green-700">Payment Status:</span>
-                                    <span className="text-green-700">FULLY PAID ✓</span>
+                                    <span className="text-green-700">FULLY PAID</span>
                                 </div>
                             )}
                         </div>
                     </div>
                 )}
 
-                {/* Bank Details */}
-                {settings?.bank_name && settings.bank_number && settings.bank_holder && (
-                    <div className="border rounded-lg p-6">
-                        <h3 className="font-bold text-gray-900 mb-3 text-lg">PAYMENT TRANSFER DETAILS</h3>
-                        <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-700 w-24">Bank:</span>
-                                <span className="text-gray-900">{settings.bank_name}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-700 w-24">Account No:</span>
-                                <span className="text-gray-900 font-mono">{settings.bank_number}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-gray-700 w-24">Holder:</span>
-                                <span className="text-gray-900">{settings.bank_holder}</span>
+                {/* Bank Details & Social Links - 2 Column */}
+                <div className="grid grid-cols-2 gap-3">
+                    {/* Bank Details */}
+                    {settings?.bank_name && settings.bank_number && settings.bank_holder && (
+                        <div className="border rounded p-3">
+                            <h3 className="font-bold text-gray-900 mb-2 text-xs">PAYMENT DETAILS</h3>
+                            <div className="space-y-1 text-xs">
+                                <div className="flex gap-2">
+                                    <span className="font-semibold text-gray-700 w-16">Bank:</span>
+                                    <span className="text-gray-900">{settings.bank_name}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="font-semibold text-gray-700 w-16">Account:</span>
+                                    <span className="text-gray-900 font-mono">{settings.bank_number}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="font-semibold text-gray-700 w-16">Holder:</span>
+                                    <span className="text-gray-900">{settings.bank_holder}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* Social Links */}
-                {(settings?.instagram_url || settings?.tiktok_url || settings?.maps_link) && (
-                    <div className="border rounded-lg p-6">
-                        <h3 className="font-bold text-gray-900 mb-3 text-lg">FIND US ONLINE</h3>
-                        <div className="flex flex-wrap gap-4 text-sm">
-                            {settings.instagram_url && (
-                                <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
-                                    Instagram: @{settings.instagram_url.split('/').pop()}
-                                </a>
-                            )}
-                            {settings.tiktok_url && (
-                                <a href={settings.tiktok_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
-                                    TikTok: @{settings.tiktok_url.split('/').pop()}
-                                </a>
-                            )}
-                            {settings.maps_link && (
-                                <a href={settings.maps_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
-                                    Google Maps Location
-                                </a>
-                            )}
+                    {/* Social Links */}
+                    {(settings?.instagram_url || settings?.tiktok_url || settings?.maps_link) && (
+                        <div className="border rounded p-3">
+                            <h3 className="font-bold text-gray-900 mb-2 text-xs">FIND US ONLINE</h3>
+                            <div className="flex flex-col gap-1 text-xs">
+                                {settings.instagram_url && (
+                                    <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                        IG: @{settings.instagram_url.split('/').pop()}
+                                    </a>
+                                )}
+                                {settings.tiktok_url && (
+                                    <a href={settings.tiktok_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                        TikTok: @{settings.tiktok_url.split('/').pop()}
+                                    </a>
+                                )}
+                                {settings.maps_link && (
+                                    <a href={settings.maps_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                                        Google Maps
+                                    </a>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
 
-                {/* Footer */}
-                <div className="border-t-2 border-gray-300 pt-6 text-center text-sm text-gray-600">
-                    <p className="font-semibold mb-2">THANK YOU FOR YOUR BUSINESS!</p>
-                    <p className="text-xs mb-1">For questions or concerns, please contact us at:</p>
-                    <p className="text-xs">
-                        WhatsApp: {settings?.business_phone || '+62 812 3456 7890'} 
-                        {settings?.business_email && ` | Email: ${settings.business_email}`}
+                {/* Footer - Compact */}
+                <div className="border-t-2 border-gray-300 pt-3 text-center text-xs text-gray-600">
+                    <p className="font-semibold mb-1">THANK YOU FOR YOUR BUSINESS!</p>
+                    <p className="text-xs mb-0.5">Contact: WhatsApp {settings?.business_phone || '+62 812 3456 7890'}
+                        {settings?.business_email && ` | ${settings.business_email}`}
                     </p>
                     {settings?.invoice_notes && (
-                        <div className="mt-3 text-xs text-gray-500 italic">
+                        <div className="mt-1 text-xs text-gray-500 italic">
                             {settings.invoice_notes}
                         </div>
                     )}
-                    <p className="text-xs mt-3 text-gray-500">
-                        This is a computer-generated invoice. No signature required.
+                    <p className="text-xs mt-1 text-gray-500">
+                        Computer-generated invoice. No signature required.
                     </p>
                 </div>
-
-                {/* Print-only Terms */}
-                <div className="hidden print:block text-xs text-gray-500 text-center mt-4">
-                    <p>Terms: Payment must be completed before session date. Cancellations require 24-hour notice.</p>
-                </div>
-            </div>
-
-            {/* Print-only Payment Instructions */}
-            <div className="hidden print:block mt-8 p-4 border-2 border-dashed border-gray-300 bg-gray-50 text-center">
-                <p className="font-semibold text-sm mb-2">PAYMENT INSTRUCTIONS</p>
-                <p className="text-xs">
-                    Transfer to: {settings?.bank_name || 'BCA'} {settings?.bank_number || '1234567890'} 
-                    a.n. {settings?.bank_holder || settings?.site_name || 'Ceritakita Studio'}
-                </p>
-                <p className="text-xs mt-1">Please send proof of payment to our WhatsApp</p>
             </div>
 
             {/* Screen-only Print Reminder */}
-            <div className="print:hidden mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                <p className="text-yellow-800 text-sm">
-                    💡 <strong>Tip:</strong> Click "Print / Save PDF" to save this invoice as a PDF file
+            <div className="print:hidden mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                <p className="text-yellow-800 text-xs">
+                    <strong>Tip:</strong> Click "Print / Save PDF" to save this invoice as a PDF file
                 </p>
             </div>
 
-            {/* Print Styles */}
+            {/* Print Styles - Optimized for Compact Layout */}
             <style jsx global>{`
                 @media print {
                     @page {
-                        margin: 15mm;
+                        margin: 10mm;
                         size: A4;
                     }
-                    
+
                     body {
                         background: white !important;
                         padding: 0 !important;
+                        font-size: 11px !important;
                     }
-                    
-                    .no-print {
-                        display: none !important;
-                    }
-                    
-                    .print\:block {
-                        display: block !important;
-                    }
-                    
+
                     .print\:hidden {
                         display: none !important;
                     }
-                    
-                    /* Ensure proper page breaks */
-                    .border, .p-6, .p-4 {
-                        break-inside: avoid;
+
+                    .print\:block {
+                        display: block !important;
                     }
-                    
-                    table {
+
+                    /* Prevent page breaks inside elements */
+                    .border, .p-3, .p-2, table {
+                        break-inside: avoid;
                         page-break-inside: avoid;
                     }
-                    
-                    /* Optimize for print */
+
+                    /* Optimize spacing for print */
+                    .space-y-3 > * + * {
+                        margin-top: 0.5rem !important;
+                    }
+
+                    /* Ensure colors print correctly */
                     * {
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
+                        color-adjust: exact !important;
                     }
-                    
-                    /* Ensure text is crisp */
+
+                    /* Crisp text rendering */
                     body {
                         -webkit-font-smoothing: antialiased;
                         -moz-osx-font-smoothing: grayscale;
+                    }
+
+                    /* Reduce overall spacing for compact fit */
+                    .max-w-4xl {
+                        max-width: 100% !important;
+                    }
+
+                    /* Ensure grid columns print correctly */
+                    .grid-cols-2 {
+                        display: grid !important;
+                        grid-template-columns: 1fr 1fr !important;
+                        gap: 0.5rem !important;
+                    }
+
+                    /* Make text slightly smaller in print */
+                    .text-xs {
+                        font-size: 9px !important;
+                    }
+
+                    .text-sm {
+                        font-size: 10px !important;
                     }
                 }
             `}</style>

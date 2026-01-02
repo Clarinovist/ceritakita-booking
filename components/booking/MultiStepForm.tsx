@@ -1,9 +1,8 @@
 'use client';
 
-'use client';
-
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { fieldValidators } from '@/lib/validation/schemas';
+import { generateWhatsAppLink, renderTemplate } from '@/lib/whatsapp-template';
 
 // Form data interface
 interface FormData {
@@ -47,9 +46,13 @@ interface FormData {
     account_number: string;
     qris_image_url?: string;
   } | null;
-  
+
   // Portfolio images
   portfolioImages: string[];
+
+  // WhatsApp settings
+  whatsapp_message_template: string;
+  whatsapp_admin_number: string;
 }
 
 interface StepError {
@@ -131,9 +134,13 @@ export function MultiStepFormProvider({
     
     // Payment settings
     paymentSettings: initialData?.paymentSettings || null,
-    
+
     // Portfolio
     portfolioImages: initialData?.portfolioImages || [],
+
+    // WhatsApp settings
+    whatsapp_message_template: initialData?.whatsapp_message_template || '',
+    whatsapp_admin_number: initialData?.whatsapp_admin_number || '',
   });
   
   const [errors, setErrors] = useState<Record<number, StepError[]>>({});
@@ -152,21 +159,32 @@ export function MultiStepFormProvider({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fetch payment settings on mount
+  // Fetch settings on mount (payment settings + WhatsApp settings)
   useEffect(() => {
-    const fetchPaymentSettings = async () => {
+    const fetchSettings = async () => {
       try {
-        const res = await fetch('/api/payment-settings');
-        if (res.ok) {
-          const settings = await res.json();
-          updateFormData({ paymentSettings: settings });
+        // Fetch payment settings
+        const paymentRes = await fetch('/api/payment-settings');
+        if (paymentRes.ok) {
+          const paymentSettings = await paymentRes.json();
+          updateFormData({ paymentSettings });
+        }
+
+        // Fetch system settings for WhatsApp template and admin number
+        const settingsRes = await fetch('/api/settings');
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          updateFormData({
+            whatsapp_message_template: settings.whatsapp_message_template || '',
+            whatsapp_admin_number: settings.whatsapp_admin_number || '',
+          });
         }
       } catch (error) {
-        console.error('Failed to fetch payment settings:', error);
+        console.error('Failed to fetch settings:', error);
       }
     };
 
-    fetchPaymentSettings();
+    fetchSettings();
   }, []);
 
   // Portfolio fetching function
@@ -343,6 +361,13 @@ export function MultiStepFormProvider({
   };
 
   const resetForm = () => {
+    // Preserve payment settings and WhatsApp settings during reset
+    const preservedSettings = {
+      paymentSettings: formData.paymentSettings,
+      whatsapp_message_template: formData.whatsapp_message_template,
+      whatsapp_admin_number: formData.whatsapp_admin_number,
+    };
+
     setFormData({
       serviceId: '',
       serviceName: '',
@@ -362,8 +387,8 @@ export function MultiStepFormProvider({
       addonsTotal: 0,
       couponDiscount: 0,
       couponCode: '',
-      paymentSettings: null,
       portfolioImages: [],
+      ...preservedSettings,
     });
     setErrors({});
     setCurrentStep(1);
@@ -433,20 +458,76 @@ export function MultiStepFormProvider({
         body: formPayload,
       });
 
-      if (!res.ok) throw new Error('Booking failed');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Booking failed');
+      }
+
+      const result = await res.json();
+      const bookingId = result.id || 'NEW';
 
       // Success - clear saved data
       localStorage.removeItem('bookingFormProgress');
-      
+
+      // Generate WhatsApp message using template from settings
+      let message = '';
+
+      if (formData.whatsapp_message_template) {
+        // Use the template from settings
+        const variables = {
+          customer_name: formData.name,
+          service: formData.serviceName,
+          date: new Date(formData.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }),
+          time: formData.time,
+          total_price: formData.totalPrice.toLocaleString('id-ID'),
+          booking_id: bookingId,
+        };
+
+        try {
+          message = renderTemplate(formData.whatsapp_message_template, variables, { escapeHtml: false });
+        } catch (error) {
+          console.error('Failed to render WhatsApp template:', error);
+          // Fallback to default message
+          message = `Halo! Saya baru saja melakukan booking dengan detail:\n\n` +
+            `📋 Booking ID: ${bookingId}\n` +
+            `👤 Nama: ${formData.name}\n` +
+            `📸 Layanan: ${formData.serviceName}\n` +
+            `📅 Tanggal: ${variables.date}\n` +
+            `⏰ Waktu: ${formData.time}\n` +
+            `💰 Total: Rp ${variables.total_price}\n\n` +
+            `Mohon konfirmasinya ya! 🙏`;
+        }
+      } else {
+        // Fallback if no template is set
+        message = `Halo! Saya baru saja melakukan booking dengan detail:\n\n` +
+          `📋 Booking ID: ${bookingId}\n` +
+          `👤 Nama: ${formData.name}\n` +
+          `📸 Layanan: ${formData.serviceName}\n` +
+          `📅 Tanggal: ${new Date(formData.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}\n` +
+          `⏰ Waktu: ${formData.time}\n` +
+          `💰 Total: Rp ${formData.totalPrice.toLocaleString('id-ID')}\n\n` +
+          `Mohon konfirmasinya ya! 🙏`;
+      }
+
+      // Get admin WhatsApp number from settings or fallback to default
+      const adminWhatsApp = formData.whatsapp_admin_number || '6281234567890';
+
+      // Generate WhatsApp URL
+      const whatsappUrl = generateWhatsAppLink(adminWhatsApp, message);
+
       // Show success message
-      alert('Booking berhasil! Admin akan menghubungi Anda.');
-      
+      alert('Booking berhasil! Anda akan diarahkan ke WhatsApp untuk konfirmasi.');
+
       // Reset form
       resetForm();
 
+      // Redirect to WhatsApp
+      window.location.href = whatsappUrl;
+
     } catch (error) {
       console.error(error);
-      alert('Terjadi kesalahan saat booking.');
+      const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan saat booking.';
+      alert(errorMessage);
       throw error;
     } finally {
       setIsSubmitting(false);

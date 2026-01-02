@@ -333,7 +333,10 @@ export const useBookingForm = () => {
                 body: formPayload
             });
 
-            if (!res.ok) throw new Error('Booking failed');
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Booking failed');
+            }
 
             const createdBooking = await res.json();
 
@@ -380,7 +383,8 @@ export const useBookingForm = () => {
 
         } catch (error) {
             console.error(error);
-            alert('Terjadi kesalahan saat booking.');
+            const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan saat booking.';
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }

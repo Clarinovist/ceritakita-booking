@@ -41,8 +41,8 @@ export const ScheduleInfo = ({ formData: propFormData, handleChange: propHandleC
                 if (res.ok) {
                     const data = await res.json();
                     setSettings({
-                        min_booking_notice: data.min_booking_notice || 1,
-                        max_booking_ahead: data.max_booking_ahead || 90
+                        min_booking_notice: parseInt(data.min_booking_notice) || 1,
+                        max_booking_ahead: parseInt(data.max_booking_ahead) || 90
                     });
                 } else {
                     // Default values if fetch fails
