@@ -21,7 +21,7 @@ export class LeadDatabaseError extends Error {
 export async function getLeads(filters: LeadFilters = {}): Promise<Lead[]> {
   try {
     const db = getDb();
-    
+
     let query = 'SELECT * FROM leads';
     const params: any[] = [];
     const conditions: string[] = [];
@@ -71,6 +71,7 @@ export async function getLeads(filters: LeadFilters = {}): Promise<Lead[]> {
       email: row.email,
       status: row.status as LeadStatus,
       source: row.source as LeadSource,
+      interest: row.interest ? JSON.parse(row.interest) : [],
       notes: row.notes,
       assigned_to: row.assigned_to,
       booking_id: row.booking_id,
@@ -103,6 +104,7 @@ export async function getLeadById(id: string): Promise<Lead | null> {
       email: row.email,
       status: row.status as LeadStatus,
       source: row.source as LeadSource,
+      interest: row.interest ? JSON.parse(row.interest) : [],
       notes: row.notes,
       assigned_to: row.assigned_to,
       booking_id: row.booking_id,
@@ -126,9 +128,9 @@ export async function createLead(data: LeadFormData): Promise<Lead> {
 
     const stmt = db.prepare(`
       INSERT INTO leads (
-        id, created_at, updated_at, name, whatsapp, email, status, source, 
+        id, created_at, updated_at, name, whatsapp, email, status, source, interest,
         notes, assigned_to, next_follow_up
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
@@ -140,6 +142,7 @@ export async function createLead(data: LeadFormData): Promise<Lead> {
       data.email || null,
       data.status,
       data.source,
+      data.interest ? JSON.stringify(data.interest) : null,
       data.notes || null,
       data.assigned_to || null,
       data.next_follow_up || null
@@ -193,17 +196,21 @@ export async function updateLead(id: string, data: LeadUpdateData): Promise<Lead
       updates.push('source = ?');
       params.push(data.source);
     }
+    if (data.interest !== undefined) {
+      updates.push('interest = ?');
+      params.push(data.interest ? JSON.stringify(data.interest) : null);
+    }
     if (data.notes !== undefined) {
       updates.push('notes = ?');
       params.push(data.notes);
     }
     if (data.assigned_to !== undefined) {
       updates.push('assigned_to = ?');
-      params.push(data.assigned_to);
+      params.push(data.assigned_to || null);
     }
     if (data.booking_id !== undefined) {
       updates.push('booking_id = ?');
-      params.push(data.booking_id);
+      params.push(data.booking_id || null);
     }
     if (data.converted_at !== undefined) {
       updates.push('converted_at = ?');

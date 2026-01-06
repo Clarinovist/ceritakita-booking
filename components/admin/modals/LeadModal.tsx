@@ -3,6 +3,7 @@
 import React from 'react';
 import type { Lead, LeadFormData, LeadStatus, LeadSource } from '@/lib/types';
 import { LEAD_STATUSES, LEAD_SOURCES } from '@/lib/types/leads';
+import { SERVICE_CATEGORIES } from '@/lib/constants';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -24,6 +25,21 @@ export function LeadModal({
   if (!isOpen) return null;
 
   const isEditing = !!editingLead;
+
+  const toggleInterest = (category: string) => {
+    const currentInterests = formData.interest || [];
+    if (currentInterests.includes(category)) {
+      setFormData({
+        ...formData,
+        interest: currentInterests.filter(i => i !== category)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        interest: [...currentInterests, category]
+      });
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
@@ -119,6 +135,23 @@ export function LeadModal({
                   onChange={e => setFormData({ ...formData, next_follow_up: e.target.value })}
                   className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
                 />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-bold text-gray-700 mb-2">Interest</label>
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg bg-white">
+                {SERVICE_CATEGORIES.map(category => (
+                  <label key={category} className="flex items-center gap-2 text-sm cursor-pointer p-1 hover:bg-gray-50 rounded">
+                    <input
+                      type="checkbox"
+                      checked={(formData.interest || []).includes(category)}
+                      onChange={() => toggleInterest(category)}
+                      className="rounded text-purple-600 focus:ring-purple-500"
+                    />
+                    <span>{category}</span>
+                  </label>
+                ))}
               </div>
             </div>
           </div>

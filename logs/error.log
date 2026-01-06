@@ -64,3 +64,9 @@
     at NoopTracer.startActiveSpan (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
     at ProxyTracer.startActiveSpan (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
     at /home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/server/lib/trace/tracer.js:122:103
+[2026-01-02T13:00:56.933Z] [ERROR]  | Context: {"stack":"AggregateError [ETIMEDOUT]: \n    at internalConnectMultiple (node:net:1134:18)\n    at internalConnectMultiple (node:net:1210:5)\n    at Timeout.internalConnectMultipleTimeout (node:net:1742:5)\n    at listOnTimeout (node:internal/timers:590:11)\n    at process.processTimers (node:internal/timers:523:7)"} | Error:  | AggregateError [ETIMEDOUT]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at internalConnectMultiple (node:net:1210:5)
+    at Timeout.internalConnectMultipleTimeout (node:net:1742:5)
+    at listOnTimeout (node:internal/timers:590:11)
+    at process.processTimers (node:internal/timers:523:7)

@@ -10,43 +10,46 @@ export type LeadSource = 'Meta Ads' | 'Organic' | 'Referral' | 'Instagram' | 'Wh
 export interface Lead {
   /** Unique lead identifier */
   id: string;
-  
+
   /** Lead creation timestamp */
   created_at: string;
-  
+
   /** Last updated timestamp */
   updated_at: string;
-  
+
   /** Lead name */
   name: string;
-  
+
   /** WhatsApp number (primary contact) */
   whatsapp: string;
-  
+
   /** Email (optional) */
   email?: string;
-  
+
   /** Lead status */
   status: LeadStatus;
-  
+
   /** Lead source */
   source: LeadSource;
-  
+
+  /** Interested services */
+  interest?: string[];
+
   /** Notes about the lead */
   notes?: string;
-  
+
   /** Assigned staff/admin user ID */
   assigned_to?: string;
-  
+
   /** Booking ID if converted to booking */
   booking_id?: string;
-  
+
   /** Conversion timestamp */
   converted_at?: string;
-  
+
   /** Last contact timestamp */
   last_contacted_at?: string;
-  
+
   /** Next follow-up date */
   next_follow_up?: string;
 }
@@ -56,6 +59,7 @@ export interface LeadFormData {
   whatsapp: string;
   email?: string;
   source: LeadSource;
+  interest?: string[];
   status: LeadStatus;
   notes?: string;
   assigned_to?: string;
@@ -67,6 +71,7 @@ export interface LeadUpdateData {
   whatsapp?: string;
   email?: string;
   source?: LeadSource;
+  interest?: string[];
   status?: LeadStatus;
   notes?: string;
   assigned_to?: string;

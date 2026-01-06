@@ -1079,3 +1079,143 @@
 [2026-01-01T03:53:17.980Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-31","spend":81352,"impressions":10896,"clicks":29,"reach":9029}
 [2026-01-01T03:53:20.721Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-31","spend":81352,"impressions":10896,"clicks":29,"reach":9029}
 [2026-01-01T03:53:20.746Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-31","spend":81352,"impressions":10896,"clicks":29,"reach":9029}
+[2026-01-02T13:00:45.345Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:00:45.347Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:00:45.395Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:00:45.395Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:00:45.411Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:00:45.412Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:00:45.421Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:00:45.421Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: hero_title | Context: {"oldValue":"Capture Your Special Moments","newValue":"Capture Your Special Moments","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: meta_description | Context: {"oldValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","newValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: business_address | Context: {"oldValue":"Jalan Raya No. 123, Jakarta","newValue":"Jalan Raya No. 123, Jakarta","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: business_phone | Context: {"oldValue":"+62 812 3456 7899","newValue":"+62 812 3456 7899","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: business_email | Context: {"oldValue":"admin.ceritakitastudio@gmail.com","newValue":"admin.ceritakitastudio@gmail.com","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: whatsapp_admin_number | Context: {"oldValue":"+62 812 3456 7891","newValue":"+62 812 3456 7891","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: instagram_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: maps_link | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: site_logo | Context: {"oldValue":"/images/default-logo.png","newValue":"/images/default-logo.png","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: tiktok_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: bank_name | Context: {"oldValue":"BCA","newValue":"BCA","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: bank_number | Context: {"oldValue":"1234567899","newValue":"1234567899","updatedBy":"admin"}
+[2026-01-02T13:01:14.220Z] [INFO] Setting updated: site_name | Context: {"oldValue":"Cerita Kita","newValue":"Cerita Kita","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: bank_holder | Context: {"oldValue":"CERITA KITA","newValue":"CERITA KITA","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: invoice_notes | Context: {"oldValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","newValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: deposit_amount | Context: {"oldValue":"50","newValue":"50","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: requires_deposit | Context: {"oldValue":"false","newValue":"false","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: tax_rate | Context: {"oldValue":"11","newValue":"11","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: min_booking_notice | Context: {"oldValue":"1","newValue":"1","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: max_booking_ahead | Context: {"oldValue":"90","newValue":"90","updatedBy":"admin"}
+[2026-01-02T13:01:14.221Z] [INFO] Setting updated: meta_title | Context: {"oldValue":"Cerita Kita - Professional Photography Services","newValue":"Cerita Kita - Professional Photography Services","updatedBy":"admin"}
+[2026-01-02T13:01:14.222Z] [INFO] Setting updated: whatsapp_message_template | Context: {"oldValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","newValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","updatedBy":"admin"}
+[2026-01-02T13:04:35.494Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:35.496Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:35.655Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:35.656Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:35.684Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:35.686Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:35.715Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:35.716Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:47.739Z] [INFO] Setting updated: site_name | Context: {"oldValue":"Cerita Kita","newValue":"Cerita Kita","updatedBy":"admin"}
+[2026-01-02T13:04:47.739Z] [INFO] Setting updated: meta_description | Context: {"oldValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","newValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","updatedBy":"admin"}
+[2026-01-02T13:04:47.739Z] [INFO] Setting updated: meta_title | Context: {"oldValue":"Cerita Kita - Professional Photography Services","newValue":"Cerita Kita - Professional Photography Services","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: business_phone | Context: {"oldValue":"+62 812 3456 7899","newValue":"+62 812 3456 7899","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: business_address | Context: {"oldValue":"Jalan Raya No. 123, Jakarta","newValue":"Jalan Raya No. 123, Jakarta","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: whatsapp_admin_number | Context: {"oldValue":"+62 812 3456 7891","newValue":"+62 812 3456 7891","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: business_email | Context: {"oldValue":"admin.ceritakitastudio@gmail.com","newValue":"admin.ceritakitastudio@gmail.com","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: tiktok_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:04:47.739Z] [INFO] Setting updated: site_logo | Context: {"oldValue":"/images/default-logo.png","newValue":"/uploads/eba7e5c5-4008-4622-be28-bf3f2dfc2688-icon.png","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: instagram_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: maps_link | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: bank_name | Context: {"oldValue":"BCA","newValue":"BCA","updatedBy":"admin"}
+[2026-01-02T13:04:47.740Z] [INFO] Setting updated: bank_number | Context: {"oldValue":"1234567899","newValue":"1234567899","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: invoice_notes | Context: {"oldValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","newValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: bank_holder | Context: {"oldValue":"CERITA KITA","newValue":"CERITA KITA","updatedBy":"admin"}
+[2026-01-02T13:04:47.739Z] [INFO] Setting updated: hero_title | Context: {"oldValue":"Capture Your Special Moments","newValue":"Capture Your Special Moments","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: tax_rate | Context: {"oldValue":"11","newValue":"11","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: deposit_amount | Context: {"oldValue":"50","newValue":"50","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: min_booking_notice | Context: {"oldValue":"1","newValue":"1","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: requires_deposit | Context: {"oldValue":"false","newValue":"false","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: max_booking_ahead | Context: {"oldValue":"90","newValue":"90","updatedBy":"admin"}
+[2026-01-02T13:04:47.741Z] [INFO] Setting updated: whatsapp_message_template | Context: {"oldValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","newValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","updatedBy":"admin"}
+[2026-01-02T13:04:51.922Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:51.921Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:52.004Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:52.005Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:52.081Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:52.082Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:04:52.102Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-02T13:04:52.102Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-02T13:07:08.649Z] [INFO] Setting updated: site_name | Context: {"oldValue":"Cerita Kita","newValue":"CeritaKita","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: meta_title | Context: {"oldValue":"Cerita Kita - Professional Photography Services","newValue":"Cerita Kita - Professional Photography Services","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: whatsapp_admin_number | Context: {"oldValue":"+62 812 3456 7891","newValue":"+62 812 3456 7891","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: site_logo | Context: {"oldValue":"/uploads/eba7e5c5-4008-4622-be28-bf3f2dfc2688-icon.png","newValue":"/uploads/eba7e5c5-4008-4622-be28-bf3f2dfc2688-icon.png","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: business_address | Context: {"oldValue":"Jalan Raya No. 123, Jakarta","newValue":"Jalan Raya No. 123, Jakarta","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: business_email | Context: {"oldValue":"admin.ceritakitastudio@gmail.com","newValue":"admin.ceritakitastudio@gmail.com","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: instagram_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: tiktok_url | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: meta_description | Context: {"oldValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","newValue":"Professional photography services in Jakarta. Book your special moments with Cerita Kita.","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: maps_link | Context: {"oldValue":"(none)","newValue":"","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: hero_title | Context: {"oldValue":"Capture Your Special Moments","newValue":"Capture Your Special Moments","updatedBy":"admin"}
+[2026-01-02T13:07:08.650Z] [INFO] Setting updated: business_phone | Context: {"oldValue":"+62 812 3456 7899","newValue":"+62 812 3456 7899","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: bank_name | Context: {"oldValue":"BCA","newValue":"BCA","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: bank_number | Context: {"oldValue":"1234567899","newValue":"1234567899","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: bank_holder | Context: {"oldValue":"CERITA KITA","newValue":"CERITA KITA","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: requires_deposit | Context: {"oldValue":"false","newValue":"false","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: deposit_amount | Context: {"oldValue":"50","newValue":"50","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: invoice_notes | Context: {"oldValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","newValue":"Terima kasih telah memilih layanan kami. Pembayaran dapat dilakukan sebelum tanggal sesi. Hubungi kami jika ada pertanyaan.","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: tax_rate | Context: {"oldValue":"11","newValue":"11","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: min_booking_notice | Context: {"oldValue":"1","newValue":"1","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: max_booking_ahead | Context: {"oldValue":"90","newValue":"90","updatedBy":"admin"}
+[2026-01-02T13:07:08.651Z] [INFO] Setting updated: whatsapp_message_template | Context: {"oldValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","newValue":"Halo {{customer_name}}!\n\nBooking Anda untuk {{service}} pada {{date}} pukul {{time}} telah dikonfirmasi.\n\nTotal: Rp {{total_price}}\nID Booking: {{booking_id}}\n\nTerima kasih telah memilih Cerita Kita!","updatedBy":"admin"}
+[2026-01-06T02:14:35.601Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:14:35.603Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:14:35.665Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:14:35.666Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:14:35.687Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:14:35.688Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:14:35.698Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:14:35.698Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:24:29.605Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:24:29.603Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:24:29.696Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:24:29.697Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:24:29.803Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:24:29.804Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:24:29.826Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:24:29.827Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:24:31.602Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-31","spend":426849,"impressions":57866,"clicks":177,"reach":32271}
+[2026-01-06T02:24:31.646Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2025-12-31","spend":426849,"impressions":57866,"clicks":177,"reach":32271}
+[2026-01-06T02:27:13.384Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:27:13.387Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:27:14.670Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:27:14.673Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:27:14.713Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:27:14.713Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:27:14.741Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:27:14.742Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:37:09.416Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:37:09.419Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:37:09.478Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:37:09.479Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:37:09.504Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:37:09.505Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:37:09.517Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:37:09.518Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:39:31.646Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:39:31.647Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:39:31.742Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:39:31.743Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:39:31.780Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:39:31.779Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:39:31.791Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:39:31.791Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:41:41.781Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:41:41.783Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:41:41.925Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:41:41.927Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:41:41.968Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-06T02:41:41.969Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:41:41.987Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-06T02:41:41.986Z] [INFO] Retrieved bookings from database | Context: {"count":3}

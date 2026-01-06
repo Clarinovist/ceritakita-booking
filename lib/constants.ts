@@ -30,3 +30,22 @@ export const SETTINGS_CACHE = {
   TIME_KEY: 'system_settings_time',
   TTL: 5 * 60 * 1000 // 5 minutes
 } as const;
+
+/**
+ * Service Categories for Leads and Bookings
+ */
+export const SERVICE_CATEGORIES = [
+  'Indoor',
+  'Indoor Studio',
+  'Outdoor',
+  'Outdoor / On Location',
+  'Wedding',
+  'Prewedding Bronze',
+  'Prewedding Gold',
+  'Prewedding Silver',
+  'Wisuda',
+  'Family',
+  'Birthday',
+  'Pas Foto',
+  'Self Photo'
+] as const;

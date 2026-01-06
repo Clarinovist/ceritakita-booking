@@ -8,21 +8,23 @@ import { CreateBookingModal } from '@/components/admin/Bookings/modals/CreateBoo
 import AdminSidebar from '@/components/AdminSidebar';
 import { useServices } from '@/components/admin/hooks/useServices';
 import { usePhotographers } from '@/components/admin/hooks/usePhotographers';
-import { 
-  Lead, 
-  LeadFormData, 
-  LeadStatus, 
-  LeadSource, 
-  Service, 
-  Photographer, 
-  Addon 
+import {
+  Lead,
+  LeadFormData,
+  LeadStatus,
+  LeadSource,
+  Service,
+  Photographer,
+  Addon
 } from '@/lib/types';
+import { SERVICE_CATEGORIES } from '@/lib/constants';
 
 export default function LeadsPage() {
   const { data: session } = useSession();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filterStatus, setFilterStatus] = useState<LeadStatus | 'All'>('All');
   const [filterSource, setFilterSource] = useState<LeadSource | 'All'>('All');
+  const [filterInterest, setFilterInterest] = useState<string | 'All'>('All');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<LeadFormData>({
@@ -30,6 +32,7 @@ export default function LeadsPage() {
     whatsapp: '',
     email: '',
     source: 'Meta Ads',
+    interest: [],
     status: 'New',
     notes: '',
     assigned_to: '',
@@ -79,6 +82,7 @@ export default function LeadsPage() {
   const filteredLeads = leads.filter(lead => {
     if (filterStatus !== 'All' && lead.status !== filterStatus) return false;
     if (filterSource !== 'All' && lead.source !== filterSource) return false;
+    if (filterInterest !== 'All' && !(lead.interest || []).includes(filterInterest)) return false;
     return true;
   });
 
@@ -91,6 +95,7 @@ export default function LeadsPage() {
         whatsapp: lead.whatsapp,
         email: lead.email || '',
         source: lead.source,
+        interest: lead.interest || [],
         status: lead.status,
         notes: lead.notes || '',
         assigned_to: lead.assigned_to || '',
@@ -103,6 +108,7 @@ export default function LeadsPage() {
         whatsapp: '',
         email: '',
         source: 'Meta Ads',
+        interest: [],
         status: 'New',
         notes: '',
         assigned_to: '',
@@ -161,7 +167,7 @@ export default function LeadsPage() {
   // Convert to booking
   const handleConvertToBooking = async (lead: Lead) => {
     setConvertingLead(lead);
-    
+
     // Pre-fill booking form with lead data
     setBookingFormData({
       customer_name: lead.name,
@@ -175,7 +181,7 @@ export default function LeadsPage() {
       dp_amount: 0,
       payment_note: 'DP Awal'
     });
-    
+
     setSelectedBookingAddons(new Map());
     setAvailableBookingAddons([]);
     setIsBookingModalOpen(true);
@@ -329,8 +335,8 @@ export default function LeadsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <AdminSidebar viewMode="leads" setViewMode={() => {}} />
-      
+      <AdminSidebar viewMode="leads" setViewMode={() => { }} />
+
       <div className="flex-1 ml-0 md:ml-64 p-6 overflow-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Leads Management</h1>
@@ -343,6 +349,8 @@ export default function LeadsPage() {
           setFilterStatus={setFilterStatus}
           filterSource={filterSource}
           setFilterSource={setFilterSource}
+          filterInterest={filterInterest}
+          setFilterInterest={setFilterInterest}
           onOpenModal={handleOpenModal}
           onDeleteLead={handleDeleteLead}
           onConvertToBooking={handleConvertToBooking}

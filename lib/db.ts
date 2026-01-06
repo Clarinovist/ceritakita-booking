@@ -396,6 +396,7 @@ function initializeSchema() {
       -- Lead tracking
       status TEXT NOT NULL CHECK(status IN ('New', 'Contacted', 'Follow Up', 'Won', 'Lost', 'Converted')),
       source TEXT NOT NULL CHECK(source IN ('Meta Ads', 'Organic', 'Referral', 'Instagram', 'WhatsApp', 'Phone Call', 'Website Form', 'Other')),
+      interest TEXT, -- JSON string of interested services
       notes TEXT,
       
       -- Assignment and conversion
@@ -419,6 +420,14 @@ function initializeSchema() {
     CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
     CREATE INDEX IF NOT EXISTS idx_leads_whatsapp ON leads(whatsapp);
   `);
+
+  // Add interest column to existing leads table (migration)
+  try {
+    db.exec(`ALTER TABLE leads ADD COLUMN interest TEXT`);
+    console.log('✅ Database migration: Added interest column to leads table');
+  } catch (e) {
+    // Column already exists
+  }
 }
 
 /**

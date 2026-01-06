@@ -28,6 +28,8 @@ import { BookingDetailModal } from './Bookings/modals/BookingDetailModal';
 import { RescheduleModal } from './Bookings/modals/RescheduleModal';
 import { CreateBookingModal } from './Bookings/modals/CreateBookingModal';
 import { LeadModal } from './modals/LeadModal';
+import { AddonModal } from './modals/AddonModal';
+import { PhotographerModal } from './modals/PhotographerModal';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
 
@@ -90,35 +92,35 @@ export default function AdminDashboard() {
 
     // Filter view modes based on permissions
     const getAvailableViewModes = (): ViewMode[] => {
-      // Note: 'users' and 'payment-settings' are now handled within SettingsManagement, 
-      // but kept in type definition for compatibility if needed elsewhere.
-      const allModes: ViewMode[] = ['dashboard', 'ads', 'calendar', 'table', 'leads', 'services', 'portfolio', 'photographers', 'addons', 'coupons', 'settings'];
-      
-      if (userRole === 'admin') {
-        return allModes;
-      }
+        // Note: 'users' and 'payment-settings' are now handled within SettingsManagement, 
+        // but kept in type definition for compatibility if needed elsewhere.
+        const allModes: ViewMode[] = ['dashboard', 'ads', 'calendar', 'table', 'leads', 'services', 'portfolio', 'photographers', 'addons', 'coupons', 'settings'];
 
-      const allowedModes: ViewMode[] = [];
-      
-      if (userPermissions?.dashboard) allowedModes.push('dashboard');
-      if (userPermissions?.ads) allowedModes.push('ads');
-      if (userPermissions?.booking?.view) {
-        allowedModes.push('calendar', 'table');
-      }
-      if (userPermissions?.leads?.view) allowedModes.push('leads');
-      if (userPermissions?.services?.view) allowedModes.push('services');
-      if (userPermissions?.portfolio?.view) allowedModes.push('portfolio');
-      if (userPermissions?.photographers?.view) allowedModes.push('photographers');
-      if (userPermissions?.addons?.view) allowedModes.push('addons');
-      if (userPermissions?.coupons?.view) allowedModes.push('coupons');
-      if (userPermissions?.settings) allowedModes.push('settings');
-      
-      // If user has permissions for modules inside settings, allow settings access
-      if ((userPermissions?.users || userPermissions?.payment) && !allowedModes.includes('settings')) {
-          allowedModes.push('settings');
-      }
+        if (userRole === 'admin') {
+            return allModes;
+        }
 
-      return allowedModes.length > 0 ? allowedModes : ['table'];
+        const allowedModes: ViewMode[] = [];
+
+        if (userPermissions?.dashboard) allowedModes.push('dashboard');
+        if (userPermissions?.ads) allowedModes.push('ads');
+        if (userPermissions?.booking?.view) {
+            allowedModes.push('calendar', 'table');
+        }
+        if (userPermissions?.leads?.view) allowedModes.push('leads');
+        if (userPermissions?.services?.view) allowedModes.push('services');
+        if (userPermissions?.portfolio?.view) allowedModes.push('portfolio');
+        if (userPermissions?.photographers?.view) allowedModes.push('photographers');
+        if (userPermissions?.addons?.view) allowedModes.push('addons');
+        if (userPermissions?.coupons?.view) allowedModes.push('coupons');
+        if (userPermissions?.settings) allowedModes.push('settings');
+
+        // If user has permissions for modules inside settings, allow settings access
+        if ((userPermissions?.users || userPermissions?.payment) && !allowedModes.includes('settings')) {
+            allowedModes.push('settings');
+        }
+
+        return allowedModes.length > 0 ? allowedModes : ['table'];
     };
 
     const availableViewModes = getAvailableViewModes();
@@ -126,12 +128,12 @@ export default function AdminDashboard() {
 
     // Reset view mode if current mode becomes unavailable
     useEffect(() => {
-      if (availableViewModes.length > 0 && !availableViewModes.includes(viewMode)) {
-        const firstMode = availableViewModes[0];
-        if (firstMode) {
-          setViewMode(firstMode);
+        if (availableViewModes.length > 0 && !availableViewModes.includes(viewMode)) {
+            const firstMode = availableViewModes[0];
+            if (firstMode) {
+                setViewMode(firstMode);
+            }
         }
-      }
     }, [availableViewModes, viewMode]);
 
     // Fetch all data on mount
@@ -141,7 +143,7 @@ export default function AdminDashboard() {
         photographersHook.fetchData();
         addonsHook.fetchData();
         fetchLeads();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Leads functions
@@ -528,7 +530,7 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen bg-gray-50 flex">
             <AdminSidebar viewMode={viewMode as string} setViewMode={(mode: string) => setViewMode(mode as ViewMode)} />
-            
+
             <div className="flex-1 ml-0 md:ml-64 p-6 overflow-auto">
                 {/* Command Bar - Simplified */}
                 <div className="bg-white border rounded-xl p-4 mb-6 sticky top-0 z-10 flex justify-between items-center shadow-sm">
@@ -756,6 +758,26 @@ export default function AdminDashboard() {
                     onToggleAddon={toggleBookingAddon}
                     onUpdateAddonQuantity={updateBookingAddonQuantity}
                     calculateTotal={calculateBookingTotal}
+                />
+
+                {/* Addon Modal */}
+                <AddonModal
+                    isOpen={addonsHook.isAddonModalOpen}
+                    onClose={() => addonsHook.setIsAddonModalOpen(false)}
+                    onSubmit={addonsHook.handleSaveAddon}
+                    editingAddon={addonsHook.editingAddon}
+                    formData={addonsHook.addonFormData}
+                    setFormData={addonsHook.setAddonFormData}
+                />
+
+                {/* Photographer Modal */}
+                <PhotographerModal
+                    isOpen={photographersHook.isPhotographerModalOpen}
+                    onClose={() => photographersHook.setIsPhotographerModalOpen(false)}
+                    onSubmit={photographersHook.handleSavePhotographer}
+                    editingPhotographer={photographersHook.editingPhotographer}
+                    formData={photographersHook.photographerFormData}
+                    setFormData={photographersHook.setPhotographerFormData}
                 />
             </div>
         </div>

@@ -2,12 +2,16 @@ import { Lead, LeadStatus, LeadSource } from '@/lib/types';
 import { getLeadStatusColor, getLeadSourceIcon } from '@/lib/types/leads';
 import { formatDate } from '@/utils/dateFormatter';
 
+import { SERVICE_CATEGORIES } from '@/lib/constants';
+
 interface LeadsTableProps {
   leads: Lead[];
   filterStatus: LeadStatus | 'All';
   setFilterStatus: (status: LeadStatus | 'All') => void;
   filterSource: LeadSource | 'All';
   setFilterSource: (source: LeadSource | 'All') => void;
+  filterInterest: string | 'All';
+  setFilterInterest: (interest: string | 'All') => void;
   onOpenModal: (lead?: Lead) => void;
   onDeleteLead: (id: string) => void;
   onConvertToBooking: (lead: Lead) => void;
@@ -20,6 +24,8 @@ export const LeadsTable = ({
   setFilterStatus,
   filterSource,
   setFilterSource,
+  filterInterest,
+  setFilterInterest,
   onOpenModal,
   onDeleteLead,
   onConvertToBooking,
@@ -35,7 +41,7 @@ export const LeadsTable = ({
           <h3 className="font-bold text-gray-700 flex items-center gap-2">
             <span>🎯</span> All Leads
           </h3>
-          
+
           {/* Status Filter */}
           <div className="flex bg-white border rounded-lg overflow-hidden text-sm">
             {(['All', 'New', 'Contacted', 'Follow Up', 'Won', 'Lost', 'Converted'] as const).map(s => (
@@ -51,15 +57,30 @@ export const LeadsTable = ({
 
           {/* Source Filter */}
           <div className="flex bg-white border rounded-lg overflow-hidden text-sm">
-            {(['All', ...sources] as const).map(s => (
-              <button
-                key={s}
-                onClick={() => setFilterSource(s as LeadSource | 'All')}
-                className={`px-3 py-1.5 ${filterSource === s ? 'bg-purple-600 text-white' : 'hover:bg-gray-50 text-gray-600'}`}
-              >
-                {s}
-              </button>
-            ))}
+            <select
+              value={filterSource}
+              onChange={(e) => setFilterSource(e.target.value as LeadSource | 'All')}
+              className="px-3 py-1.5 outline-none hover:bg-gray-50 text-gray-600 bg-transparent cursor-pointer"
+            >
+              <option value="All">All Sources</option>
+              {sources.map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Interest Filter */}
+          <div className="flex bg-white border rounded-lg overflow-hidden text-sm">
+            <select
+              value={filterInterest}
+              onChange={(e) => setFilterInterest(e.target.value)}
+              className="px-3 py-1.5 outline-none hover:bg-gray-50 text-gray-600 bg-transparent cursor-pointer"
+            >
+              <option value="All">All Interests</option>
+              {SERVICE_CATEGORIES.map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -80,6 +101,7 @@ export const LeadsTable = ({
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">WhatsApp</th>
               <th className="px-4 py-3">Source</th>
+              <th className="px-4 py-3">Interest</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Created</th>
               <th className="px-4 py-3">Next Follow-up</th>
@@ -89,7 +111,7 @@ export const LeadsTable = ({
           <tbody className="divide-y">
             {leads.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center p-8 text-gray-400">
+                <td colSpan={8} className="text-center p-8 text-gray-400">
                   No leads found.
                 </td>
               </tr>
@@ -118,6 +140,24 @@ export const LeadsTable = ({
                     <span>{getLeadSourceIcon(lead.source)}</span>
                     {lead.source}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  {(lead.interest && lead.interest.length > 0) ? (
+                    <div className="flex flex-wrap gap-1">
+                      {lead.interest.slice(0, 2).map((item, idx) => (
+                        <span key={idx} className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">
+                          {item}
+                        </span>
+                      ))}
+                      {lead.interest.length > 2 && (
+                        <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded" title={lead.interest.join(', ')}>
+                          +{lead.interest.length - 2}
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400 text-xs">-</span>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${getLeadStatusColor(lead.status)}`}>
