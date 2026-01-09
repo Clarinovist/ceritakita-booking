@@ -1,7 +1,13 @@
+'use client';
+import { useHomepageData } from '@/hooks/useHomepageData';
 import Link from 'next/link';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
+    const { data } = useHomepageData();
+
+    // No loading state for footer, just fallback to defaults if loading
+    const footer = data?.footer || {};
 
     return (
         <footer className="bg-olive-900 text-cream-200">
@@ -19,8 +25,7 @@ export function Footer() {
                             </p>
                         </Link>
                         <p className="text-cream-300/70 leading-relaxed max-w-md">
-                            Mengabadikan momen berharga Anda dengan sentuhan artistik yang timeless.
-                            Setiap foto adalah cerita yang akan dikenang selamanya.
+                            {footer.tagline || 'Studio foto profesional untuk prewedding, wedding, wisuda, birthday, family portrait, dan momen spesial lainnya di Jakarta.'}
                         </p>
                     </div>
 
@@ -59,15 +64,15 @@ export function Footer() {
                             Get in Touch
                         </h4>
                         <ul className="space-y-3 text-cream-300/70 text-sm">
-                            <li>hello@ceritakita.studio</li>
-                            <li>+62 812 3456 7890</li>
-                            <li>Jakarta, Indonesia</li>
+                            <li>{footer.email || 'hello@ceritakita.studio'}</li>
+                            <li>{footer.phone || '+62 812 3456 7890'}</li>
+                            <li>{footer.address || 'Jakarta, Indonesia'}</li>
                         </ul>
 
                         {/* Social Links */}
                         <div className="flex gap-4 mt-6">
                             <a
-                                href="https://instagram.com"
+                                href={footer.instagram || "https://instagram.com"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 border border-cream-300/30 flex items-center justify-center hover:border-gold-400 hover:text-gold-400 transition-colors"
@@ -78,7 +83,7 @@ export function Footer() {
                                 </svg>
                             </a>
                             <a
-                                href="https://wa.me/6281234567890"
+                                href={`https://wa.me/${footer.whatsapp || '6281234567890'}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 border border-cream-300/30 flex items-center justify-center hover:border-gold-400 hover:text-gold-400 transition-colors"
@@ -102,13 +107,13 @@ export function Footer() {
 
                     {/* Admin Link - Subtle */}
                     <Link
-                        href="/admin"
+                        href="/admin/homepage"
                         className="text-cream-400/40 hover:text-cream-300 text-xs transition-colors flex items-center gap-1"
                     >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        Admin
+                        Admin (Homepage CMS)
                     </Link>
                 </div>
             </div>

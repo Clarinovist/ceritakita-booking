@@ -11,7 +11,10 @@
 
 export { Navbar } from './Navbar';
 export { HeroSection } from './HeroSection';
+export { AboutSection } from './AboutSection';
 export { PackagesGrid } from './PackagesGrid';
+export { WhyChooseUsSection } from './WhyChooseUsSection';
+export { PromoSection } from './PromoSection';
 export { TestimonialsSection } from './TestimonialsSection';
-export { WeddingPackagesSection } from './WeddingPackagesSection';
+export { CTASection } from './CTASection';
 export { Footer } from './Footer';

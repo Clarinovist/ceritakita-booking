@@ -1,9 +1,12 @@
 import {
   Navbar,
   HeroSection,
+  AboutSection,
   PackagesGrid,
+  WhyChooseUsSection,
+  PromoSection,
   TestimonialsSection,
-  WeddingPackagesSection,
+  CTASection,
   Footer,
 } from '@/components/homepage';
 
@@ -13,17 +16,26 @@ export default function Home() {
       {/* Navigation */}
       <Navbar />
 
-      {/* Hero Section with Packages Title */}
+      {/* Hero Section */}
       <HeroSection />
+
+      {/* About Section */}
+      <AboutSection />
 
       {/* Package Categories Grid */}
       <PackagesGrid />
 
+      {/* Why Choose Us */}
+      <WhyChooseUsSection />
+
+      {/* Promo Section */}
+      <PromoSection />
+
       {/* Testimonials */}
       <TestimonialsSection />
 
-      {/* Wedding Packages Detail */}
-      <WeddingPackagesSection />
+      {/* CTA Section */}
+      <CTASection />
 
       {/* Footer */}
       <Footer />

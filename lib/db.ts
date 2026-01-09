@@ -428,6 +428,168 @@ function initializeSchema() {
   } catch (e) {
     // Column already exists
   }
+
+  // --- HOMEPAGE CMS TABLES ---
+
+  // 1. Homepage Content (Key-Value Store)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS homepage_content (
+      id TEXT PRIMARY KEY,
+      section TEXT NOT NULL, -- 'hero', 'about', 'cta', 'footer', 'promo'
+      content_key TEXT NOT NULL,
+      content_value TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(section, content_key)
+    )
+  `);
+
+  // Seed Homepage Content
+  const homepageContentCount = db.prepare('SELECT COUNT(*) as count FROM homepage_content').get() as { count: number };
+  if (homepageContentCount.count === 0) {
+    const seedContent = [
+      // Hero
+      { section: 'hero', key: 'tagline', value: 'Abadikan Setiap Momen Berharga' },
+      { section: 'hero', key: 'subtagline', value: 'Dari wisuda hingga pernikahan, kami siap merekam cerita indah Anda dalam bingkai kenangan yang tak terlupakan.' },
+      { section: 'hero', key: 'cta_text', value: 'Booking Sekarang' },
+      { section: 'hero', key: 'background_image', value: '/images/hero_photography.png' },
+      // About
+      { section: 'about', key: 'label', value: 'Tentang Kami' },
+      { section: 'about', key: 'headline', value: 'Studio Foto untuk Setiap Cerita Anda' },
+      { section: 'about', key: 'body_1', value: 'CeritaKita hadir untuk mengabadikan setiap detik kebahagiaan Anda. Kami percaya bahwa setiap foto memiliki cerita yang layak untuk dikenang selamanya.' },
+      { section: 'about', key: 'body_2', value: 'Dengan tim fotografer profesional dan peralatan modern, kami menjamin kualitas terbaik untuk setiap sesi pemotretan Anda.' },
+      { section: 'about', key: 'image', value: '/images/studio_interior.png' },
+      // Promo
+      { section: 'promo', key: 'title', value: 'Promo Spesial Bulan Ini' },
+      { section: 'promo', key: 'description', value: 'Jangan lewatkan penawaran terbatas untuk paket Prewedding dan Family.' },
+      { section: 'promo', key: 'is_active', value: 'true' },
+      // CTA
+      { section: 'cta', key: 'headline', value: 'Siap Mengabadikan Momen Anda?' },
+      { section: 'cta', key: 'description', value: 'Pilih layanan, tentukan jadwal, dan biarkan kami yang mengurus sisanya.' },
+      { section: 'cta', key: 'primary_button', value: 'Mulai Booking' },
+      { section: 'cta', key: 'secondary_button', value: 'Konsultasi via WhatsApp' },
+      // Footer
+      { section: 'footer', key: 'tagline', value: 'Studio foto profesional untuk prewedding, wedding, wisuda, dan momen spesial lainnya.' },
+      { section: 'footer', key: 'email', value: 'hello@ceritakita.studio' },
+      { section: 'footer', key: 'phone', value: '+62 812 3456 7890' },
+      { section: 'footer', key: 'address', value: 'Jakarta, Indonesia' },
+      { section: 'footer', key: 'whatsapp', value: '6281234567890' },
+      { section: 'footer', key: 'instagram', value: 'https://instagram.com/ceritakita' },
+    ];
+
+    const insertStmt = db.prepare('INSERT INTO homepage_content (id, section, content_key, content_value) VALUES (?, ?, ?, ?)');
+    const insertMany = db.transaction(() => {
+      seedContent.forEach(item => {
+        insertStmt.run(randomUUID(), item.section, item.key, item.value);
+      });
+    });
+    insertMany();
+    console.log('✅ Database seeded: Homepage Content');
+  }
+
+  // 2. Service Categories
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS service_categories (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      description TEXT,
+      thumbnail_url TEXT,
+      display_order INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Seed Service Categories
+  const categoryCount = db.prepare('SELECT COUNT(*) as count FROM service_categories').get() as { count: number };
+  if (categoryCount.count === 0) {
+    const seedCategories = [
+      { name: 'Prewedding', slug: 'prewedding', description: 'Abadikan kisah cinta Anda sebelum hari bahagia.', thumbnail_url: '/images/services/prewedding.jpg' },
+      { name: 'Wedding', slug: 'wedding', description: 'Dokumentasi lengkap hari pernikahan Anda.', thumbnail_url: '/images/services/wedding.jpg' },
+      { name: 'Wisuda', slug: 'wisuda', description: 'Kenangan manis kelulusan bersama orang terkasih.', thumbnail_url: '/images/services/graduation.jpg' },
+      { name: 'Birthday', slug: 'birthday', description: 'Perayaan ulang tahun yang penuh warnan.', thumbnail_url: '/images/services/birthday.jpg' },
+      { name: 'Family', slug: 'family', description: 'Foto keluarga hangat di studio kami.', thumbnail_url: '/images/services/family.jpg' },
+      { name: 'Tematik', slug: 'tematik', description: 'Sesi foto dengan tema khusus sesuai keinginan.', thumbnail_url: '/images/services/thematic.jpg' },
+    ];
+
+    const insertStmt = db.prepare('INSERT INTO service_categories (id, name, slug, description, thumbnail_url, display_order) VALUES (?, ?, ?, ?, ?, ?)');
+    const insertMany = db.transaction(() => {
+      seedCategories.forEach((cat, index) => {
+        insertStmt.run(randomUUID(), cat.name, cat.slug, cat.description, cat.thumbnail_url, index);
+      });
+    });
+    insertMany();
+    console.log('✅ Database seeded: Service Categories');
+  }
+
+  // 3. Testimonials
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS testimonials (
+      id TEXT PRIMARY KEY,
+      quote TEXT NOT NULL,
+      author_name TEXT NOT NULL,
+      author_title TEXT,
+      display_order INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Seed Testimonials
+  const testimonialCount = db.prepare('SELECT COUNT(*) as count FROM testimonials').get() as { count: number };
+  if (testimonialCount.count === 0) {
+    const seedTestimonials = [
+      { quote: "Hasil fotonya sangat memuaskan! Timnya ramah dan profesional banget. Suka banget sama editingnya yang natural.", author_name: "Sarah & Dimas", author_title: "Prewedding Session" },
+      { quote: "Studio-nya nyaman, properti lengkap. Fotografernya sabar banget arahin gaya buat kita yang kaku ini. Recommended!", author_name: "Budi Santoso", author_title: "Family Photo" },
+      { quote: "Momen wisuda jadi makin berkesan berkat CeritaKita. Kualitas cetaknya juga premium abis. Thank you!", author_name: "Jessica M.", author_title: "Graduation Package" },
+    ];
+
+    const insertStmt = db.prepare('INSERT INTO testimonials (id, quote, author_name, author_title, display_order) VALUES (?, ?, ?, ?, ?)');
+    const insertMany = db.transaction(() => {
+      seedTestimonials.forEach((t, index) => {
+        insertStmt.run(randomUUID(), t.quote, t.author_name, t.author_title, index);
+      });
+    });
+    insertMany();
+    console.log('✅ Database seeded: Testimonials');
+  }
+
+  // 4. Value Propositions
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS value_propositions (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      display_order INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Seed Value Propositions
+  const valuePropCount = db.prepare('SELECT COUNT(*) as count FROM value_propositions').get() as { count: number };
+  if (valuePropCount.count === 0) {
+    const seedValueProps = [
+      { title: "Fotografer Profesional", description: "Tim berpengalaman yang siap mengarahkan gaya terbaik Anda.", icon: "Camera" },
+      { title: "Studio Nyaman", description: "Ruang studio full AC dengan berbagai pilihan background.", icon: "Home" },
+      { title: "Harga Terjangkau", description: "Paket lengkap dengan harga yang bersahabat.", icon: "CreditCard" },
+      { title: "Proses Cepat", description: "Preview foto instan dan hasil edit maksimal 3 hari.", icon: "Zap" },
+    ];
+
+    const insertStmt = db.prepare('INSERT INTO value_propositions (id, title, description, icon, display_order) VALUES (?, ?, ?, ?, ?)');
+    const insertMany = db.transaction(() => {
+      seedValueProps.forEach((vp, index) => {
+        insertStmt.run(randomUUID(), vp.title, vp.description, vp.icon, index);
+      });
+    });
+    insertMany();
+    console.log('✅ Database seeded: Value Propositions');
+  }
 }
 
 /**
