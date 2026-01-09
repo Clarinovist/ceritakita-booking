@@ -47,5 +47,12 @@ export const SERVICE_CATEGORIES = [
   'Family',
   'Birthday',
   'Pas Foto',
-  'Self Photo'
+  'Self Photo',
+  'Promo Christmast',
+  'Cute Pas Photo',
+  'Outdoor NatureCharm',
+  'Outdoor Golden',
+  'Outdoor WonderlustMoment',
+  'Maternity',
+  'Portrait Photoshoot'
 ] as const;
