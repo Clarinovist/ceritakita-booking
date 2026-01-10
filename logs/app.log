@@ -1544,3 +1544,11 @@
 [2026-01-10T06:13:13.213Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
 [2026-01-10T06:13:13.226Z] [INFO] Retrieved bookings from database | Context: {"count":3}
 [2026-01-10T06:13:13.226Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-10T06:31:14.814Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-10T06:31:14.815Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-10T06:31:14.875Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-10T06:31:14.876Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-10T06:31:14.892Z] [INFO] Bookings retrieved successfully | Context: {"count":3}
+[2026-01-10T06:31:14.892Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-10T06:31:14.902Z] [INFO] Retrieved bookings from database | Context: {"count":3}
+[2026-01-10T06:31:14.903Z] [INFO] Bookings retrieved successfully | Context: {"count":3}

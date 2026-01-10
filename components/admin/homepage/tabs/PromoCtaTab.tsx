@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import useSWR, { mutate } from 'swr';
 import { HomepageContent } from '@/types/homepage';
 import { Save, Loader2, Info } from 'lucide-react';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -19,6 +20,7 @@ interface FormValues {
         description: string;
         primary_button: string;
         secondary_button: string;
+        background_image: string;
     };
     footer: {
         tagline: string;
@@ -36,7 +38,7 @@ export function PromoCtaTab() {
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-    const { register, handleSubmit, reset } = useForm<FormValues>();
+    const { register, handleSubmit, reset, watch, setValue } = useForm<FormValues>();
 
     useEffect(() => {
         if (content) {
@@ -96,8 +98,8 @@ export function PromoCtaTab() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-in fade-in duration-500">
             {message && (
                 <div className={`p-4 rounded-xl border flex items-center gap-3 ${message.type === 'success'
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                        : 'bg-red-50 border-red-200 text-red-800'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
                     }`}>
                     <Info size={18} />
                     <span className="font-medium">{message.text}</span>
@@ -195,6 +197,14 @@ export function PromoCtaTab() {
                             />
                         </div>
                     </div>
+
+                    <div className="mt-6 border-t border-slate-100 pt-6">
+                        <ImageUpload
+                            label="Background Image"
+                            value={watch('cta.background_image')}
+                            onChange={(url) => setValue('cta.background_image', url)}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -284,6 +294,6 @@ export function PromoCtaTab() {
                     </button>
                 </div>
             </div>
-        </form>
+        </form >
     );
 }

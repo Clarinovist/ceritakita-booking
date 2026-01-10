@@ -37,7 +37,7 @@ export function TestimonialsSection() {
             <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                    backgroundImage: `url('/images/family.png')`,
+                    backgroundImage: `url('${data?.testimonials_config?.background_image || '/images/family.png'}')`,
                 }}
             >
                 <div className="absolute inset-0 bg-olive-900/80" />

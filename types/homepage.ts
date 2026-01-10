@@ -1,6 +1,6 @@
 export interface HomepageContent {
     id: string;
-    section: 'hero' | 'about' | 'cta' | 'footer' | 'promo';
+    section: 'hero' | 'about' | 'cta' | 'footer' | 'promo' | 'testimonials_config';
     content_key: string;
     content_value: string;
 }
@@ -39,6 +39,7 @@ export interface HomepageData {
     promo: Record<string, string>;
     cta: Record<string, string>;
     footer: Record<string, string>;
+    testimonials_config: Record<string, string>;
     categories: ServiceCategory[];
     testimonials: Testimonial[];
     valueProps: ValueProposition[];

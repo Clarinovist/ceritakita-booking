@@ -17,12 +17,13 @@ export async function GET() {
             about: {},
             promo: {},
             cta: {},
-            footer: {}
+            footer: {},
+            testimonials_config: {}
         };
 
         contentRows.forEach(row => {
             // Ensure the section key exists in contentMap before assigning
-            if (row.section in contentMap) {
+            if (contentMap[row.section]) {
                 contentMap[row.section][row.content_key] = row.content_value;
             }
         });
@@ -38,6 +39,7 @@ export async function GET() {
             promo: contentMap.promo || {},
             cta: contentMap.cta || {},
             footer: contentMap.footer || {},
+            testimonials_config: contentMap.testimonials_config || {},
             categories,
             testimonials,
             valueProps

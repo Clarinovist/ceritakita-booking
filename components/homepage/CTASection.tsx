@@ -22,7 +22,7 @@ export function CTASection() {
             <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                    backgroundImage: `url('/images/studio_interior.png')`,
+                    backgroundImage: `url('${cta.background_image || '/images/studio_interior.png'}')`,
                 }}
             >
                 <div className="absolute inset-0 bg-olive-900/85" />

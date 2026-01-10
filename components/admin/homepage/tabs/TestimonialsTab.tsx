@@ -1,20 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
-import { Testimonial } from '@/types/homepage';
-import { Plus, Trash2, Pencil, Quote, Loader2, X, Search } from 'lucide-react';
+import { Testimonial, HomepageContent } from '@/types/homepage';
+import { Plus, Trash2, Pencil, Quote, Loader2, X, Search, Save, ImageIcon } from 'lucide-react';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function TestimonialsTab() {
-    const { data: items, isLoading } = useSWR<Testimonial[]>('/api/admin/testimonials', fetcher);
+    const { data: items, isLoading: isLoadingItems } = useSWR<Testimonial[]>('/api/admin/testimonials', fetcher);
+    const { data: content, isLoading: isLoadingContent } = useSWR<HomepageContent[]>('/api/admin/homepage/content', fetcher);
+
     const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [backgroundImage, setBackgroundImage] = useState<string>('');
+    const [isSavingBg, setIsSavingBg] = useState(false);
 
     const { register, handleSubmit, reset } = useForm<Partial<Testimonial>>();
+
+    useEffect(() => {
+        if (content) {
+            const config = content.find(c => c.section === 'testimonials_config' && c.content_key === 'background_image');
+            if (config) {
+                setBackgroundImage(config.content_value);
+            }
+        }
+    }, [content]);
+
+    const handleSaveBackground = async () => {
+        setIsSavingBg(true);
+        try {
+            const updates = [{
+                section: 'testimonials_config',
+                content_key: 'background_image',
+                content_value: backgroundImage
+            }];
+
+            const res = await fetch('/api/admin/homepage/content', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates),
+            });
+
+            if (!res.ok) throw new Error('Failed to update background');
+            mutate('/api/admin/homepage/content');
+            alert('Background saved!');
+        } catch (error) {
+            alert('Failed to save background');
+        } finally {
+            setIsSavingBg(false);
+        }
+    };
 
     const handleEdit = (item: Testimonial) => {
         setEditingItem(item);
@@ -62,7 +101,7 @@ export function TestimonialsTab() {
         }
     };
 
-    if (isLoading) {
+    if (isLoadingItems || isLoadingContent) {
         return (
             <div className="flex items-center justify-center py-12">
                 <Loader2 className="animate-spin text-indigo-600" size={32} />
@@ -85,6 +124,34 @@ export function TestimonialsTab() {
                     <Plus size={18} />
                     Add Testimonial
                 </button>
+            </div>
+
+            {/* Configuration Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <div>
+                        <h3 className="text-lg font-display font-bold text-slate-800 flex items-center gap-2">
+                            <ImageIcon size={20} className="text-slate-400" />
+                            Section Background
+                        </h3>
+                        <p className="text-sm text-slate-500 mt-1">Background image for the testimonials section</p>
+                    </div>
+                    <button
+                        onClick={handleSaveBackground}
+                        disabled={isSavingBg}
+                        className="text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    >
+                        {isSavingBg ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        Save Background
+                    </button>
+                </div>
+                <div className="p-6">
+                    <ImageUpload
+                        label="Upload Background Image"
+                        value={backgroundImage}
+                        onChange={setBackgroundImage}
+                    />
+                </div>
             </div>
 
             {/* List */}
