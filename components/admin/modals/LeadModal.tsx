@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import type { Lead, LeadFormData, LeadStatus, LeadSource } from '@/lib/types';
+import { Lead, LeadFormData, LeadStatus, LeadSource, Service } from '@/lib/types';
 import { LEAD_STATUSES, LEAD_SOURCES } from '@/lib/types/leads';
-import { SERVICE_CATEGORIES } from '@/lib/constants';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -12,6 +11,7 @@ interface LeadModalProps {
   formData: LeadFormData;
   setFormData: React.Dispatch<React.SetStateAction<LeadFormData>>;
   editingLead: Lead | null;
+  services: Service[]; // Added services prop
 }
 
 export function LeadModal({
@@ -20,7 +20,8 @@ export function LeadModal({
   onSubmit,
   formData,
   setFormData,
-  editingLead
+  editingLead,
+  services // Destructure services
 }: LeadModalProps) {
   if (!isOpen) return null;
 
@@ -141,15 +142,15 @@ export function LeadModal({
             <div className="mt-4">
               <label className="block text-sm font-bold text-gray-700 mb-2">Interest</label>
               <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg bg-white">
-                {SERVICE_CATEGORIES.map(category => (
-                  <label key={category} className="flex items-center gap-2 text-sm cursor-pointer p-1 hover:bg-gray-50 rounded">
+                {services.map(service => (
+                  <label key={service.id} className="flex items-center gap-2 text-sm cursor-pointer p-1 hover:bg-gray-50 rounded">
                     <input
                       type="checkbox"
-                      checked={(formData.interest || []).includes(category)}
-                      onChange={() => toggleInterest(category)}
+                      checked={(formData.interest || []).includes(service.name)}
+                      onChange={() => toggleInterest(service.name)}
                       className="rounded text-purple-600 focus:ring-purple-500"
                     />
-                    <span>{category}</span>
+                    <span>{service.name}</span>
                   </label>
                 ))}
               </div>

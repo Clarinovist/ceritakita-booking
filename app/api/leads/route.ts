@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-config';
-import { 
-  getLeads, 
-  createLead, 
-  getLeadStats 
+import {
+  getLeads,
+  getLeadsPaginated,
+  createLead,
+  getLeadStats
 } from '@/lib/leads';
 import type { LeadFormData, LeadFilters } from '@/lib/types';
 
@@ -46,6 +47,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(stats);
     }
 
+    // Check pagination
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : undefined;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
+
+    if (page || limit) {
+      const result = await getLeadsPaginated(filters, page || 1, limit || 20);
+      return NextResponse.json(result);
+    }
+
     const leads = await getLeads(filters);
     return NextResponse.json(leads);
   } catch (error) {
@@ -83,7 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(lead, { status: 201 });
   } catch (error) {
     console.error('Error creating lead:', error);
-    
+
     if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
       return NextResponse.json(
         { error: 'Lead with this WhatsApp number already exists' },

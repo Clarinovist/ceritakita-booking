@@ -93,6 +93,26 @@ export interface LeadFilters {
 }
 
 // UI utility types
+
+export interface LeadsPaginatedResponse {
+  data: Lead[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface BulkActionRequest {
+  ids: string[];
+  action: 'update_status' | 'delete';
+  data?: {
+    status?: LeadStatus;
+  };
+}
+
+
 export const getLeadStatusColor = (status: LeadStatus): string => {
   switch (status) {
     case 'New':

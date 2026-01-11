@@ -1,7 +1,7 @@
 import 'server-only';
 import { randomUUID } from 'crypto';
 import { getDb } from './db';
-import type { Lead, LeadFormData, LeadUpdateData, LeadFilters, LeadStatus, LeadSource } from '@/lib/types';
+import type { Lead, LeadFormData, LeadUpdateData, LeadFilters, LeadStatus, LeadSource, LeadsPaginatedResponse } from '@/lib/types';
 
 /**
  * Lead Database Operations
@@ -81,6 +81,101 @@ export async function getLeads(filters: LeadFilters = {}): Promise<Lead[]> {
     }));
   } catch (error) {
     throw new LeadDatabaseError('Failed to fetch leads', error);
+  }
+}
+
+/**
+ * Get leads with pagination
+ */
+export async function getLeadsPaginated(
+  filters: LeadFilters = {},
+  page: number = 1,
+  limit: number = 20
+): Promise<LeadsPaginatedResponse> {
+  try {
+    const db = getDb();
+
+    let query = 'SELECT * FROM leads';
+    let countQuery = 'SELECT COUNT(*) as total FROM leads';
+
+    const params: any[] = [];
+    const conditions: string[] = [];
+
+    // Apply filters
+    if (filters.status) {
+      conditions.push('status = ?');
+      params.push(filters.status);
+    }
+
+    if (filters.source) {
+      conditions.push('source = ?');
+      params.push(filters.source);
+    }
+
+    if (filters.assigned_to) {
+      conditions.push('assigned_to = ?');
+      params.push(filters.assigned_to);
+    }
+
+    if (filters.date_range) {
+      conditions.push('created_at >= ? AND created_at <= ?');
+      params.push(filters.date_range.start, filters.date_range.end);
+    }
+
+    if (filters.search) {
+      conditions.push('(name LIKE ? OR whatsapp LIKE ? OR email LIKE ?)');
+      const searchTerm = `%${filters.search}%`;
+      params.push(searchTerm, searchTerm, searchTerm);
+    }
+
+    if (conditions.length > 0) {
+      const whereClause = ' WHERE ' + conditions.join(' AND ');
+      query += whereClause;
+      countQuery += whereClause;
+    }
+
+    // Get total count
+    const countStmt = db.prepare(countQuery);
+    const countResult = countStmt.get(...params) as any;
+    const total = countResult.total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Get paginated data
+    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(limit, (page - 1) * limit);
+
+    const stmt = db.prepare(query);
+    const rows = stmt.all(...params) as any[];
+
+    const data = rows.map(row => ({
+      id: row.id,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+      name: row.name,
+      whatsapp: row.whatsapp,
+      email: row.email,
+      status: row.status as LeadStatus,
+      source: row.source as LeadSource,
+      interest: row.interest ? JSON.parse(row.interest) : [],
+      notes: row.notes,
+      assigned_to: row.assigned_to,
+      booking_id: row.booking_id,
+      converted_at: row.converted_at,
+      last_contacted_at: row.last_contacted_at,
+      next_follow_up: row.next_follow_up
+    }));
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
+    };
+  } catch (error) {
+    throw new LeadDatabaseError('Failed to fetch paginated leads', error);
   }
 }
 
@@ -341,5 +436,55 @@ export async function getLeadStats() {
     };
   } catch (error) {
     throw new LeadDatabaseError('Failed to fetch lead statistics', error);
+  }
+}
+
+/**
+ * Bulk update lead status
+ */
+export async function bulkUpdateLeadStatus(ids: string[], status: LeadStatus): Promise<number> {
+  try {
+    const db = getDb();
+    const now = new Date().toISOString();
+
+    if (ids.length === 0) return 0;
+
+    // Create placeholders for the IN clause: ?, ?, ?
+    const placeholders = ids.map(() => '?').join(', ');
+
+    const query = `
+      UPDATE leads 
+      SET status = ?, updated_at = ?
+      WHERE id IN (${placeholders})
+    `;
+
+    const stmt = db.prepare(query);
+    const result = stmt.run(status, now, ...ids);
+
+    return result.changes;
+  } catch (error) {
+    throw new LeadDatabaseError('Failed to bulk update leads', error);
+  }
+}
+
+/**
+ * Bulk delete leads
+ */
+export async function bulkDeleteLeads(ids: string[]): Promise<number> {
+  try {
+    const db = getDb();
+
+    if (ids.length === 0) return 0;
+
+    const placeholders = ids.map(() => '?').join(', ');
+
+    const query = `DELETE FROM leads WHERE id IN (${placeholders})`;
+
+    const stmt = db.prepare(query);
+    const result = stmt.run(...ids);
+
+    return result.changes;
+  } catch (error) {
+    throw new LeadDatabaseError('Failed to bulk delete leads', error);
   }
 }

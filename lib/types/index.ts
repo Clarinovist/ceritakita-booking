@@ -71,7 +71,9 @@ export type {
   getLeadStatusColor,
   getLeadSourceIcon,
   LEAD_STATUSES,
-  LEAD_SOURCES
+  LEAD_SOURCES,
+  LeadsPaginatedResponse,
+  BulkActionRequest
 } from './leads';
 
 // User Types (existing)
