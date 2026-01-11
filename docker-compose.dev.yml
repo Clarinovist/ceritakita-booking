@@ -17,7 +17,7 @@ services:
       - NODE_ENV=production
       
       # PENTING: Override URL agar Auth jalan di domain dev lokal
-      - NEXTAUTH_URL=https://dev.ceritakitastudio.site
+      - NEXTAUTH_URL=https://localhost
       
       # Variable lain akan diambil dari file .env.local
     env_file:
