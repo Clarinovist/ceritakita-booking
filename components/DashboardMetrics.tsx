@@ -7,15 +7,20 @@ import { DollarSign, Users, CalendarX, CheckCircle, TrendingUp, TrendingDown, Cl
 interface Props {
     sessionBookings: Booking[];
     createdBookings: Booking[];
+    allBookings: Booking[];
     dateRange: { start: string; end: string };
 }
 
-export default function DashboardMetrics({ sessionBookings, createdBookings, dateRange }: Props) {
+export default function DashboardMetrics({ sessionBookings, createdBookings, allBookings, dateRange }: Props) {
 
     // Metrics calculations
     const pipelineTotalBookings = createdBookings.length;
-    const pipelineRevenue = createdBookings.filter(b => b.status !== 'Cancelled').reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
+    // Sales Value (New Orders Value)
+    // const salesValue = createdBookings.filter(b => b.status !== 'Cancelled').reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
     const pipelineCancelled = createdBookings.filter(b => b.status === 'Cancelled').length;
+
+    // Session Revenue (Operational Value - "Omzet Potensial")
+    const sessionRevenue = sessionBookings.filter(b => b.status !== 'Cancelled').reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
 
     const completedSessions = sessionBookings.filter(b => b.status === 'Completed');
     const sessionsCompleted = completedSessions.length;
@@ -24,12 +29,28 @@ export default function DashboardMetrics({ sessionBookings, createdBookings, dat
 
     const realizedRevenue = completedSessions.reduce((sum, b) => sum + (b.finance.total_price || 0), 0);
 
-    const actualCashReceived = completedSessions.reduce((sum, b) => {
-        const totalPaid = b.finance.payments.reduce((paidSum, payment) => paidSum + payment.amount, 0);
-        return sum + totalPaid;
+    // Calculate actual cash received based on PAYMENT DATE
+    // We iterate through ALL bookings and check if any payment falls within the selected date range
+    const actualCashReceived = allBookings.reduce((total, booking) => {
+        const payments = booking.finance.payments || [];
+        const paymentsInPeriod = payments.filter(p => {
+            if (!p.date) return false;
+            const paymentDate = p.date.split('T')[0]; // Ensure local date comparison
+            return paymentDate && paymentDate >= dateRange.start && paymentDate <= dateRange.end;
+        });
+
+        const bookingTotal = paymentsInPeriod.reduce((sum, p) => sum + (p.amount || 0), 0);
+        return total + bookingTotal;
     }, 0);
 
-    const outstandingBalance = realizedRevenue - actualCashReceived;
+    // Calculate outstanding balance for REALIZED REVENUE only
+    // This tracks how much of the completed sessions' value hasn't been paid yet
+    const collectedForCompleted = completedSessions.reduce((total, b) => {
+        const bookingPaid = b.finance.payments.reduce((sum, p) => sum + p.amount, 0);
+        return total + bookingPaid;
+    }, 0);
+
+    const outstandingBalance = realizedRevenue - collectedForCompleted;
 
     const categories = [
         'Wedding', 'Prewedding Bronze', 'Prewedding Gold', 'Prewedding Silver',
@@ -65,7 +86,7 @@ export default function DashboardMetrics({ sessionBookings, createdBookings, dat
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Total Bookings */}
+                {/* Total Bookings -> New Orders */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:scale-110 transition-transform">
@@ -75,12 +96,12 @@ export default function DashboardMetrics({ sessionBookings, createdBookings, dat
                     </div>
                     <div>
                         <p className="text-slate-500 text-sm font-medium mb-1">Total Bookings</p>
-                        <h3 className="text-3xl font-bold text-slate-800">{pipelineTotalBookings}</h3>
-                        <p className="text-xs text-slate-400 mt-2">New leads & orders</p>
+                        <h3 className="text-3xl font-bold text-slate-800">{sessionsTotal}</h3>
+                        <p className="text-xs text-slate-400 mt-2">Scheduled sessions</p>
                     </div>
                 </div>
 
-                {/* Pipeline Revenue */}
+                {/* Pipeline Revenue -> Potential Revenue (Session Based) */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:scale-110 transition-transform">
@@ -89,11 +110,11 @@ export default function DashboardMetrics({ sessionBookings, createdBookings, dat
                         {renderTrend(true)}
                     </div>
                     <div>
-                        <p className="text-slate-500 text-sm font-medium mb-1">Est. Revenue</p>
+                        <p className="text-slate-500 text-sm font-medium mb-1">Potential Revenue</p>
                         <h3 className="text-3xl font-bold text-slate-800">
-                            {(pipelineRevenue / 1000000).toFixed(1)}M
+                            {(sessionRevenue / 1000000).toFixed(1)}M
                         </h3>
-                        <p className="text-xs text-slate-400 mt-2">Rp {pipelineRevenue.toLocaleString()}</p>
+                        <p className="text-xs text-slate-400 mt-2">Rp {sessionRevenue.toLocaleString()}</p>
                     </div>
                 </div>
 

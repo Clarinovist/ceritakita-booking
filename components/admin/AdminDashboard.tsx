@@ -403,6 +403,7 @@ export default function AdminDashboard() {
                             <DashboardMetrics
                                 sessionBookings={bookingsHook.bookingsByDateRange}
                                 createdBookings={bookingsHook.bookingsByCreatedDate}
+                                allBookings={bookingsHook.bookings}
                                 dateRange={bookingsHook.dateRange}
                             />
                         </div>
@@ -413,7 +414,7 @@ export default function AdminDashboard() {
                     {viewMode === 'ads' && (
                         <div className="animate-in fade-in">
                             <AdsPerformance
-                                bookings={bookingsHook.bookingsByDateRange}
+                                bookings={bookingsHook.bookingsByCreatedDate}
                                 dateRange={bookingsHook.dateRange}
                             />
                         </div>

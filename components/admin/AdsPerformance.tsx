@@ -183,7 +183,7 @@ export default function AdsPerformance({ bookings, dateRange }: AdsPerformancePr
             <p className="text-xl font-bold text-purple-700">Rp {adsSpend.toLocaleString()}</p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <p className="text-sm text-gray-600 mb-1">Revenue Generated</p>
+            <p className="text-sm text-gray-600 mb-1">Sales Generated</p>
             <p className="text-xl font-bold text-green-700">Rp {totalRevenue.toLocaleString()}</p>
           </div>
           <div className={`p-4 rounded-lg border ${roi >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
