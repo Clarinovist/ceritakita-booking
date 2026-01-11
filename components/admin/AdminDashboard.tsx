@@ -10,17 +10,14 @@ import { useSession } from "next-auth/react";
 import AdminSidebar from '../AdminSidebar';
 import DashboardMetrics from '../DashboardMetrics';
 import CouponManagement from '../CouponManagement';
-import PortfolioManagement from '../PortfolioManagement';
 import SettingsManagement from './SettingsManagement';
+import CatalogManagement from './CatalogManagement';
 import HomepageCMS from './HomepageCMS';
 import AdsPerformance from './AdsPerformance';
 import DateFilterToolbar from './DateFilterToolbar';
 
 // Tables
 import { BookingsTable } from './tables/BookingsTable';
-import { ServicesTable } from './tables/ServicesTable';
-import { PhotographersTable } from './tables/PhotographersTable';
-import { AddonsTable } from './tables/AddonsTable';
 import { LeadsTable } from './tables/LeadsTable';
 
 // Modals
@@ -60,8 +57,8 @@ export default function AdminDashboard() {
     // Filter view modes based on permissions
     const getAvailableViewModes = (): ViewMode[] => {
         // Note: 'users' and 'payment-settings' are now handled within SettingsManagement, 
-        // but kept in type definition for compatibility if needed elsewhere.
-        const allModes: ViewMode[] = ['dashboard', 'ads', 'calendar', 'table', 'leads', 'services', 'portfolio', 'photographers', 'addons', 'coupons', 'settings', 'homepage'];
+        // 'services', 'portfolio', 'addons', 'photographers' are now handled within CatalogManagement
+        const allModes: ViewMode[] = ['dashboard', 'ads', 'calendar', 'table', 'leads', 'catalog', 'coupons', 'settings', 'homepage'];
 
         if (userRole === 'admin') {
             return allModes;
@@ -75,10 +72,16 @@ export default function AdminDashboard() {
             allowedModes.push('calendar', 'table');
         }
         if (userPermissions?.leads?.view) allowedModes.push('leads');
-        if (userPermissions?.services?.view) allowedModes.push('services');
-        if (userPermissions?.portfolio?.view) allowedModes.push('portfolio');
-        if (userPermissions?.photographers?.view) allowedModes.push('photographers');
-        if (userPermissions?.addons?.view) allowedModes.push('addons');
+
+        // Catalog permission check
+        const hasCatalogAccess =
+            userPermissions?.services?.view ||
+            userPermissions?.portfolio?.view ||
+            userPermissions?.photographers?.view ||
+            userPermissions?.addons?.view;
+
+        if (hasCatalogAccess) allowedModes.push('catalog');
+
         if (userPermissions?.coupons?.view) allowedModes.push('coupons');
         if (userPermissions?.settings) allowedModes.push('settings');
         if (userPermissions?.homepage_cms) allowedModes.push('homepage');
@@ -354,6 +357,21 @@ export default function AdminDashboard() {
                                 />
                             </div>
                         )}
+
+                        {/* Leads Actions (Add Button) */}
+                        {viewMode === 'leads' && (
+                            <div className="flex items-center gap-3">
+                                <span className="bg-blue-100 text-blue-700 font-medium px-3 py-1 rounded-full text-sm">
+                                    {leadsHook.pagination.total} Leads
+                                </span>
+                                <button
+                                    onClick={() => leadsHook.handleOpenLeadModal()}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm"
+                                >
+                                    <span>+</span> Add Lead
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right Side: Admin Profile */}
@@ -430,45 +448,27 @@ export default function AdminDashboard() {
                         />
                     )}
 
-                    {/* SERVICES VIEW */}
-                    {viewMode === 'services' && (
-                        <ServicesTable
+                    {/* CATALOG VIEW */}
+                    {viewMode === 'catalog' && (
+                        <CatalogManagement
                             services={servicesHook.services}
-                            handleOpenAddModal={servicesHook.handleOpenAddModal}
-                            handleOpenEditModal={servicesHook.handleOpenEditModal}
+                            handleOpenAddServiceModal={servicesHook.handleOpenAddModal}
+                            handleOpenEditServiceModal={servicesHook.handleOpenEditModal}
                             handleDeleteService={servicesHook.handleDeleteService}
                             toggleServiceActive={servicesHook.toggleServiceActive}
-                        />
-                    )}
 
-                    {/* PHOTOGRAPHERS VIEW */}
-                    {viewMode === 'photographers' && (
-                        <PhotographersTable
+                            addons={addonsHook.addons}
+                            handleOpenAddAddonModal={addonsHook.handleOpenAddAddonModal}
+                            handleOpenEditAddonModal={addonsHook.handleOpenEditAddonModal}
+                            handleDeleteAddon={addonsHook.handleDeleteAddon}
+                            toggleAddonActive={addonsHook.toggleAddonActive}
+
                             photographers={photographersHook.photographers}
                             handleOpenAddPhotographerModal={photographersHook.handleOpenAddPhotographerModal}
                             handleOpenEditPhotographerModal={photographersHook.handleOpenEditPhotographerModal}
                             handleDeletePhotographer={photographersHook.handleDeletePhotographer}
                             togglePhotographerActive={photographersHook.togglePhotographerActive}
                         />
-                    )}
-
-                    {/* ADDONS VIEW */}
-                    {viewMode === 'addons' && (
-                        <AddonsTable
-                            addons={addonsHook.addons}
-                            services={servicesHook.services}
-                            handleOpenAddAddonModal={addonsHook.handleOpenAddAddonModal}
-                            handleOpenEditAddonModal={addonsHook.handleOpenEditAddonModal}
-                            handleDeleteAddon={addonsHook.handleDeleteAddon}
-                            toggleAddonActive={addonsHook.toggleAddonActive}
-                        />
-                    )}
-
-                    {/* PORTFOLIO VIEW */}
-                    {viewMode === 'portfolio' && (
-                        <div className="animate-in fade-in">
-                            <PortfolioManagement services={servicesHook.services} />
-                        </div>
                     )}
 
                     {/* COUPONS VIEW */}
@@ -502,10 +502,23 @@ export default function AdminDashboard() {
                             setFilterSource={leadsHook.setFilterSource}
                             filterInterest={leadsHook.filterInterest}
                             setFilterInterest={leadsHook.setFilterInterest}
+                            searchQuery={leadsHook.searchQuery}
+                            setSearchQuery={leadsHook.setSearchQuery}
                             onOpenModal={leadsHook.handleOpenLeadModal}
                             onDeleteLead={leadsHook.handleDeleteLead}
                             onConvertToBooking={leadsHook.handleConvertToBooking}
                             onWhatsApp={leadsHook.handleWhatsApp}
+
+                            selectedIds={leadsHook.selectedIds}
+                            onToggleSelect={leadsHook.handleToggleSelect}
+                            onSelectAll={leadsHook.handleSelectAll}
+                            onDeselectAll={leadsHook.handleDeselectAll}
+                            onBulkUpdateStatus={leadsHook.handleBulkUpdateStatus}
+                            onBulkDelete={leadsHook.handleBulkDelete}
+                            onBulkWhatsApp={leadsHook.handleBulkWhatsApp}
+                            pagination={leadsHook.pagination}
+                            onPageChange={leadsHook.setPage}
+                            services={servicesHook.services}
                         />
                     )}
                 </div>
@@ -518,6 +531,7 @@ export default function AdminDashboard() {
                     formData={leadsHook.leadFormData}
                     setFormData={leadsHook.setLeadFormData}
                     editingLead={leadsHook.selectedLead}
+                    services={servicesHook.services}
                 />
 
                 {/* Create Booking Modal (for lead conversion) */}

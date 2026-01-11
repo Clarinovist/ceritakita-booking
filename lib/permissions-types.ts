@@ -89,10 +89,7 @@ export function getFilteredMenuItems(permissions: any, role: string) {
     { id: 'calendar', icon: 'Calendar', label: 'Calendar', permission: 'booking.view' },
     { id: 'table', icon: 'List', label: 'Bookings', permission: 'booking.view' },
     { id: 'leads', icon: 'Target', label: 'Leads', permission: 'leads.view' },
-    { id: 'services', icon: 'Tag', label: 'Services', permission: 'services.view' },
-    { id: 'portfolio', icon: 'ImageIcon', label: 'Portfolio', permission: 'portfolio.view' },
-    { id: 'addons', icon: 'ShoppingBag', label: 'Add-ons', permission: 'addons.view' },
-    { id: 'photographers', icon: 'Camera', label: 'Photographers', permission: 'photographers.view' },
+    { id: 'catalog', icon: 'ShoppingBag', label: 'Catalog', permission: 'catalog' },
     { id: 'coupons', icon: 'Tag', label: 'Kupon', permission: 'coupons.view' },
     { id: 'users', icon: 'Users', label: 'Users', permission: 'users' },
     { id: 'payment-settings', icon: 'CreditCard', label: 'Payment Settings', permission: 'payment' },
@@ -110,6 +107,16 @@ export function getFilteredMenuItems(permissions: any, role: string) {
     if (item.permission === 'dashboard' || item.permission === 'ads' || item.permission === 'homepage_cms') {
       return permissions?.[item.permission];
     }
+
+    // Check for catalog permission (if user has access to any of the sub-modules)
+    if (item.permission === 'catalog') {
+      const hasServices = hasPermission(permissions, 'services.view');
+      const hasPortfolio = hasPermission(permissions, 'portfolio.view');
+      const hasAddons = hasPermission(permissions, 'addons.view');
+      const hasPhotographers = hasPermission(permissions, 'photographers.view');
+      return hasServices || hasPortfolio || hasAddons || hasPhotographers;
+    }
+
     return hasPermission(permissions, item.permission);
   });
 }
