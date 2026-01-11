@@ -70,3 +70,14 @@
     at Timeout.internalConnectMultipleTimeout (node:net:1742:5)
     at listOnTimeout (node:internal/timers:590:11)
     at process.processTimers (node:internal/timers:523:7)
+[2026-01-11T04:47:05.536Z] [ERROR] Health check failed | Context: {} | Error: database disk image is malformed | SqliteError: database disk image is malformed
+    at /home/nugroho/Documents/ceritakita-booking/.next/server/chunks/9487.js:171:69
+    at r (/home/nugroho/Documents/ceritakita-booking/.next/server/chunks/9487.js:277:793)
+    at d (/home/nugroho/Documents/ceritakita-booking/.next/server/app/api/health/route.js:1:717)
+    at /home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /home/nugroho/Documents/ceritakita-booking/node_modules/next/dist/server/lib/trace/tracer.js:122:103

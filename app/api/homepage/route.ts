@@ -23,8 +23,9 @@ export async function GET() {
 
         contentRows.forEach(row => {
             // Ensure the section key exists in contentMap before assigning
-            if (contentMap[row.section]) {
-                contentMap[row.section][row.content_key] = row.content_value;
+            const sectionData = contentMap[row.section];
+            if (sectionData) {
+                sectionData[row.content_key] = row.content_value;
             }
         });
 
@@ -32,6 +33,14 @@ export async function GET() {
         const categories = db.prepare('SELECT * FROM service_categories WHERE is_active = 1 ORDER BY display_order ASC').all() as ServiceCategory[];
         const testimonials = db.prepare('SELECT * FROM testimonials WHERE is_active = 1 ORDER BY display_order ASC').all() as Testimonial[];
         const valueProps = db.prepare('SELECT * FROM value_propositions WHERE is_active = 1 ORDER BY display_order ASC').all() as ValueProposition[];
+
+        // Fetch portfolio images with service names
+        const portfolioImages = db.prepare(`
+            SELECT p.id, p.image_url, p.service_id, s.name as service_name, p.display_order
+            FROM portfolio_images p
+            LEFT JOIN service_categories s ON p.service_id = s.id
+            ORDER BY p.display_order ASC
+        `).all() as any[];
 
         const responseData: HomepageData = {
             hero: contentMap.hero || {},
@@ -42,7 +51,8 @@ export async function GET() {
             testimonials_config: contentMap.testimonials_config || {},
             categories,
             testimonials,
-            valueProps
+            valueProps,
+            portfolioImages
         };
 
         return NextResponse.json(responseData);

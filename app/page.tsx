@@ -8,6 +8,7 @@ import {
   TestimonialsSection,
   CTASection,
   Footer,
+  GallerySection,
 } from '@/components/homepage';
 
 export default function Home() {
@@ -27,6 +28,9 @@ export default function Home() {
 
       {/* Why Choose Us */}
       <WhyChooseUsSection />
+
+      {/* Gallery Section */}
+      <GallerySection />
 
       {/* Promo Section */}
       <PromoSection />
