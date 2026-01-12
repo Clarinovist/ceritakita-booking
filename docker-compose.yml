@@ -9,9 +9,9 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      # Named volumes for persistent data
-      - booking-data:/app/data
-      - booking-uploads:/app/uploads
+      # Bind mounts for persistent data (synced with host)
+      - ./data:/app/data
+      - ./uploads:/app/uploads
     environment:
       - NODE_ENV=production
       - NEXTAUTH_URL=${NEXTAUTH_URL:-https://ceritakitastudio.site}
@@ -64,14 +64,6 @@ services:
       retries: 3
       start_period: 10s
 
-# Named volumes for data persistence
-volumes:
-  booking-data:
-    driver: local
-    name: ceritakita-booking_data
-  booking-uploads:
-    driver: local
-    name: ceritakita-booking_uploads
 
 # Network for service communication
 networks:
