@@ -2,31 +2,23 @@
   {
     "id": "2",
     "name": "Outdoor / On Location",
-    "basePrice": 3000000,
+    "basePrice": 1500000,
     "discountValue": 200000,
     "isActive": true,
     "badgeText": "Best deal"
   },
   {
-    "id": "3",
-    "name": "Wedding",
-    "basePrice": 3000000,
-    "discountValue": 200000,
-    "isActive": true,
-    "badgeText": "with make up"
-  },
-  {
     "id": "4",
     "name": "Prewedding Bronze",
-    "basePrice": 0,
+    "basePrice": 400000,
     "discountValue": 0,
     "isActive": true,
-    "badgeText": "PROMO 11.11"
+    "badgeText": ""
   },
   {
     "id": "5",
     "name": "Prewedding Silver",
-    "basePrice": 352000,
+    "basePrice": 600000,
     "discountValue": 0,
     "isActive": true,
     "badgeText": ""
@@ -34,50 +26,105 @@
   {
     "id": "6",
     "name": "Prewedding Gold",
-    "basePrice": 0,
+    "basePrice": 800000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "7",
-    "name": "Wisuda",
-    "basePrice": 0,
+    "name": "Indoor Wisuda",
+    "basePrice": 150000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "8",
     "name": "Family",
-    "basePrice": 0,
+    "basePrice": 300000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "9",
     "name": "Birthday",
-    "basePrice": 0,
+    "basePrice": 150000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "10",
     "name": "Pas Foto",
-    "basePrice": 0,
+    "basePrice": 40000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
     "id": "11",
     "name": "Self Photo",
-    "basePrice": 0,
+    "basePrice": 50000,
     "discountValue": 0,
-    "isActive": true
+    "isActive": true,
+    "badgeText": ""
   },
   {
-    "id": "0995cf1b-9831-4c71-ba54-3f2d613a01f2",
-    "name": "Promo Christmast",
-    "basePrice": 250000,
-    "discountValue": 10000,
-    "isActive": true
+    "id": "0a9f53a2-cf84-44ef-a006-28d6dd87f7fd",
+    "name": "Simple Outdoor",
+    "basePrice": 500000,
+    "discountValue": 0,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "bfe106cc-ee95-4ffa-a74e-c36876674d74",
+    "name": "Premium Outdoor",
+    "basePrice": 750000,
+    "discountValue": 0,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "9f2684c4-ba73-4fd5-96c8-2394167cb1de",
+    "name": "Java Pride Prewedding",
+    "basePrice": 750000,
+    "discountValue": 250000,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "af17cca7-d511-429f-82f8-5fab9733c14e",
+    "name": "wedding gold",
+    "basePrice": 1300000,
+    "discountValue": 0,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "54178184-8a2a-46fc-8e82-cbb8f9a88ae2",
+    "name": "cute pas foto",
+    "basePrice": 150000,
+    "discountValue": 25000,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "0840b0cf-c88c-41b7-8ebc-ddf3ef9a00b3",
+    "name": "Outdoor Wisuda",
+    "basePrice": 500000,
+    "discountValue": 150000,
+    "isActive": true,
+    "badgeText": ""
+  },
+  {
+    "id": "d086d393-fcb5-48aa-ac2b-824dd0f5ba76",
+    "name": "Mini Album (10's/@4R)",
+    "basePrice": 150000,
+    "discountValue": 0,
+    "isActive": true,
+    "badgeText": ""
   }
 ]
