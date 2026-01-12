@@ -1594,3 +1594,146 @@
 [2026-01-11T09:23:24.253Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
 [2026-01-11T09:23:24.319Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
 [2026-01-11T09:23:24.318Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T02:16:45.932Z] [WARN] Failed login attempt | Context: {"username":"admin","ip":"unknown"}
+[2026-01-12T02:17:55.071Z] [WARN] Failed login attempt | Context: {"username":"admin","ip":"unknown"}
+[2026-01-12T02:28:10.172Z] [WARN] Failed login attempt | Context: {"username":"Manager","ip":"unknown"}
+[2026-01-12T02:29:32.444Z] [INFO] Successful login | Context: {"username":"admin","role":"admin"}
+[2026-01-12T02:29:32.445Z] [INFO] User signed in | Context: {"userId":"986449aa-9875-4206-8adc-8504edef3f3b","name":"admin","role":"admin"}
+[2026-01-12T02:29:36.819Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:29:36.819Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:29:36.825Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:29:36.825Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:29:36.830Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:29:36.830Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:29:36.834Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:29:36.834Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:31:37.103Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:31:37.103Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:31:37.117Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:31:37.117Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:31:37.142Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:31:37.142Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:31:37.152Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-12T02:31:37.152Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-12T02:31:41.926Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2026-01-01","spend":784369,"impressions":114713,"clicks":336,"reach":55904}
+[2026-01-12T02:31:41.935Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2026-01-01","spend":784369,"impressions":114713,"clicks":336,"reach":55904}
+[2026-01-12T02:51:01.372Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T02:51:01.373Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T02:51:01.950Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T02:51:01.950Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T02:51:02.357Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T02:51:02.358Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T02:51:02.738Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T02:51:02.739Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:52:30.699Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:52:30.700Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:52:31.436Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:52:31.436Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:52:31.447Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:52:31.447Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:52:31.455Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:52:31.455Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:06.669Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:06.669Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:06.679Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:06.679Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:06.718Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:06.720Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:06.731Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:06.730Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:55.518Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:55.518Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:55.549Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:55.549Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:55.569Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:55.569Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:54:55.578Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:54:55.579Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:55:01.162Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:55:01.162Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:55:01.197Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:55:01.197Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:55:01.211Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:55:01.211Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:55:01.218Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:55:01.218Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:56:31.322Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:56:31.322Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:56:31.351Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:56:31.351Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:56:31.364Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:56:31.364Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:56:31.371Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:56:31.371Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:57:37.197Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:57:37.197Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:57:37.410Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:57:37.411Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:57:37.437Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:57:37.438Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:57:37.447Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T03:57:37.446Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T03:58:19.241Z] [WARN] Validation failed for booking update | Context: {"requestId":"980b28a4-aa9d-48fb-afbd-fecad89b5784","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T03:58:23.475Z] [WARN] Validation failed for booking update | Context: {"requestId":"36a151b1-8992-4a87-9cf0-9e7acb2699d2","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T03:58:27.096Z] [WARN] Validation failed for booking update | Context: {"requestId":"60b56db3-df82-4d75-9c2b-e4300977b055","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:00:23.448Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:00:23.447Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:00:24.188Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:00:24.189Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:00:24.204Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:00:24.203Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:00:24.223Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:00:24.222Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:00:32.916Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"a233152d-cc4d-443e-ba56-0bd5fdf07d29","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":680000,"newTotal":720000,"newAddonsTotal":120000}
+[2026-01-12T04:00:32.918Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:00:32.918Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"a233152d-cc4d-443e-ba56-0bd5fdf07d29","updates":["addons"]} | User: Yofa
+[2026-01-12T04:01:44.330Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"6b098cf9-b3cd-45d6-b50c-1633d8b78983","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":720000,"newTotal":680000,"newAddonsTotal":80000}
+[2026-01-12T04:01:44.332Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:01:44.332Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"6b098cf9-b3cd-45d6-b50c-1633d8b78983","updates":["addons"]} | User: Yofa
+[2026-01-12T04:01:47.401Z] [WARN] Validation failed for booking update | Context: {"requestId":"9a996a5b-1b32-40b5-b04a-773ae0000d7e","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:01:52.148Z] [WARN] Validation failed for booking update | Context: {"requestId":"b7a81636-7911-4175-a387-e4810f6ed31c","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:02:49.842Z] [WARN] Validation failed for booking update | Context: {"requestId":"0a0caced-774e-438d-a131-2b7202c09402","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:02:58.969Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:02:58.969Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:02:59.297Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:02:59.297Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:02:59.319Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:02:59.319Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:02:59.326Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:02:59.327Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:03:06.338Z] [WARN] Validation failed for booking update | Context: {"requestId":"f5beffb7-239e-4ddd-9de8-414baf8aa45e","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:03:10.289Z] [WARN] Validation failed for booking update | Context: {"requestId":"fe37d9cd-aa1a-4090-b55e-e5d001e9cfb0","errors":[{"origin":"number","code":"too_small","minimum":0,"inclusive":true,"path":["addons",1,"price_at_booking"],"message":"Price must be positive"}]}
+[2026-01-12T04:05:22.824Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"a3fe8192-de94-4538-ac63-07235dce912c","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":680000,"newTotal":400000,"newAddonsTotal":-200000}
+[2026-01-12T04:05:22.826Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:05:22.826Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"a3fe8192-de94-4538-ac63-07235dce912c","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:36.300Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"0d2b2b56-92d2-4996-9221-a3cadaf7542f","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":400000,"newTotal":440000,"newAddonsTotal":-160000}
+[2026-01-12T04:05:36.302Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:05:36.302Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"0d2b2b56-92d2-4996-9221-a3cadaf7542f","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:45.594Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"a2bef0db-c9d1-4801-89be-b706716e9d86","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":440000,"newTotal":720000,"newAddonsTotal":120000}
+[2026-01-12T04:05:45.595Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:05:45.595Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"a2bef0db-c9d1-4801-89be-b706716e9d86","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:46.740Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"d47a0717-bb52-444a-873d-64265bda89ad","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":720000,"newTotal":680000,"newAddonsTotal":80000}
+[2026-01-12T04:05:46.741Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:05:46.742Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"d47a0717-bb52-444a-873d-64265bda89ad","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:48.875Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"282f0fbe-aa89-4057-9862-a4c879bc79e9","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":680000,"newTotal":600000,"newAddonsTotal":0}
+[2026-01-12T04:05:48.876Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:05:48.876Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"282f0fbe-aa89-4057-9862-a4c879bc79e9","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:51.368Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"c723f33b-7fbb-4b45-95dd-52425d821773","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":600000,"newTotal":320000,"newAddonsTotal":-280000}
+[2026-01-12T04:05:51.369Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"c723f33b-7fbb-4b45-95dd-52425d821773","updates":["addons"]} | User: Yofa
+[2026-01-12T04:05:51.369Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:10:10.920Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2026-01-01","spend":784369,"impressions":114713,"clicks":336,"reach":55904}
+[2026-01-12T04:10:10.923Z] [INFO] Saved daily ads performance log | Context: {"date_record":"2026-01-01","spend":784369,"impressions":114713,"clicks":336,"reach":55904}
+[2026-01-12T04:10:20.034Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"74ea1294-56d9-4340-981f-ea8dbffc18b0","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":320000,"newTotal":600000,"newAddonsTotal":0}
+[2026-01-12T04:10:20.035Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:10:20.035Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"74ea1294-56d9-4340-981f-ea8dbffc18b0","updates":["addons"]} | User: Yofa
+[2026-01-12T04:12:31.043Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:12:31.044Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:12:31.282Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:12:31.283Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:12:31.356Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:12:31.357Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:12:31.421Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-12T04:12:31.423Z] [INFO] Bookings retrieved successfully | Context: {"count":13}
+[2026-01-12T04:15:54.320Z] [INFO] Recalculated price due to addon changes | Context: {"requestId":"ca7eff1b-c88c-462f-9663-93e9533d7be4","bookingId":"5c860130-0d2f-496a-967c-1db175307658","oldTotal":600000,"newTotal":320000,"newAddonsTotal":-280000}
+[2026-01-12T04:15:54.322Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","bookingId":"5c860130-0d2f-496a-967c-1db175307658","date":"2026-01-11T14:00","status":"Active"} | User: Yofa
+[2026-01-12T04:15:54.322Z] [INFO] AUDIT: UPDATE_BOOKING on booking:5c860130-0d2f-496a-967c-1db175307658 | Context: {"action":"UPDATE_BOOKING","resource":"booking:5c860130-0d2f-496a-967c-1db175307658","requestId":"ca7eff1b-c88c-462f-9663-93e9533d7be4","updates":["addons"]} | User: Yofa

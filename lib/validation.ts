@@ -41,7 +41,7 @@ export const financeSchema = z.object({
   // Price breakdown fields (optional for backward compatibility)
   service_base_price: z.number().min(0).optional(),
   base_discount: z.number().min(0).optional(),
-  addons_total: z.number().min(0).optional(),
+  addons_total: z.number().optional(),
   coupon_discount: z.number().min(0).optional(),
   coupon_code: z.string().optional(),
 });
@@ -51,7 +51,7 @@ export const bookingAddonSchema = z.object({
   addon_id: z.string(),
   addon_name: z.string(),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
-  price_at_booking: z.number().min(0, 'Price must be positive'),
+  price_at_booking: z.number(), // Allow negative for adjustments/downgrades
 });
 
 // Full booking creation schema
@@ -89,3 +89,12 @@ export const serviceSchema = z.object({
 
 // Array of services schema
 export const servicesArraySchema = z.array(serviceSchema);
+
+// Price adjustment schema
+export const priceAdjustmentSchema = z.object({
+  booking_id: z.string().uuid(),
+  addon_id: z.string(),
+  quantity: z.number().int().positive().default(1),
+  price: z.number().nonnegative().optional(), // Optional override price
+  reason: z.string().max(500).optional()
+});

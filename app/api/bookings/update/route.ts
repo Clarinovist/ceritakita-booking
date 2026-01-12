@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth';
 import { updateBookingSchema } from '@/lib';
 import { rateLimiters } from '@/lib/rate-limit';
 import { logger, createErrorResponse, createValidationError } from '@/lib/logger';
-import { safeString } from '@/lib/type-utils';
+import { safeString, safeNumber } from '@/lib/type-utils';
 
 /**
  * Valid status transition matrix
@@ -148,6 +148,60 @@ export async function PUT(req: NextRequest) {
             }
         }
 
+        // PRICE CHANGE VALIDATION
+        // Only allow finance changes on Active bookings
+        if ((updates.finance || updates.addons) && currentBooking.status !== 'Active') {
+            logger.warn('Attempted to modify price/addons on non-active booking', {
+                requestId,
+                bookingId: id,
+                status: currentBooking.status
+            });
+            return NextResponse.json(
+                {
+                    error: 'Perubahan harga hanya diizinkan untuk booking dengan status Active',
+                    code: 'INVALID_STATUS_FOR_PRICE_CHANGE'
+                },
+                { status: 400 }
+            );
+        }
+
+        // Addon update handling
+        let finalFinance = updates.finance || currentBooking.finance;
+
+        if (updates.addons !== undefined) {
+            // Calculate new addons_total
+            const newAddonsTotal = updates.addons.reduce((sum, addon) => {
+                return sum + (safeNumber(addon.price_at_booking) * safeNumber(addon.quantity));
+            }, 0);
+
+            // Recalculate total_price
+            const serviceBase = updates.finance?.service_base_price ?? currentBooking.finance.service_base_price ?? 0;
+            const baseDiscount = updates.finance?.base_discount ?? currentBooking.finance.base_discount ?? 0;
+            const couponDiscount = updates.finance?.coupon_discount ?? currentBooking.finance.coupon_discount ?? 0;
+
+            // Handle legacy data (if no service base but has total)
+            let basePrice = serviceBase;
+            if (basePrice === 0 && currentBooking.finance.total_price > 0 && (!currentBooking.addons || currentBooking.addons.length === 0) && !updates.finance?.service_base_price) {
+                basePrice = currentBooking.finance.total_price;
+            }
+
+            const newTotalPrice = Math.max(0, basePrice + newAddonsTotal - baseDiscount - couponDiscount);
+
+            finalFinance = {
+                ...finalFinance,
+                addons_total: newAddonsTotal,
+                total_price: newTotalPrice
+            };
+
+            logger.info('Recalculated price due to addon changes', {
+                requestId,
+                bookingId: id,
+                oldTotal: currentBooking.finance.total_price,
+                newTotal: newTotalPrice,
+                newAddonsTotal
+            });
+        }
+
         // Only update allowed fields (no arbitrary field injection)
         const updatedBooking: Booking = {
             ...currentBooking,
@@ -161,7 +215,7 @@ export async function PUT(req: NextRequest) {
                     location_link: updates.booking.location_link ? safeString(updates.booking.location_link) : currentBooking.booking.location_link
                 }
             }),
-            ...(updates.finance && { finance: updates.finance }),
+            finance: finalFinance,
             ...(updates.customer && {
                 customer: {
                     ...currentBooking.customer,

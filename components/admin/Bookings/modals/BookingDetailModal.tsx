@@ -3,12 +3,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { formatDateTime } from '@/utils/dateFormatter';
-import type { Booking } from '@/lib/storage';
+import type { Booking, Addon } from '@/lib/types';
 import type { Photographer } from '@/lib/photographers';
 
 interface BookingDetailModalProps {
   booking: Booking | null;
   photographers: Photographer[];
+  addons: Addon[]; // Added addons prop
   onClose: () => void;
   onDelete: (id: string) => void;
   onUpdateStatus: (id: string, status: Booking['status']) => void;
@@ -29,6 +30,7 @@ interface BookingDetailModalProps {
 export function BookingDetailModal({
   booking,
   photographers,
+  addons,
   onClose,
   onDelete,
   onUpdateStatus,
@@ -309,23 +311,149 @@ export function BookingDetailModal({
               </div>
             </div>
 
-            {booking.addons && booking.addons.length > 0 && (
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                <h4 className="font-bold text-sm mb-3 flex items-center gap-2">
-                  <span>🛍️</span> Selected Add-ons
-                </h4>
-                <div className="space-y-2">
+            {/* Addons Section */}
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+              <h4 className="font-bold text-sm mb-3 flex items-center gap-2">
+                <span>🛍️</span> Add-ons & Adjustments
+              </h4>
+
+              {booking.addons && booking.addons.length > 0 && (
+                <div className="space-y-2 mb-4">
                   {booking.addons.map((addon, idx) => (
-                    <div key={idx} className="text-sm">
-                      <span>
-                        {addon.addon_name}
-                        {addon.quantity > 1 && <span className="text-gray-500"> x{addon.quantity}</span>}
-                      </span>
+                    <div key={idx} className="text-sm bg-white p-2 rounded border border-blue-100 flex justify-between items-center group">
+                      <div>
+                        <span>
+                          {addon.addon_name}
+                          {addon.quantity > 1 && <span className="text-gray-500 font-medium"> x{addon.quantity}</span>}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-mono ${addon.price_at_booking < 0 ? 'text-red-500' : 'text-gray-600'}`}>
+                          {addon.price_at_booking < 0 ? '-' : '+'} Rp {Math.abs(addon.price_at_booking * addon.quantity).toLocaleString()}
+                        </span>
+                        {booking.status === 'Active' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Remove this specific addon instance
+                              // Since we don't have unique IDs per instance, we filter by index
+                              // But better safest way is to rebuild the array excluding this index
+                              const newAddons = [...(booking.addons || [])];
+                              newAddons.splice(idx, 1);
+                              onUpdate(booking.id, { addons: newAddons });
+                            }}
+                            className="text-gray-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Remove item"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* Add New Addon Form */}
+              {booking.status === 'Active' && (
+                <div className="flex gap-2 mt-2">
+                  <select
+                    className="flex-1 text-xs border rounded p-1.5"
+                    onChange={(e) => {
+                      const selectedAddon = addons.find(a => a.id === e.target.value);
+                      if (!selectedAddon) return;
+
+                      const newAddonItem = {
+                        addon_id: selectedAddon.id,
+                        addon_name: selectedAddon.name,
+                        quantity: 1,
+                        price_at_booking: selectedAddon.price
+                      };
+
+                      const currentAddons = booking.addons || [];
+                      onUpdate(booking.id, { addons: [...currentAddons, newAddonItem] });
+                      e.target.value = "";
+                    }}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>+ Add Item / Adjustment...</option>
+
+                    <optgroup label="System Adjustments">
+                      {addons.filter(a => {
+                        if (!a.is_active) return false;
+
+                        // Filter by category relevance
+                        let applicable = a.applicable_categories;
+                        if (typeof applicable === 'string') {
+                          try {
+                            applicable = JSON.parse(applicable);
+                          } catch (e) {
+                            applicable = []; // Fallback if invalid json
+                          }
+                        }
+
+                        // If specific categories are defined, strictly enforce them
+                        if (Array.isArray(applicable) && applicable.length > 0) {
+                          if (!applicable.includes(booking.customer.category)) {
+                            return false; // Hide if category doesn't match
+                          }
+                        }
+
+                        // Name based grouping
+                        return (
+                          a.name.toLowerCase().includes('upgrade') ||
+                          a.name.toLowerCase().includes('downgrade') ||
+                          a.name.toLowerCase().includes('penyesuaian') ||
+                          a.name.toLowerCase().includes('rush') ||
+                          a.name.toLowerCase().includes('tambah')
+                        );
+                      }).map(a => (
+                        <option key={a.id} value={a.id}>
+                          {a.name} ({a.price > 0 ? '+' : ''}{a.price.toLocaleString()})
+                        </option>
+                      ))}
+                    </optgroup>
+
+                    <optgroup label="Add-on Items">
+                      {addons.filter(a => {
+                        if (!a.is_active) return false;
+
+                        // Filter by category relevance
+                        let applicable = a.applicable_categories;
+                        if (typeof applicable === 'string') {
+                          try {
+                            applicable = JSON.parse(applicable);
+                          } catch (e) {
+                            applicable = [];
+                          }
+                        }
+
+                        // If specific categories are defined, strictly enforce them
+                        if (Array.isArray(applicable) && applicable.length > 0) {
+                          if (!applicable.includes(booking.customer.category)) {
+                            return false; // Hide if category doesn't match
+                          }
+                        }
+
+                        // Name based grouping (inverse)
+                        return !(
+                          a.name.toLowerCase().includes('upgrade') ||
+                          a.name.toLowerCase().includes('downgrade') ||
+                          a.name.toLowerCase().includes('penyesuaian') ||
+                          a.name.toLowerCase().includes('rush') ||
+                          a.name.toLowerCase().includes('tambah')
+                        );
+                      }).map(a => (
+                        <option key={a.id} value={a.id}>
+                          {a.name} ({a.price > 0 ? '+' : ''}{a.price.toLocaleString()})
+                        </option>
+                      ))}
+                    </optgroup>
+
+                  </select>
+                </div>
+              )}
+            </div>
 
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-bold text-sm mb-3">Payment History</h4>

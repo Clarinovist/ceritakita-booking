@@ -112,8 +112,10 @@ export const useBookings = () => {
     const calculateFinance = (b: Booking) => {
         const total = b.finance.total_price;
         const paid = b.finance.payments.reduce((sum, p) => sum + p.amount, 0);
-        const balance = total - paid;
-        return { total, paid, balance, isPaidOff: balance <= 0 && total > 0 };
+        const rawBalance = total - paid;
+        const balance = Math.max(0, rawBalance);
+        // Is considered paid off if raw balance is <= 0 (including overpayment) and total > 0
+        return { total, paid, balance, isPaidOff: rawBalance <= 0 && total > 0 };
     };
 
     const getOrReconstructBreakdown = (booking: Booking | null) => {

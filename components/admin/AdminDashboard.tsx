@@ -568,6 +568,7 @@ export default function AdminDashboard() {
                 <BookingDetailModal
                     booking={bookingsHook.selectedBooking}
                     photographers={photographersHook.photographers}
+                    addons={addonsHook.addons}
                     onClose={() => bookingsHook.setSelectedBooking(null)}
                     onDelete={bookingsHook.handleDeleteBooking}
                     onUpdateStatus={bookingsHook.handleUpdateStatus}
