@@ -214,10 +214,7 @@ export default function DashboardMetrics({ sessionBookings, createdBookings, all
                 <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="font-bold text-lg text-slate-800">Service Distribution</h3>
-                        <select className="bg-slate-50 border-none text-xs font-medium text-slate-500 rounded-lg py-2 px-3 focus:ring-0">
-                            <option>This Month</option>
-                            <option>Last Month</option>
-                        </select>
+
                     </div>
                     <div className="flex-1 w-full min-h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">

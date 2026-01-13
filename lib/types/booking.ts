@@ -21,6 +21,12 @@ export interface Payment {
 
   /** Relative path to uploaded proof file */
   proof_filename?: string;
+
+  /** Direct URL to proof file (e.g. for B2 storage) */
+  proof_url?: string;
+
+  /** Storage backend used */
+  storage_backend?: 'local' | 'b2';
 }
 
 export interface FinanceData {
