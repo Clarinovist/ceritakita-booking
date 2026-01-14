@@ -1900,3 +1900,28 @@
 [2026-01-12T12:30:33.960Z] [INFO] Retrieved bookings from database | Context: {"count":13}
 [2026-01-12T12:30:35.397Z] [INFO] Retrieved bookings from database | Context: {"count":13}
 [2026-01-12T12:30:36.092Z] [INFO] Retrieved bookings from database | Context: {"count":13}
+[2026-01-14T12:38:20.711Z] [INFO] Successful login | Context: {"username":"admin","role":"admin"}
+[2026-01-14T12:38:20.712Z] [INFO] User signed in | Context: {"userId":"9cf573f4-8f7c-485a-8cae-74c625d152f8","name":"admin","role":"admin"}
+[2026-01-14T12:39:48.537Z] [INFO] Successful login | Context: {"username":"admin","role":"admin"}
+[2026-01-14T12:39:48.537Z] [INFO] User signed in | Context: {"userId":"9cf573f4-8f7c-485a-8cae-74c625d152f8","name":"admin","role":"admin"}
+[2026-01-14T12:39:53.477Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:39:53.477Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:39:53.543Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:39:53.543Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:39:53.586Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:39:53.586Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:39:53.610Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:39:53.610Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:40:59.420Z] [INFO] Successful login | Context: {"username":"admin","role":"admin"}
+[2026-01-14T12:40:59.421Z] [INFO] User signed in | Context: {"userId":"9cf573f4-8f7c-485a-8cae-74c625d152f8","name":"admin","role":"admin"}
+[2026-01-14T12:41:01.485Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:01.485Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:41:01.539Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:41:01.539Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:01.596Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:01.596Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:41:01.621Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:01.621Z] [INFO] Bookings retrieved successfully | Context: {"count":0}
+[2026-01-14T12:41:03.588Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:03.606Z] [INFO] Retrieved bookings from database | Context: {"count":0}
+[2026-01-14T12:41:03.629Z] [INFO] Retrieved bookings from database | Context: {"count":0}
