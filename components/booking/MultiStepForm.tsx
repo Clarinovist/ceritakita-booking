@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { useSession, getCsrfToken } from 'next-auth/react';
 import { fieldValidators } from '@/lib/validation/schemas';
 import { generateWhatsAppLink, renderTemplate } from '@/lib/whatsapp-template';
 
@@ -96,6 +97,7 @@ export function MultiStepFormProvider({
   children,
   initialData
 }: MultiStepFormProviderProps) {
+  const { data: session } = useSession();
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
 
@@ -428,8 +430,20 @@ export function MultiStepFormProvider({
         formPayload.append('proof', formData.proofFile);
       }
 
+      // Prepare headers
+      const headers: HeadersInit = {};
+
+      // If authenticated, add CSRF token
+      if (session) {
+        const csrfToken = await getCsrfToken();
+        if (csrfToken) {
+          headers['X-CSRF-Token'] = csrfToken;
+        }
+      }
+
       const res = await fetch('/api/bookings', {
         method: 'POST',
+        headers,
         body: formPayload,
       });
 

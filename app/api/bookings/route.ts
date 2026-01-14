@@ -19,6 +19,7 @@ import {
     getCouponByCode
 } from '@/lib/coupons';
 import { generateWhatsAppMessage, generateWhatsAppLink } from '@/lib/whatsapp-template';
+import { getCsrfToken } from 'next-auth/react';
 import formidable from 'formidable';
 import { IncomingMessage } from 'http';
 import { Readable } from 'stream';
@@ -119,10 +120,30 @@ export async function POST(req: NextRequest) {
 
         // CSRF protection (if user is authenticated)
         const authCheck = await requireAuth(req);
-        if (authCheck) {
-            // If authenticated, check CSRF
-            // For now, we'll skip CSRF if auth check returns null (meaning authenticated)
-            // In production, you'd get the user ID from session and validate CSRF
+        // requireAuth returns null if authenticated, otherwise returns a 401 response
+        if (!authCheck) {
+            // User is authenticated. Validate CSRF.
+            // Check that the X-CSRF-Token header matches the token derived from the session cookie
+            const headerToken = req.headers.get('x-csrf-token');
+            const cookieToken = await getCsrfToken({
+                req: {
+                    headers: {
+                        cookie: req.headers.get('cookie') ?? '',
+                    },
+                },
+            });
+
+            if (headerToken !== cookieToken) {
+                logger.warn('CSRF validation failed', {
+                    requestId,
+                    user: 'authenticated',
+                    headerToken: headerToken ? 'present' : 'missing',
+                });
+                return NextResponse.json(
+                    { error: 'Invalid CSRF token', code: 'CSRF_INVALID' },
+                    { status: 403 }
+                );
+            }
         }
 
         const contentType = req.headers.get('content-type') || '';
