@@ -75,22 +75,27 @@ export async function POST(req: NextRequest) {
     // Perbaikan: Container untuk data yang sudah dikonversi ke string
     const settingsToUpdate: Record<string, string> = {};
 
-    // Perbaikan: Validasi type yang lebih fleksibel (String, Number, Boolean)
+    // Perbaikan: Validasi type yang lebih fleksibel (String, Number, Boolean, Object)
     for (const [key, value] of Object.entries(body)) {
-      // Izinkan string, number, dan boolean
+      // Izinkan string, number, boolean, dan object
       if (
         typeof value !== 'string' &&
         typeof value !== 'number' &&
-        typeof value !== 'boolean'
+        typeof value !== 'boolean' &&
+        (typeof value !== 'object' || value === null)
       ) {
         return NextResponse.json(
-          { error: `Invalid value type for key "${key}". Must be string, number, or boolean.` },
+          { error: `Invalid value type for key "${key}". Must be string, number, boolean, or object.` },
           { status: 400 }
         );
       }
 
       // Konversi semua nilai ke string untuk penyimpanan
-      settingsToUpdate[key] = String(value);
+      if (typeof value === 'object') {
+        settingsToUpdate[key] = JSON.stringify(value);
+      } else {
+        settingsToUpdate[key] = String(value);
+      }
     }
 
     // Validate logo URL only if it's explicitly passed as a string

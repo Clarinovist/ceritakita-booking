@@ -17,6 +17,8 @@ import TemplatesTab from './settings/TemplatesTab';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
 import { SettingsPreviewModal } from './modals/SettingsPreviewModal';
+import { InvoicePreviewModal } from './modals/InvoicePreviewModal';
+import { InvoiceSettings } from '@/lib/types/settings';
 
 // Tab type definition
 type TabType = 'general' | 'contact' | 'finance' | 'rules' | 'templates' | 'payment_methods' | 'users';
@@ -74,6 +76,7 @@ export default function SettingsManagement() {
   const [uploading, setUploading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('general');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isInvoicePreviewOpen, setIsInvoicePreviewOpen] = useState(false);
 
   useEffect(() => {
     fetchSettings();
@@ -105,6 +108,21 @@ export default function SettingsManagement() {
 
   const handleToggle = (key: keyof SystemSettings, value: boolean) => {
     setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleInvoiceChange = (key: keyof InvoiceSettings, value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      invoice: {
+        companyName: '',
+        companyAddress: '',
+        companyPhone: '',
+        companyEmail: '',
+        footerNote: '',
+        ...(prev.invoice || {}),
+        [key]: value
+      }
+    }));
   };
 
   const handleLogoUpload = async (file: File) => {
@@ -245,6 +263,8 @@ export default function SettingsManagement() {
               onChange={handleInputChange}
               onToggle={handleToggle}
               onNumberChange={handleNumberChange}
+              onInvoiceChange={handleInvoiceChange}
+              onPreviewInvoice={() => setIsInvoicePreviewOpen(true)}
             />
           )}
 
@@ -323,6 +343,13 @@ export default function SettingsManagement() {
       <SettingsPreviewModal
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
+        settings={settings}
+      />
+
+      {/* Invoice Preview Modal */}
+      <InvoicePreviewModal
+        isOpen={isInvoicePreviewOpen}
+        onClose={() => setIsInvoicePreviewOpen(false)}
         settings={settings}
       />
     </div>

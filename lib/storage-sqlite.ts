@@ -9,6 +9,7 @@ import { getBookingAddons, getBookingAddonsForBookings, setBookingAddons, type B
 import { logger, AppError } from './logger';
 import { normalizeBookingStatus, safeString, safeNumber, executeTransaction } from './type-utils';
 import { withLock } from './file-lock';
+import { InvoiceSettings } from '@/lib/types/settings';
 
 export interface Payment {
   date: string;
@@ -1114,7 +1115,8 @@ export interface SystemSettings {
   site_logo: string;
   business_phone: string;
   business_address: string;
-  [key: string]: string;
+  invoice?: InvoiceSettings;
+  [key: string]: string | number | boolean | object | undefined;
 }
 
 // Simple in-memory cache for system settings
@@ -1144,7 +1146,15 @@ export function getSystemSettings(): SystemSettings {
 
   // Override with database values
   rows.forEach(row => {
-    settings[row.key] = row.value;
+    if (row.key === 'invoice') {
+      try {
+        settings[row.key] = JSON.parse(row.value);
+      } catch (e) {
+        settings[row.key] = {};
+      }
+    } else {
+      settings[row.key] = row.value;
+    }
   });
 
   // Update cache
@@ -1160,7 +1170,9 @@ export function getSystemSetting(key: string): string | null {
   // Use cached settings if available to avoid DB hit
   const settings = getSystemSettings();
   const val = settings[key];
-  return val !== undefined ? val : null;
+  if (val === undefined) return null;
+  if (typeof val === 'object') return JSON.stringify(val);
+  return String(val);
 }
 
 /**

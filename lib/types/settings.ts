@@ -28,6 +28,17 @@ export interface FinanceSettings {
   requires_deposit: boolean;
   deposit_amount: number; // percentage
   tax_rate: number; // percentage
+  invoice?: InvoiceSettings;
+}
+
+// 3b. Invoice Specific Settings
+export interface InvoiceSettings {
+  companyName: string;
+  companyAddress: string; // multiline
+  companyPhone: string;
+  companyEmail: string;
+  footerNote: string;
+  logoUrl?: string;
 }
 
 // 4. Booking Rules Settings
