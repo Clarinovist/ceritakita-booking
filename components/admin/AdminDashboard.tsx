@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useSession } from "next-auth/react";
+import { useSession, getCsrfToken } from "next-auth/react";
 
 // Components
 import AdminSidebar from '../AdminSidebar';
@@ -248,9 +248,16 @@ export default function AdminDashboard() {
                 addons: addonsData.length > 0 ? addonsData : undefined
             };
 
+            // Get CSRF token for authenticated request
+            const csrfToken = await getCsrfToken();
+            const headers: HeadersInit = { 'Content-Type': 'application/json' };
+            if (csrfToken) {
+                headers['X-CSRF-Token'] = csrfToken;
+            }
+
             const res = await fetch('/api/bookings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify(payload)
             });
 
