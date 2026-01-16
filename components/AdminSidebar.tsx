@@ -10,7 +10,7 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { getFilteredMenuItems } from '@/lib/permissions-types';
-import { useSettings } from '@/lib/settings-context';
+import { useSettings } from '@/components/providers/SettingsContext';
 import { LucideIcon } from 'lucide-react';
 
 interface MenuItem {

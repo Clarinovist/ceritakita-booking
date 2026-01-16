@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { Booking } from '@/lib/storage';
+import { Booking } from '@/lib/types';
 import { SystemSettings } from '@/lib/types/settings';
 import { InvoiceTemplate } from '@/components/admin/invoices/InvoiceTemplate';
 

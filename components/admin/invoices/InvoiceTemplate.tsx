@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { SystemSettings } from '@/lib/types/settings';
-import { Booking } from '@/lib/storage';
+import { Booking } from '@/lib/types';
 
 interface InvoiceTemplateProps {
     settings: SystemSettings;

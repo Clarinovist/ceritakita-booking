@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { SystemSettings, SettingsContextType } from './types/settings';
-import { SETTINGS_CACHE } from './constants';
+import { SystemSettings, SettingsContextType } from '@/lib/types/settings';
+import { SETTINGS_CACHE } from '@/lib/constants';
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 

@@ -1,4 +1,4 @@
-import { Service } from '@/lib/storage';
+import { Service } from '@/lib/repositories/services';
 
 interface ServicesTableProps {
     services: Service[];

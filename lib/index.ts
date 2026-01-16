@@ -39,7 +39,7 @@ export {
 export {
   SettingsProvider,
   useSettings
-} from './settings-context';
+} from '@/components/providers/SettingsContext';
 
 // ✅ Permission Types (Enums/Constants only - Safe)
 export {
