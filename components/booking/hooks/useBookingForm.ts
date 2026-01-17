@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, ChangeEvent, FormEvent } from 'react';
 import { Service, Addon, PaymentSettings, CouponValidation, BookingFormData, BookingPayload, Coupon } from '@/lib/types';
 import { generateWhatsAppMessage, generateWhatsAppLink } from '@/lib/whatsapp-template';
-import { useSettings } from '@/lib/settings-context';
+import { useSettings } from '@/components/providers/SettingsContext';
+import { calculateDetailedPricing, calculateAddonsTotal as calculateAddonsTotalLib } from '@/lib/pricing';
 
 export const useBookingForm = () => {
     const { settings } = useSettings();
@@ -41,10 +42,11 @@ export const useBookingForm = () => {
     }, [selectedService]);
 
     const calculateAddonsTotal = useCallback(() => {
-        return Array.from(selectedAddons.entries()).reduce((total, [addonId, quantity]) => {
+        const addonsList = Array.from(selectedAddons.entries()).map(([addonId, quantity]) => {
             const addon = availableAddons.find(a => a.id === addonId);
-            return total + (addon ? addon.price * quantity : 0);
-        }, 0);
+            return { price: addon?.price || 0, quantity };
+        });
+        return calculateAddonsTotalLib(addonsList);
     }, [selectedAddons, availableAddons]);
 
     const calculateBaseDiscount = useCallback(() => {
@@ -53,8 +55,19 @@ export const useBookingForm = () => {
     }, [selectedService]);
 
     const calculateSubtotalForCoupon = useCallback(() => {
-        return calculateServiceBasePrice() + calculateAddonsTotal() - calculateBaseDiscount();
-    }, [calculateServiceBasePrice, calculateAddonsTotal, calculateBaseDiscount]);
+        const addonsList = Array.from(selectedAddons.entries()).map(([addonId, quantity]) => {
+            const addon = availableAddons.find(a => a.id === addonId);
+            return { price: addon?.price || 0, quantity };
+        });
+
+        const breakdown = calculateDetailedPricing(
+            selectedService,
+            addonsList,
+            0 // No coupon discount for subtotal
+        );
+
+        return breakdown.total; // Total without coupon is the subtotal for coupon validation
+    }, [selectedService, selectedAddons, availableAddons]);
 
     // Fetch initial data
     useEffect(() => {
@@ -153,13 +166,18 @@ export const useBookingForm = () => {
     };
 
     const calculateTotal = () => {
-        const serviceBase = calculateServiceBasePrice();
-        const addonsTotal = calculateAddonsTotal();
-        const baseDiscount = calculateBaseDiscount();
-        const couponDiscount = calculateCouponDiscount();
+        const addonsList = Array.from(selectedAddons.entries()).map(([addonId, quantity]) => {
+            const addon = availableAddons.find(a => a.id === addonId);
+            return { price: addon?.price || 0, quantity };
+        });
 
-        const total = serviceBase + addonsTotal - baseDiscount - couponDiscount;
-        return Math.max(0, total);
+        const breakdown = calculateDetailedPricing(
+            selectedService,
+            addonsList,
+            appliedCoupon?.discount_amount || 0
+        );
+
+        return breakdown.total;
     };
 
     const handleApplyCoupon = async () => {

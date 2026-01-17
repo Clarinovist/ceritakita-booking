@@ -3,7 +3,7 @@
 import { Camera } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSettings } from '@/lib/settings-context';
+import { useSettings } from '@/components/providers/SettingsContext';
 
 interface LogoProps {
   className?: string;

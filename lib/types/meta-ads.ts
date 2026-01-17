@@ -4,23 +4,13 @@
  */
 
 export interface AdsData {
-  /** Total ad spend */
   spend: number;
-  
-  /** Number of impressions */
   impressions: number;
-  
-  /** Number of clicks */
-  clicks: number;
-  
-  /** Number of leads generated */
-  leads: number;
-  
-  /** Cost per lead */
-  cost_per_lead?: number;
-  
-  /** Date of the data */
-  date?: string;
+  inlineLinkClicks: number;
+  reach: number;
+  date_start?: string;
+  date_end?: string;
+  updated_at?: string;
 }
 
 export interface AdsLogEntry {
@@ -28,13 +18,15 @@ export interface AdsLogEntry {
   id: number;
   
   /** Date of the log entry */
-  date: string;
+  date_record: string;
   
-  /** Ads data */
-  data: AdsData;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  reach: number;
   
-  /** When the entry was created */
-  created_at: string;
+  /** When the entry was updated */
+  updated_at: string;
 }
 
 export interface AdsInsights {
@@ -47,11 +39,8 @@ export interface AdsInsights {
   /** Total clicks */
   total_clicks: number;
   
-  /** Total leads */
-  total_leads: number;
-  
-  /** Average cost per lead */
-  avg_cost_per_lead: number;
+  /** Total reach */
+  total_reach: number;
   
   /** Start date of insights */
   start_date: string;

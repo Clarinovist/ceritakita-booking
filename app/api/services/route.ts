@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readServices, writeServices } from '@/lib/storage';
+import { readServices, writeServices } from '@/lib/repositories/services';
 import { requireAuth } from '@/lib/auth';
 import { servicesArraySchema } from '@/lib/validation';
 import { logger, createErrorResponse } from '@/lib/logger';
