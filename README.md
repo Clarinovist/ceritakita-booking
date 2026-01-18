@@ -31,6 +31,15 @@ npm run build
 npm start
 ```
 
+### Docker Deployment
+```bash
+# Pull the latest image
+docker compose pull
+
+# Start the services
+docker compose up -d
+```
+
 ## 🛠 Tech Stack
 
 - **Framework**: Next.js 14.2.35 (App Router)

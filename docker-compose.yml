@@ -1,10 +1,11 @@
 services:
   # Next.js Application Service
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: runner
+    image: ghcr.io/clarinovist/ceritakita-booking:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    #   target: runner
     container_name: ceritakita-booking
     ports:
       - "3001:3000"

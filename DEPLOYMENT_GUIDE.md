@@ -149,7 +149,37 @@ ls -la .next/
 # Should show: server/, static/, app/
 ```
 
+
 ---
+
+## Docker Deployment (Alternative)
+
+For a simplified deployment using Docker and GitHub Container Registry (GHCR):
+
+### 1. Prerequisites
+- Docker and Docker Compose installed on the server.
+- `docker-compose.yml` file present.
+
+### 2. Login to GHCR (Optional - for private packages)
+If the image is private, you need to log in:
+```bash
+echo $CR_PAT | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
+### 3. Deploy
+```bash
+# Pull the latest image
+docker compose pull
+
+# Start the application
+docker compose up -d
+
+# Check logs
+docker compose logs -f
+```
+
+---
+
 
 ## Database Management
 
