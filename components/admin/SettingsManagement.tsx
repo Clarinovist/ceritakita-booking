@@ -5,7 +5,7 @@ import { SystemSettings } from '@/lib/types/settings';
 import { UPLOAD_FOLDERS } from '@/lib/constants';
 import {
   Info, Home, DollarSign, Calendar,
-  MessageSquare, CreditCard, Users,
+  MessageSquare, CreditCard, Users, Activity,
   type LucideIcon
 } from 'lucide-react';
 
@@ -16,11 +16,12 @@ import RulesTab from './settings/RulesTab';
 import TemplatesTab from './settings/TemplatesTab';
 import UserManagement from './UserManagement';
 import PaymentMethodsManagement from './PaymentMethodsManagement';
+import { MonitoringDashboard } from './MonitoringDashboard';
 import { InvoicePreviewModal } from './modals/InvoicePreviewModal';
 import { InvoiceSettings } from '@/lib/types/settings';
 
 // Tab type definition
-type TabType = 'general' | 'contact' | 'finance' | 'rules' | 'templates' | 'payment_methods' | 'users';
+type TabType = 'general' | 'contact' | 'finance' | 'rules' | 'templates' | 'payment_methods' | 'users' | 'performance';
 
 interface TabConfig {
   id: TabType;
@@ -35,7 +36,8 @@ const TABS: TabConfig[] = [
   { id: 'rules', label: 'Booking Rules', icon: Calendar },
   { id: 'templates', label: 'Templates', icon: MessageSquare },
   { id: 'payment_methods', label: 'Payment Methods', icon: CreditCard },
-  { id: 'users', label: 'Team Access', icon: Users }
+  { id: 'users', label: 'Team Access', icon: Users },
+  { id: 'performance', label: 'Performance', icon: Activity }
 ];
 
 export default function SettingsManagement() {
@@ -188,7 +190,7 @@ export default function SettingsManagement() {
   };
 
   // Helper to determine if we are in a self-managed tab
-  const isSelfManagedTab = ['payment_methods', 'users'].includes(activeTab);
+  const isSelfManagedTab = ['payment_methods', 'users', 'performance'].includes(activeTab);
 
   if (loading) {
     return (
@@ -297,6 +299,16 @@ export default function SettingsManagement() {
                 <span className="font-medium">User management actions (create, update, delete) are effective immediately.</span>
               </div>
               <UserManagement />
+            </div>
+          )}
+
+          {activeTab === 'performance' && (
+            <div className="space-y-4">
+              <div className="bg-indigo-50 border border-indigo-200 text-indigo-800 px-4 py-3 rounded-xl flex items-center gap-2 text-sm">
+                <Info size={18} className="flex-shrink-0" />
+                <span className="font-medium">Monitor database operation latency and get performance insights for optimization.</span>
+              </div>
+              <MonitoringDashboard />
             </div>
           )}
         </div>

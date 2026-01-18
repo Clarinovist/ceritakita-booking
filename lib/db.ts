@@ -419,13 +419,31 @@ function initializeSchema() {
     )
   `);
 
-  // Create indexes for leads table
+  // Create performance_metrics table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS performance_metrics (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operation TEXT NOT NULL,
+      module TEXT NOT NULL,
+      execution_time_ms REAL NOT NULL,
+      timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      metadata TEXT -- Extra context in JSON
+    )
+  `);
+
+  // Create indexes for leads table and performance metrics
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
     CREATE INDEX IF NOT EXISTS idx_leads_source ON leads(source);
     CREATE INDEX IF NOT EXISTS idx_leads_assigned_to ON leads(assigned_to);
     CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
     CREATE INDEX IF NOT EXISTS idx_leads_whatsapp ON leads(whatsapp);
+    CREATE INDEX IF NOT EXISTS idx_leads_status_source ON leads(status, source);
+    CREATE INDEX IF NOT EXISTS idx_leads_follow_up ON leads(next_follow_up) WHERE next_follow_up IS NOT NULL;
+    
+    CREATE INDEX IF NOT EXISTS idx_perf_metrics_op ON performance_metrics(operation);
+    CREATE INDEX IF NOT EXISTS idx_perf_metrics_ts ON performance_metrics(timestamp);
+    CREATE INDEX IF NOT EXISTS idx_perf_metrics_module ON performance_metrics(module);
   `);
 
   // Add interest column to existing leads table (migration)
