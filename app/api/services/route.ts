@@ -6,7 +6,7 @@ import { logger, createErrorResponse } from '@/lib/logger';
 
 // Public endpoint - customers need to see active services
 export async function GET() {
-    const data = readServices();
+    const data = await readServices();
     return NextResponse.json(data);
 }
 
