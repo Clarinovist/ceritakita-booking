@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 // @ts-ignore
 const originalRequire = Module.prototype.require;
 // @ts-ignore
-Module.prototype.require = function(id) {
+Module.prototype.require = function (id) {
   if (id === 'server-only') {
     return {};
   }
@@ -27,27 +27,27 @@ async function benchmark() {
 
   const insert = db.transaction(() => {
     for (const status of STATUSES) {
-        for (let i = 0; i < COUNT_PER_STATUS; i++) {
-          const id = randomUUID();
-          ids.push(id);
-          // Distribute dates over last 365 days
-          const daysAgo = Math.floor(Math.random() * 365);
-          const date = new Date();
-          date.setDate(date.getDate() - daysAgo);
-          const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+      for (let i = 0; i < COUNT_PER_STATUS; i++) {
+        const id = randomUUID();
+        ids.push(id);
+        // Distribute dates over last 365 days
+        const daysAgo = Math.floor(Math.random() * 365);
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+        const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
 
-          db.prepare(`
+        db.prepare(`
             INSERT INTO bookings (
               id, created_at, status, customer_name, customer_whatsapp, customer_category, booking_date, total_price
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `).run(
-            id, new Date().toISOString(), status, `Test Customer ${status} ${i}`, '08123456789', 'Wedding', dateStr, 1000000
-          );
+          id, new Date().toISOString(), status, `Test Customer ${status} ${i}`, '08123456789', 'Wedding', dateStr, 1000000
+        );
 
-          // Add some payments to make it realistic (as readData fetches them)
-           db.prepare(`INSERT INTO payments (booking_id, date, amount, note) VALUES (?, ?, ?, ?)`)
-             .run(id, new Date().toISOString(), 500000, 'DP');
-        }
+        // Add some payments to make it realistic (as readData fetches them)
+        db.prepare(`INSERT INTO payments (booking_id, date, amount, note) VALUES (?, ?, ?, ?)`)
+          .run(id, new Date().toISOString(), 500000, 'DP');
+      }
     }
   });
 
@@ -56,10 +56,10 @@ async function benchmark() {
 
   // Test Case: Filter 'Active' bookings in the last 30 days
   const targetStatus = 'Active';
-  const endDate = new Date().toISOString().split('T')[0];
+  const endDate = new Date().toISOString().split('T')[0] ?? '';
   const startDateObj = new Date();
   startDateObj.setDate(startDateObj.getDate() - 30);
-  const startDate = startDateObj.toISOString().split('T')[0];
+  const startDate = startDateObj.toISOString().split('T')[0] ?? '';
 
   console.log(`\n--- Baseline: In-Memory Filtering ---`);
   console.log(`Filtering for Status: ${targetStatus}, Date: ${startDate} to ${endDate}`);
@@ -102,21 +102,21 @@ async function benchmark() {
 
   // Verify results match
   if (bookings.length !== optimizedBookings.length) {
-     console.error(`❌ Mismatch! Baseline found ${bookings.length}, Optimized found ${optimizedBookings.length}`);
+    console.error(`❌ Mismatch! Baseline found ${bookings.length}, Optimized found ${optimizedBookings.length}`);
   } else {
-     console.log(`✅ Results match.`);
+    console.log(`✅ Results match.`);
   }
 
   // Cleanup
   console.log('\nCleaning up...');
   const cleanup = db.transaction(() => {
-      // Chunk deletion to avoid "too many SQL variables"
-      const chunkSize = 900;
-      for (let i = 0; i < ids.length; i += chunkSize) {
-        const chunk = ids.slice(i, i + chunkSize);
-        const chunkPlaceholders = chunk.map(() => '?').join(',');
-        db.prepare(`DELETE FROM bookings WHERE id IN (${chunkPlaceholders})`).run(...chunk);
-      }
+    // Chunk deletion to avoid "too many SQL variables"
+    const chunkSize = 900;
+    for (let i = 0; i < ids.length; i += chunkSize) {
+      const chunk = ids.slice(i, i + chunkSize);
+      const chunkPlaceholders = chunk.map(() => '?').join(',');
+      db.prepare(`DELETE FROM bookings WHERE id IN (${chunkPlaceholders})`).run(...chunk);
+    }
   });
   cleanup();
 
