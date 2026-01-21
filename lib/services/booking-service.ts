@@ -33,7 +33,7 @@ export class BookingService {
         const { customer, booking, finance, photographer_id, addons } = data;
 
         // 1. Backend Price Validation and Breakdown Calculation
-        const services = readServices();
+        const services = await readServices();
         const service = services.find(s => s.id === customer.serviceId);
 
         let validatedTotalPrice = 0;
