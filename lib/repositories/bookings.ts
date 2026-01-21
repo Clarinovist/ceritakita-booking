@@ -231,7 +231,7 @@ export function addRescheduleHistory(
 /**
  * Read all bookings, with optional date filtering
  */
-export function readData(startDate?: string, endDate?: string): Booking[] {
+export function readData(startDate?: string, endDate?: string, page?: number, limit?: number): Booking[] {
   const db = getDb();
 
   let query = 'SELECT * FROM bookings';
@@ -255,13 +255,25 @@ export function readData(startDate?: string, endDate?: string): Booking[] {
 
   query += " ORDER BY ABS(julianday(booking_date) - julianday('now')) ASC";
 
+  if (limit && limit > 0) {
+    query += ' LIMIT ?';
+    params.push(limit);
+
+    if (page && page > 0) {
+      query += ' OFFSET ?';
+      params.push((page - 1) * limit);
+    }
+  }
+
   const stmt = db.prepare(query);
   const rows = stmt.all(...params) as BookingRow[];
 
   logger.info('Retrieved bookings from database', {
     count: rows.length,
     startDate,
-    endDate
+    endDate,
+    page,
+    limit
   });
 
   if (rows.length === 0) {

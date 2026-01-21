@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
         const endDate = searchParams.get('endDate');
 
         // 1. Calculate Revenue (from Bookings)
-        const bookings = readData(startDate || undefined, endDate || undefined);
+        let bookings = readData(startDate || undefined, endDate || undefined);
 
         // Only include active/completed bookings for P&L?
         // Usually cancelled bookings might have refunds or no revenue.

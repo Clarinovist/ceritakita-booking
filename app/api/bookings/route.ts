@@ -77,11 +77,26 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(booking);
         }
 
-        // Get all bookings
-        const data = readDataSQLite();
+        // Get pagination and filter params
+        const page = parseInt(searchParams.get('page') || '0', 10);
+        const limit = parseInt(searchParams.get('limit') || '0', 10);
+        const startDate = searchParams.get('startDate') || undefined;
+        const endDate = searchParams.get('endDate') || undefined;
+
+        // Get bookings with pagination and date filtering
+        const data = readDataSQLite(
+            startDate,
+            endDate,
+            page > 0 ? page : undefined,
+            limit > 0 ? limit : undefined
+        );
 
         logger.info('Bookings retrieved successfully', {
-            count: data.length
+            count: data.length,
+            page,
+            limit,
+            startDate,
+            endDate
         });
 
         return NextResponse.json(data);
