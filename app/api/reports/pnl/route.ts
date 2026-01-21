@@ -21,22 +21,7 @@ export async function GET(req: NextRequest) {
         const endDate = searchParams.get('endDate');
 
         // 1. Calculate Revenue (from Bookings)
-        let bookings = readData();
-
-        // Apply date filters to bookings
-        if (startDate) {
-            bookings = bookings.filter(b => {
-                const bDate = b.booking.date.split('T')[0] ?? '';
-                return bDate >= startDate;
-            });
-        }
-
-        if (endDate) {
-            bookings = bookings.filter(b => {
-                const bDate = b.booking.date.split('T')[0] ?? '';
-                return bDate <= endDate;
-            });
-        }
+        const bookings = readData(startDate || undefined, endDate || undefined);
 
         // Only include active/completed bookings for P&L?
         // Usually cancelled bookings might have refunds or no revenue.
