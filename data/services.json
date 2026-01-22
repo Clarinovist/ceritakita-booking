@@ -33,7 +33,13 @@
     "basePrice": 600000,
     "discountValue": 0,
     "isActive": true,
-    "badgeText": ""
+    "badgeText": "",
+    "benefits": [
+      "Makeup dan Hairdo",
+      "Fotografer dan Pengarah Gaya",
+      "All file via gdrive + Editing 10File",
+      "Free Cetak 4r 4Lembar"
+    ]
   },
   {
     "id": "6",
