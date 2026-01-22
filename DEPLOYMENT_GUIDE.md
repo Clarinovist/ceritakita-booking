@@ -180,6 +180,27 @@ docker compose logs -f
 
 ---
 
+## File permissions for `./data`
+
+The application stores runtime files under the `./data` directory (SQLite DB, `services.json`, locks, uploads metadata). The container process needs write access to this directory. If you run the container with a non-root runtime user (the image uses UID 1001 for the app process), ensure the host folder is owned by that UID/GID or make it writable for the container user.
+
+Quick remediation on the host (run from project root):
+
+```bash
+sudo chown -R 1001:1001 ./data
+sudo chmod -R 775 ./data
+```
+
+Or set the container user in `docker-compose.yml` to match the host ownership:
+
+```yaml
+services:
+  app:
+    user: "1001:1001"
+```
+
+If you still see `EACCES` when updating services via the admin UI, check container logs for `Error writing services file` and verify ownership/mode of `./data/services.json`.
+
 
 ## Database Management
 

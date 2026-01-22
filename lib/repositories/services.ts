@@ -55,7 +55,20 @@ export async function writeServices(data: Service[]): Promise<void> {
     });
 
     // Write data
-    await fs.promises.writeFile(SERVICES_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    try {
+      await fs.promises.writeFile(SERVICES_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (err: any) {
+      // Provide a clearer error message for permission issues so operators know how to fix
+      if (err.code === 'EACCES' || err.code === 'EPERM') {
+        console.error(`Permission error writing services file: ${SERVICES_PATH}. Please ensure the container user can write to the data directory.`);
+        // Re-throw a descriptive error so API layer returns 500 with context
+        const e = new Error(`EACCES: cannot write services file (${SERVICES_PATH}). Ensure ./data is writable by the container user or set the service user in docker-compose.`);
+        // attach original code for logging downstream
+        (e as any).code = err.code;
+        throw e;
+      }
+      throw err;
+    }
   } catch (error) {
     console.error("Error writing services file:", error);
     throw error;
