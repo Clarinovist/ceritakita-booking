@@ -262,7 +262,8 @@ Grand Total = (Service Base Price + Add-ons Total) - Base Discount - Coupon Disc
 - **Mobile-first** responsive design
 - **Keyboard navigation** support
 - **ARIA labels** throughout
-- **Real-time validation**
+- **Optimized DB Queries**: Index-aware search for booking dates
+- **JSON Parsing Cache**: High-speed addon row mapping
 - **Loading states** with skeletons
 - **Smooth animations**
 
