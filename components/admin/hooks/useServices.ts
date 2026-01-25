@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Service, ServiceFormData } from '@/lib/types';
+import { logger } from '@/lib/logger';
 
 export const useServices = () => {
     const [services, setServices] = useState<Service[]>([]);
@@ -22,6 +23,13 @@ export const useServices = () => {
             if (res.ok) {
                 const data = await res.json();
                 setServices(data);
+            } else {
+                // Log unexpected status code with details
+                logger.error('Failed to fetch services - non‑OK response', {
+                    status: res.status,
+                    statusText: res.statusText
+                });
+                console.error('Fetch services error: ', res.status, res.statusText);
             }
         } catch (err) {
             console.error(err);
@@ -36,12 +44,29 @@ export const useServices = () => {
                 body: JSON.stringify(updatedList)
             });
             if (res.ok) {
+                // Ensure response JSON is valid
+                try {
+                    await res.json();
+                } catch (parseError) {
+                    logger.error('Invalid JSON response from /api/services', { error: parseError });
+                    console.error('JSON parse error:', parseError);
+                    throw new Error('Invalid JSON response');
+                }
                 setServices(updatedList);
                 return true;
+            } else {
+                const errorText = await res.text();
+                logger.error('Failed to save services - non-OK response', {
+                    status: res.status,
+                    statusText: res.statusText,
+                    body: errorText
+                });
+                console.error('Save services error:', res.status, res.statusText, errorText);
+                throw new Error(`Failed with status ${res.status}`);
             }
-            throw new Error("Failed");
-        } catch {
-            alert("Error saving services");
+        } catch (error) {
+            logger.error('Error saving services (catch block)', { error });
+            console.error('Error saving services:', error);
             return false;
         }
     };
